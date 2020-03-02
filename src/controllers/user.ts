@@ -93,7 +93,7 @@ export const forgotPassword = async (
       service: 'Gmail',
       auth: {
         user: 'nguyengiang.nchg@gmail.com',
-        pass: "Lovelybunnie12",
+        pass: "aaa",//Put this one in secrect!!!!!
       }
     });
     
