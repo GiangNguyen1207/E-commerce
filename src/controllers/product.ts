@@ -1,15 +1,39 @@
+import mongoose from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 
-import Movie from '../models/Movie'
-import MovieService from '../services/movie'
+import ProductService from '../services/product'
 import {
   NotFoundError,
   BadRequestError,
   InternalServerError,
 } from '../helpers/apiError'
 
+export const findAll = async (
+  req: Request, 
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json(await ProductService.findAll(req.query.search))
+  } catch (error) {
+    next(new NotFoundError('Product not found', error))
+  }
+}
+
+export const findById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json(await ProductService.findById(req.params.productId))
+  } catch(error) {
+    next(new NotFoundError('Product not found', error))
+  }
+}
+
 // POST /movies
-export const createMovie = async (
+/*export const createMovie = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -29,7 +53,7 @@ export const createMovie = async (
     res.json(movie)
   } catch (error) {
     if (error.name === 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
+      next(new BadRequestError('Ires.json(awnvalid Request', error))
     } else {
       next(new InternalServerError('Internal Server Error', error))
     }
@@ -90,4 +114,4 @@ export const findAll = async (
   } catch (error) {
     next(new NotFoundError('Movies not found', error))
   }
-}
+}*/

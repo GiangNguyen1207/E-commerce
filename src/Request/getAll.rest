@@ -1,0 +1,34 @@
+//GET http://localhost:3000/api/v1/products/
+
+//GET http://localhost:3000/api/v1/products/?search=green
+
+//GET http://localhost:3000/api/v1/products/5e5a696ae20f6ce73c64e971
+
+# POST http://localhost:3000/api/v1/users/signup
+# Content-Type: application/json
+
+# {
+#   "firstName": "chip",
+#   "lastName": "chipchip",
+#   "username": "chipheo",
+#   "email": "chipchip123@gmail.com",
+#   "password": "chipchipxinhdep"
+# }
+
+# POST http://localhost:3000/api/v1/users/
+# Content-Type: application/json
+
+# {
+#   "username": "chipheo",
+#   "password": "chipchipxinhdep"
+# }
+
+# PUT http://localhost:3000/api/v1/users/5e5bd30078a302273f005772
+# Content-Type: application/json
+
+# {
+#   "firstName": "Gigi",
+#   "lastName": "Nguyen",
+#   "email": "gigi123@gmail.com",
+#   "password": "gigixinhdep"
+# }
