@@ -46,21 +46,59 @@ function updateUserProfile(
       })
 }
 
-/*function forgotPassword(username: string, email: string): Promise<UserDocument[]> {
+function forgotPassword(email: string, token: string): Promise<UserDocument> {
   return User.findOne({email: email})
     .exec()
     .then(user => {
-      if(user) {
-        if(tokens) {
-          delete
-        }
-        
+      if(!user) {
+        throw new Error('Invalid Email')
       }
+      if(user) {
+        user.forgotPassword = {
+          token: token,
+          timeOfCreated: Date.now(),
+          numberOfMs: 300,
+        }
+      }
+      return user
     })
-}*/
+}
+
+function validateToken(query: string): Promise<UserDocument> { 
+  return User.findOne({forgotPasswordtoken: query})
+    .exec() 
+    .then(user => {
+      if(!user) {
+        throw new Error('Wrong token')
+      } if(Date.now() >= (user.forgotPassword.timeOfCreated + user.forgotPassword.numberOfMs))
+        throw new Error('Invalid token')
+      return user
+    })
+}
+
+function resetPassword(
+  username: string, 
+  newPassword: string, 
+  retypePassword: string
+  ): Promise<UserDocument> {
+    return User.findOne({username: username}) 
+      .exec()
+      .then(user => {
+        if(!user)
+          throw new Error('User not found')
+        if(newPassword !== retypePassword) {
+          throw new Error('Passwords do not match')
+        }
+        user.password = newPassword
+        return user.save()
+      })
+  }
 
 export default {
   createUser,
   signIn,
-  updateUserProfile
+  updateUserProfile,
+  forgotPassword,
+  validateToken,
+  resetPassword
 }

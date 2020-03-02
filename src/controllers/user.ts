@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import nodemailer from 'nodemailer'
 
 import UserService from '../services/user'
 import User from '../models/User';
@@ -66,4 +68,80 @@ export const updateUserProfile = async (
   }
 }
 
- 
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = await crypto.randomBytes(32).toString('hex')
+    await UserService.forgotPassword(req.body.email, token) 
+    const data = {
+      to: req.body.email,
+      from: 'giang.nguyen@integrify.io',
+      template: 'reset-password-template',
+      subject: 'Reset your password',
+      text: 
+      `Please click on the following link
+      ${`http://localhost:3000/users/resetPassword?token=${token}`} 
+      to reset your password. \n\n 
+      If you did not request this, 
+      please ignore this email and your password will remain unchanged.\n`,
+    }
+
+    const smtpTransport = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'nguyengiang.nchg@gmail.com',
+        pass: "Lovelybunnie12",
+      }
+    });
+    
+    smtpTransport.sendMail(data, function(error) {
+      if (error) {
+        console.log(error)
+      } else {
+        res.status(200).send('Email sent successfully')
+      }
+    });
+  } catch (error) {
+    if(error.name = 'Invalid Email') {
+      next (new NotFoundError('Email not found', error))
+    }
+      next(new InternalServerError('Internal server error', error))
+  }
+}
+
+export const validateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    await UserService.validateToken(req.query.token)
+    res.status(200).send('Token is validated')
+  } catch (error) {
+    if(error.name === 'Invalid token' || 'Wrong token') {
+      next(new BadRequestError('Invalid token', error))
+  }
+    next(new InternalServerError('Internal server error', error))
+  }
+}
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const {username, newPassword, retypePassword} = req.body
+    await UserService.resetPassword(username, newPassword, retypePassword)
+    res.json('Password has been reset successfully')
+  } catch (error) {
+    if(error.name === 'User not found' || 'Passwords do not match') {
+      next(new BadRequestError('Bad request', error))
+  }
+    next(new InternalServerError('Internal server error', error))
+  }
+}
+

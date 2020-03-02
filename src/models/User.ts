@@ -1,13 +1,19 @@
 import mongoose, { Document } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
+type PasswordToken = {
+  token: string,
+  timeOfCreated: number,
+  numberOfMs: number,
+}
+
 export type UserDocument = Document & {
   firstName: string,
   lastName: string,
   username: string,
   email: string,
   password: string,
-  forgotPassword: object
+  forgotPassword: PasswordToken
 }
 
 const userSchema = new mongoose.Schema({
@@ -36,15 +42,14 @@ const userSchema = new mongoose.Schema({
     minlength: 8
   },
   forgotPassword: {
-    type: Object,
-    required: false,
-    properties: {
-      token: String,
-      timeOfCreated: Date.now(),
-      numberOfMs: Number
-    }
+    token: String,
+    timeOfCreated: {
+      type: Number,
+    },
+    numberOfMs: Number,
   }
 })
+
 userSchema.plugin(uniqueValidator)
 
 export default mongoose.model<UserDocument>('User', userSchema)

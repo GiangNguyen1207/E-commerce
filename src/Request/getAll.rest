@@ -8,11 +8,11 @@
 # Content-Type: application/json
 
 # {
-#   "firstName": "chip",
-#   "lastName": "chipchip",
-#   "username": "chipheo",
-#   "email": "chipchip123@gmail.com",
-#   "password": "chipchipxinhdep"
+#   "firstName": "Gigi",
+#   "lastName": "meomeow",
+#   "username": "gigixinhgai",
+#   "email": "giang.nguyen@integrify.io",
+#   "password": "gigixinhdep"
 # }
 
 # POST http://localhost:3000/api/v1/users/
@@ -32,3 +32,10 @@
 #   "email": "gigi123@gmail.com",
 #   "password": "gigixinhdep"
 # }
+
+POST http://localhost:3000/api/v1/users/forgotPassword
+Content-Type: application/json
+
+{
+  "email": "giang.nguyen@integrify.io"
+}
