@@ -7,6 +7,7 @@ import {
   forgotPassword,
   validateToken,
   resetPassword,
+  changePassword
 } from '../controllers/user'
 
 const router = express.Router()
@@ -15,7 +16,8 @@ router.post('/signup', createUser)
 router.post('/', signIn)
 router.put('/:userId', updateUserProfile)
 router.post('/forgotPassword', forgotPassword)
-router.get('/resetPassword', validateToken)
-router.put('/resetPassword/', resetPassword)
+router.post('/resetPassword', validateToken)
+//router.put('/resetPassword', resetPassword)
+router.put('/:userId/changePassword', changePassword)
 
 export default router

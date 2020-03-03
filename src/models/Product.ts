@@ -1,4 +1,5 @@
 import mongoose, { Document } from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 
 export type ProductDocument = Document & {
   name: string,
@@ -10,6 +11,7 @@ export type ProductDocument = Document & {
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     index: true,
   },
   category: {
@@ -21,5 +23,7 @@ const productSchema = new mongoose.Schema({
     index: true
   }
 })
+
+productSchema.plugin(uniqueValidator)
 
 export default mongoose.model<ProductDocument>('Product', productSchema)

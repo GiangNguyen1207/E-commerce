@@ -39,3 +39,8 @@ Content-Type: application/json
 {
   "email": "giang.nguyen@integrify.io"
 }
+
+# POST   http://localhost:3000/api/v1/users/resetPassword?token=ff24ddc428fbc0ea7fcef52331dbb2fe61afafc907e7291ea039cad6bb6af444
+
+
+# Content-Type: application/json

@@ -15,11 +15,13 @@ export const createUser = async (
   try {
     const {firstName, lastName, username, email} = req.body
     const password = await bcrypt.hash(req.body.password, 10)
+    const key = await crypto.randomBytes(32).toString('hex')
 
     const user = new User({
       firstName,
       lastName,
       username,
+      key,
       email,
       password,
     })
@@ -29,9 +31,8 @@ export const createUser = async (
   } catch (error) {
     if(error.name === 'ValidationError') {
       next(new BadRequestError(error.message, error))
-    } else {
+    } 
       next(new InternalServerError('Internal Server Error', error))
-    }
   }
 }
 
@@ -59,7 +60,6 @@ export const updateUserProfile = async (
 ) => {
   try {
     const updateUser = req.body
-    console.log(updateUser)
     const userId = req.params.userId
     const updateUserProfile = await UserService.updateUserProfile(updateUser, userId)
     res.json(updateUserProfile)
@@ -92,8 +92,11 @@ export const forgotPassword = async (
     const smtpTransport = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
+        type: "OAuth2",
         user: 'nguyengiang.nchg@gmail.com',
-        pass: "aaa",//Put this one in secrect!!!!!
+        clientId: "827944169415-prtn9qqng1o1dqn18kb65jtfral9c7ta.apps.googleusercontent.com",
+        clientSecret: "TAVY45kpNcpuQtbTVJIAf65f",
+        refreshToken: "1//04EH5AztmTdRXCgYIARAAGAQSNwF-L9IrK-g9MecBpAXET7OKQDtZmnDopsMnfoKDgu37wyV2f06ianoFYrHAmXzdPgPFFA8s_EA"
       }
     });
     
@@ -141,6 +144,32 @@ export const resetPassword = async (
     if(error.name === 'User not found' || 'Passwords do not match') {
       next(new BadRequestError('Bad request', error))
   }
+    next(new InternalServerError('Internal server error', error))
+  }
+}
+
+export const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {oldPassword, newPassword} = req.body
+    const newHashedPassword = await bcrypt.hash(newPassword, 10)
+    const userId = req.params.userId
+    const updatedPassword = await UserService.changePassword(
+      userId, 
+      oldPassword, 
+      newHashedPassword
+    )
+    res.status(200).send('Password has been changed successfully')
+  } catch (error) {
+    if(error.name = 'User not found') {
+      next(new NotFoundError('User not found', error))
+    }
+    if(error.name = 'Passwords not match') {
+      next(new BadRequestError('Passwords not match', error))
+    }
     next(new InternalServerError('Internal server error', error))
   }
 }

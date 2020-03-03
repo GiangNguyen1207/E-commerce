@@ -57,22 +57,24 @@ function forgotPassword(email: string, token: string): Promise<UserDocument> {
         user.forgotPassword = {
           token: token,
           timeOfCreated: Date.now(),
-          numberOfMs: 300,
+          timeStamp: 300000,
         }
       }
-      return user
+      return user.save()
     })
 }
 
 function validateToken(query: string): Promise<UserDocument> { 
-  return User.findOne({forgotPasswordtoken: query})
+  return User.findOne({'forgotPassword.token': query})
     .exec() 
     .then(user => {
+      console.log(user)
       if(!user) {
         throw new Error('Wrong token')
-      } if(Date.now() >= (user.forgotPassword.timeOfCreated + user.forgotPassword.numberOfMs))
+      } if(Date.now() > (user.forgotPassword.timeOfCreated + user.forgotPassword.timeStamp))
         throw new Error('Invalid token')
-      return user
+     user.set('forgotPassword', null)
+      return user.save()
     })
 }
 
@@ -94,11 +96,32 @@ function resetPassword(
       })
   }
 
+function changePassword(
+  userId: string,
+  oldPassword: string,
+  newHashedPassword: string
+  ): Promise<UserDocument> {
+    return User.findById({userId: userId}) 
+      .exec()
+      .then(async(user) => {
+        if(!user) {
+          throw new Error('User not found')
+        }
+        const match = await bcrypt.compare(oldPassword, user.password)
+        if(!match) {
+          throw new Error('Passwords not match')
+        }
+        user.password = newHashedPassword
+        return user.save()
+      })
+}
+
 export default {
   createUser,
   signIn,
   updateUserProfile,
   forgotPassword,
   validateToken,
-  resetPassword
+  resetPassword,
+  changePassword
 }
