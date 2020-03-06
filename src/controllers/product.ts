@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 
+import Product from '../models/Product'
 import ProductService from '../services/product'
 import {
   NotFoundError,
@@ -32,86 +32,55 @@ export const findById = async (
   }
 }
 
-// POST /movies
-/*export const createMovie = async (
+export const addProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { name, publishedYear, genres, duration, characters } = req.body
+  const {name, category, variant} = req.body
 
-    const movie = new Movie({
-      name,
-      publishedYear,
-      genres,
-      duration,
-      characters,
-    })
+  const newProduct = new Product({
+    name: name,
+    category: category,
+    variant: variant
+  })
 
-    await MovieService.create(movie)
-    res.json(movie)
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      next(new BadRequestError('Ires.json(awnvalid Request', error))
-    } else {
+  await ProductService.addProduct(newProduct)
+  res.json(newProduct)
+  } catch(error) {
+    if(error.name = 'ValidationError') {
+      next(new BadRequestError(error.message, error))
+  } 
       next(new InternalServerError('Internal Server Error', error))
-    }
   }
 }
 
-// PUT /movies/:movieId
-export const updateMovie = async (
+export const updateProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const update = req.body
-    const movieId = req.params.movieId
-    const updatedMovie = await MovieService.update(movieId, update)
-    res.json(updatedMovie)
-  } catch (error) {
-    next(new NotFoundError('Movie not found', error))
-  }
+  const product = req.body
+  const productId = req.params.productId
+  const updatedProduct = await ProductService.updateProduct(productId, product)
+  res.json(updatedProduct)
+} catch (error) {
+  next (new NotFoundError('Product not found', error))
+}
 }
 
-// DELETE /movies/:movieId
-export const deleteMovie = async (
+export const deleteProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await MovieService.deleteMovie(req.params.movieId)
+    await ProductService.deleteProduct(req.params.productId)
     res.status(204).end()
   } catch (error) {
-    next(new NotFoundError('Movie not found', error))
+    next(new NotFoundError('Product not found', error))
   }
 }
 
-// GET /movies/:movieId
-export const findById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    res.json(await MovieService.findById(req.params.movieId))
-  } catch (error) {
-    next(new NotFoundError('Movie not found', error))
-  }
-}
-
-// GET /movies
-export const findAll = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    res.json(await MovieService.findAll())
-  } catch (error) {
-    next(new NotFoundError('Movies not found', error))
-  }
-}*/

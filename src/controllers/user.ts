@@ -1,11 +1,14 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction, response } from 'express'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import nodemailer from 'nodemailer'
+import jwt from 'jsonwebtoken'
 
 import UserService from '../services/user'
 import User from '../models/User';
 import { BadRequestError, InternalServerError, NotFoundError } from '../helpers/apiError';
+import { RequestError } from 'request-promise/errors';
+import { JWT_SECRET } from 'src/util/secrets';
 
 export const createUser = async (
   req: Request,
@@ -171,6 +174,28 @@ export const changePassword = async (
       next(new BadRequestError('Passwords not match', error))
     }
     next(new InternalServerError('Internal server error', error))
+  }
+}
+
+export const authenticate = async (
+  req: Request, 
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {email} = req.user as any
+    const token = await jwt.sign(
+      {
+        email
+      }, 
+      JWT_SECRET,
+      {
+        expiresIn: '1h'
+      }
+      )
+    res.json({token})
+  } catch(error) {
+    return next(new InternalServerError())
   }
 }
 

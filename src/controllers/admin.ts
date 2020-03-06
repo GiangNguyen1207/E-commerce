@@ -5,7 +5,6 @@ import Admin from '../models/Admin'
 import Product from '../models/Product';
 import { BadRequestError, InternalServerError, NotFoundError } from '../helpers/apiError'
 
-
 export const addProduct = async (
   req: Request,
   res: Response,

@@ -5,22 +5,22 @@ export type ProductDocument = Document & {
   name: string,
   category: string,
   variant: string[],
-  size: string[]
 }
 
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
     unique: true,
-    index: true,
+
   },
   category: {
     type: String,
-    index: true
+    required: true
+
   },
   variant: {
     type: [String],
-    index: true
+    required: true,
   }
 })
 
