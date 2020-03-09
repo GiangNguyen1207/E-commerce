@@ -1,11 +1,17 @@
 import mongoose, { Document } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
+import Product, { ProductDocument } from './Product';
 
 type PasswordToken = {
   token: string,
   timeOfCreated: number,
   timeStamp: number,
 }
+
+type Cart = [{
+  name: string,
+  variant: string
+}]
 
 export type UserDocument = Document & {
   firstName: string,
@@ -14,7 +20,8 @@ export type UserDocument = Document & {
   key: string,
   email: string,
   password: string,
-  forgotPassword: PasswordToken
+  forgotPassword: PasswordToken,
+  cart: Cart
 }
 
 const userSchema = new mongoose.Schema({
@@ -46,7 +53,11 @@ const userSchema = new mongoose.Schema({
     token: String,
     timeOfCreated: Number,
     timeStamp: Number,
-  }
+  }, 
+  cart: [{
+    name: String,
+    variant: String
+  }]
 })
 
 userSchema.plugin(uniqueValidator)

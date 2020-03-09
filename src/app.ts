@@ -9,6 +9,7 @@ import path from 'path'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
+import cors from 'cors'
 
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
@@ -17,6 +18,7 @@ import userRouter from './routers/user'
 
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
+import './config/passport'
 
 const app = express()
 const mongoUrl = MONGODB_URI
@@ -38,12 +40,17 @@ mongoose
     process.exit(1)
   })
 
+//Passport initialize
+app.use(passport.initialize())
+app.use(passport.session())
+
 // Express configuration
 app.set('port', process.env.PORT || 3000)
 
 // Use common 3rd-party middlewares
 app.use(compression())
 app.use(bodyParser.json())
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))

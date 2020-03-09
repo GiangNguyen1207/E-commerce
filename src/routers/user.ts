@@ -1,4 +1,5 @@
 import express from 'express'
+import passport from 'passport'
 
 import {
   createUser,
@@ -7,22 +8,25 @@ import {
   forgotPassword,
   validateToken,
   resetPassword,
-  changePassword
+  changePassword,
+  authenticate
 } from '../controllers/user'
-import passport = require('passport');
+
+import auth from '../middlewares/authenticate'
 
 const router = express.Router()
 
 router.post('/signup', createUser)
 router.post('/', signIn)
-router.put('/:userId', updateUserProfile)
+router.put('/:userId',auth, updateUserProfile)
 router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword', validateToken)
-//router.put('/resetPassword', resetPassword)
-router.put('/:userId/changePassword', changePassword)
-/*router.post('/google-authenticate', 
+router.put('/resetPassword', resetPassword)
+router.put('/:userId/changePassword', auth, changePassword)
+router.post('/google-authenticate', 
   passport.authenticate('google-id-token'),
   authenticate
-)*/
+)
+//router.post('/cart/:userId', addProductToCart)
 
 export default router

@@ -7,8 +7,7 @@ import jwt from 'jsonwebtoken'
 import UserService from '../services/user'
 import User from '../models/User';
 import { BadRequestError, InternalServerError, NotFoundError } from '../helpers/apiError';
-import { RequestError } from 'request-promise/errors';
-import { JWT_SECRET } from 'src/util/secrets';
+import { JWT_SECRET } from '../util/secrets';
 
 export const createUser = async (
   req: Request,
@@ -47,8 +46,8 @@ export const signIn = async (
   try {
     const {username, password} = req.body
 
-    await UserService.signIn(username, password)
-    res.status(200).send('Log in successfully')
+    const user = await UserService.signIn(username, password)
+    res.json(user)
   } catch (error) {
     if(error.name = 'Username or password incorrect') {
       next (new NotFoundError('Username or password incorrect', error))
@@ -183,19 +182,56 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const {email} = req.user as any
+    const {email, userId, username} = req.user as any
     const token = await jwt.sign(
       {
-        email
+        email,
+        userId,
+        username
       }, 
       JWT_SECRET,
       {
         expiresIn: '1h'
       }
       )
-    res.json({token})
+    res.json({token, email, userId, username})
   } catch(error) {
     return next(new InternalServerError())
+  }
+}
+
+export const addProductToCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId
+    const {productId, variant} = req.body
+    const cart = await UserService.addProductToCart(userId, productId, variant)
+    res.json(cart)
+  } catch(error) {
+      if(error.name = 'User not found') {
+        return next(new BadRequestError('User not found', error))
+      }
+      return next(new InternalServerError('Internal server error', error))
+  }
+}
+
+export const getCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId
+    const cart = await UserService.getCart(userId)
+    res.json(cart)
+  } catch(error) {
+    if(error.name = 'User not found') {
+      return next(new BadRequestError('User not found', error))
+    }
+    return next(new InternalServerError('Internal server error', error))
   }
 }
 

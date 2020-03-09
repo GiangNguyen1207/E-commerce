@@ -1,5 +1,7 @@
 import User, { UserDocument } from '../models/User'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../util/secrets';
 
 function createUser(user: UserDocument): Promise<UserDocument> {
   return user.save()
@@ -16,10 +18,6 @@ function signIn(username: string, password: string): Promise<UserDocument> {
         } throw new Error('Username or password incorrect')
       } 
         throw new Error('Usernam of password incorrect')
-      /*if(user && bcrypt.compareSync(password, user.password)) {
-        return user
-      }
-      throw new Error('Username or password incorrect')*/
     })
 }
 
@@ -101,7 +99,7 @@ function changePassword(
   oldPassword: string,
   newHashedPassword: string
   ): Promise<UserDocument> {
-    return User.findById({userId: userId}) 
+    return User.findById({userId}) 
       .exec()
       .then(async(user) => {
         if(!user) {
@@ -116,6 +114,33 @@ function changePassword(
       })
 }
 
+function addProductToCart (
+  userId: string,
+  name: string,
+  variant: string 
+) : Promise<UserDocument> {
+  return User.findById({userId})
+    .exec()
+    .then(user => {
+      if(!user) {
+        throw new Error('User not found')
+      }
+        user.cart.push({name, variant})
+      return user.save()
+    })
+}
+
+function getCart(userId: string): Promise<UserDocument> {
+  return User.findById({userId})
+    .exec()
+    .then(user => {
+      if(!user) {
+        throw new Error('User not found')
+      }
+      return user
+    })
+}
+
 export default {
   createUser,
   signIn,
@@ -123,5 +148,7 @@ export default {
   forgotPassword,
   validateToken,
   resetPassword,
-  changePassword
+  changePassword,
+  addProductToCart,
+  getCart
 }
