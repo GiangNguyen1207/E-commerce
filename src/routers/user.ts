@@ -18,11 +18,11 @@ const router = express.Router()
 
 router.post('/signup', createUser)
 router.post('/', signIn)
-router.put('/:userId',auth, updateUserProfile)
 router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword', validateToken)
 router.put('/resetPassword', resetPassword)
-router.put('/:userId/changePassword', auth, changePassword)
+router.put('/changePassword/:userId', auth, changePassword)
+router.put('/:userId',auth, updateUserProfile)
 router.post('/google-authenticate', 
   passport.authenticate('google-id-token'),
   authenticate

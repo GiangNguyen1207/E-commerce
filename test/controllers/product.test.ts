@@ -1,3 +1,4 @@
+import {Request, Response, NextFunction} from 'express'
 import request from 'supertest'
 import mongoose from 'mongoose'
 
@@ -6,6 +7,11 @@ import app from '../../src/app'
 import * as dbHelper from '../db-helper'
 
 const fakeId = '5e57b77b5744fa0b461c5573'
+
+jest.mock(
+  '../../src/middlewares/authenticate',
+  () => (req: Request, res: Response, next: NextFunction) => next()
+)
 
 async function createProduct(override?: Partial<ProductDocument>) {
   let product = {

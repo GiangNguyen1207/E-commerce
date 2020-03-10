@@ -19,6 +19,8 @@ import userRouter from './routers/user'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
 import './config/passport'
+import unless from './util/unless'
+import authenticate from './middlewares/authenticate';
 
 const app = express()
 const mongoUrl = MONGODB_URI
@@ -43,6 +45,13 @@ mongoose
 //Passport initialize
 app.use(passport.initialize())
 app.use(passport.session())
+
+//Authenticate
+app.use(
+  '/api', 
+  apiContentType,
+  unless(['/v1/users/google-authenticate', '/v1/products/'], authenticate)
+  )
 
 // Express configuration
 app.set('port', process.env.PORT || 3000)

@@ -28,7 +28,6 @@ passport.use(
     },
     async function(parsedToken: any, googleId: string, done: Function) {
       const {payload} = parsedToken
-      console.log(payload)
       try {
         let user = await User.findOne({email: payload.email}).exec()
         if(user) {

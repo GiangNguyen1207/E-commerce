@@ -139,8 +139,8 @@ export const resetPassword = async (
   next: NextFunction,
 ) => {
   try {
-    const {username, newPassword, retypePassword} = req.body
-    await UserService.resetPassword(username, newPassword, retypePassword)
+    const {username, newPassword} = req.body
+    await UserService.resetPassword(username, newPassword)
     res.json('Password has been reset successfully')
   } catch (error) {
     if(error.name === 'User not found' || 'Passwords do not match') {
@@ -159,7 +159,7 @@ export const changePassword = async (
     const {oldPassword, newPassword} = req.body
     const newHashedPassword = await bcrypt.hash(newPassword, 10)
     const userId = req.params.userId
-    const updatedPassword = await UserService.changePassword(
+    await UserService.changePassword(
       userId, 
       oldPassword, 
       newHashedPassword
