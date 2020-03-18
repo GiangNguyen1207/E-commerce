@@ -11,6 +11,7 @@ export default async function (
   next: NextFunction
 ) {
   try {
+    console.log('hey')
     const token = (req.headers['authorization'] || '').split('Bearer ')[1]
     const decoded = jwt.verify(token, JWT_SECRET) as any
     const user = await User.findOne({email: decoded.email})

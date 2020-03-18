@@ -9,6 +9,8 @@ import User from '../models/User';
 import { BadRequestError, InternalServerError, NotFoundError } from '../helpers/apiError';
 import { JWT_SECRET } from '../util/secrets';
 
+var jwtDecode = require('jwt-decode');
+
 export const createUser = async (
   req: Request,
   res: Response,
@@ -17,19 +19,17 @@ export const createUser = async (
   try {
     const {firstName, lastName, username, email} = req.body
     const password = await bcrypt.hash(req.body.password, 10)
-    const key = await crypto.randomBytes(32).toString('hex')
 
     const user = new User({
       firstName,
       lastName,
       username,
-      key,
       email,
       password,
     })
 
     await UserService.createUser(user)
-    res.json(user)
+    res.json({status: 200, message: 'Success', user})
   } catch (error) {
     if(error.name === 'ValidationError') {
       next(new BadRequestError(error.message, error))
@@ -45,9 +45,19 @@ export const signIn = async (
 ) => {
   try {
     const {username, password} = req.body
-
     const user = await UserService.signIn(username, password)
-    res.json(user)
+    const id = user.id
+    const token = await jwt.sign(
+      {
+        id,
+        username,
+      }, 
+      JWT_SECRET,
+      {
+        expiresIn: '1h'
+      }
+      )
+    res.json({token, user})
   } catch (error) {
     if(error.name = 'Username or password incorrect') {
       next (new NotFoundError('Username or password incorrect', error))
@@ -63,9 +73,11 @@ export const updateUserProfile = async (
   try {
     const updateUser = req.body
     const userId = req.params.userId
-    const updateUserProfile = await UserService.updateUserProfile(updateUser, userId)
+    const updateUserProfile = await UserService.updateUserProfile(userId, updateUser)
     res.json(updateUserProfile)
+
   } catch (error) {
+
     next (new NotFoundError('User not found', error))
   }
 }
@@ -106,7 +118,7 @@ export const forgotPassword = async (
       if (error) {
         console.log(error)
       } else {
-        res.status(200).send('Email sent successfully')
+        res.json({status: 200, message:'Email sent successfully'})
       }
     });
   } catch (error) {
@@ -141,12 +153,11 @@ export const resetPassword = async (
   try {
     const {username, newPassword} = req.body
     await UserService.resetPassword(username, newPassword)
-    res.json('Password has been reset successfully')
+    res.json({status: 200, message: 'Password has been reset successfully'})
   } catch (error) {
-    if(error.name === 'User not found' || 'Passwords do not match') {
-      next(new BadRequestError('Bad request', error))
+    if(error.name === 'User not found') {
+      next(new NotFoundError('User not found', error))
   }
-    next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -164,7 +175,7 @@ export const changePassword = async (
       oldPassword, 
       newHashedPassword
     )
-    res.status(200).send('Password has been changed successfully')
+    res.json({status: 200, message: 'Password has been changed successfully'})
   } catch (error) {
     if(error.name = 'User not found') {
       next(new NotFoundError('User not found', error))
@@ -206,15 +217,11 @@ export const addProductToCart = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.params.userId
-    const {productId, variant} = req.body
-    const cart = await UserService.addProductToCart(userId, productId, variant)
+    const {userId, product, variant} = req.body
+    const cart = await UserService.addProductToCart(userId, product, variant)
     res.json(cart)
   } catch(error) {
-      if(error.name = 'User not found') {
-        return next(new BadRequestError('User not found', error))
-      }
-      return next(new InternalServerError('Internal server error', error))
+      return next(new NotFoundError('User not found', error))
   }
 }
 
@@ -228,10 +235,7 @@ export const getCart = async (
     const cart = await UserService.getCart(userId)
     res.json(cart)
   } catch(error) {
-    if(error.name = 'User not found') {
-      return next(new BadRequestError('User not found', error))
-    }
-    return next(new InternalServerError('Internal server error', error))
+      return next(new NotFoundError('User not found', error))
   }
 }
 

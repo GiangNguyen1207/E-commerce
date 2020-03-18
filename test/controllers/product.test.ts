@@ -17,7 +17,7 @@ async function createProduct(override?: Partial<ProductDocument>) {
   let product = {
     name: 'Luna 2',
     category: 'skincare',
-    variant: ['pearl pink', 'aqua', 'yellow', 'red'],
+    variant: 'pearl pink',
   }
 
   if (override) {
@@ -61,13 +61,13 @@ describe('product controller', () => {
     const res1 = await createProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
-      variant: ['pearl pink', 'aqua', 'yellow', 'red'],
+      variant: 'pearl pink',
     })
 
     const res2 = await createProduct({
       name: 'Luna 3',
       category: 'skincare',
-      variant: ['pearl pink', 'aqua', 'yellow', 'red'],
+      variant: 'aqua',
     })
 
     const res3 = await request(app)
@@ -82,7 +82,7 @@ describe('product controller', () => {
     const res1 = await createProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
-      variant: ['pearl pink', 'aqua', 'yellow', 'red'],
+      variant: 'red',
     })
 
     const res2 = await request(app)

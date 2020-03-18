@@ -50,16 +50,20 @@ app.use(passport.session())
 app.use(
   '/api', 
   apiContentType,
-  unless(['/v1/users/google-authenticate', '/v1/products/'], authenticate)
-  )
+  unless([
+    '/v1/users/google-authenticate',
+    '/v1/products/',
+    '/v1/users/signUp',
+    '/v1/users/signIn'
+  ], authenticate)
+)
 
 // Express configuration
 app.set('port', process.env.PORT || 3000)
-
+app.use(cors())
 // Use common 3rd-party middlewares
 app.use(compression())
 app.use(bodyParser.json())
-app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))

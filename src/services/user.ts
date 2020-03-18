@@ -1,7 +1,6 @@
-import User, { UserDocument } from '../models/User'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../util/secrets';
+
+import User, { UserDocument } from '../models/User'
 
 function createUser(user: UserDocument): Promise<UserDocument> {
   return user.save()

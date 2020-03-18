@@ -1,25 +1,24 @@
 //GET http://localhost:3000/api/v1/products/
-//GET http://localhost:3000/api/v1/products/?search=Luna 3
-
+//GET http://localhost:3000/api/v1/products/?search=a
 //GET http://localhost:3000/api/v1/products/5e5a696ae20f6ce73c64e971
 
-# POST http://localhost:3000/api/v1/users/signup
+# POST http://localhost:3000/api/v1/users/signUp
 # Content-Type: application/json
 
 # {
-#   "firstName": "Gigi",
-#   "lastName": "meomeow",
-#   "username": "gigixinhgai",
-#   "email": "giang.nguyen@integrify.io",
-#   "password": "gigixinhdep"
+#   "firstName": "abc",
+#   "lastName": "xyz",
+#   "username": "ab",
+#   "email": "abcxyz@gmail.com",
+#   "password": "abc"
 # }
 
-# POST http://localhost:3000/api/v1/users/
+# POST http://localhost:3000/api/v1/users/signIn
 # Content-Type: application/json
 
 # {
-#   "username": "chipheo",
-#   "password": "chipchipxinhdep"
+#   "username": "gigixinhgai",
+#   "password": "gigixinhdep"
 # }
 
 # PUT http://localhost:3000/api/v1/users/5e5bd30078a302273f005772

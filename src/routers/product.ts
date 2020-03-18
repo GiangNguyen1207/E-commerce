@@ -12,10 +12,11 @@ const router = express.Router()
 
 // Every path we define here will get /api/v1/movies prefix
 router.get('/', findAll)
+router.get('/:productId', findById)
 router.post('/admin', addProduct)
 router.put('/admin/:productId', updateProduct)
 router.post('/admin/:productId', deleteProduct)
 router.delete('/admin/:productId', deleteProduct)
-router.get('/:productId', findById)
+
 
 export default router

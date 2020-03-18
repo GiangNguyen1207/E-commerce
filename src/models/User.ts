@@ -1,6 +1,5 @@
 import mongoose, { Document } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
-import Product, { ProductDocument } from './Product';
 
 type PasswordToken = {
   token: string,
@@ -37,7 +36,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 3
   },
   email: {
     type: String,
@@ -47,7 +45,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8
   },
   forgotPassword: {
     token: String,

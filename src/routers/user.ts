@@ -9,24 +9,26 @@ import {
   validateToken,
   resetPassword,
   changePassword,
-  authenticate
+  authenticate,
+  addProductToCart,
+  getCart
 } from '../controllers/user'
 
-import auth from '../middlewares/authenticate'
 
 const router = express.Router()
 
-router.post('/signup', createUser)
-router.post('/', signIn)
+router.post('/signUp', createUser)
+router.post('/signIn', signIn)
 router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword', validateToken)
 router.put('/resetPassword', resetPassword)
-router.put('/changePassword/:userId', auth, changePassword)
-router.put('/:userId',auth, updateUserProfile)
+router.put('/changePassword/:userId', changePassword)
+router.put('/:userId', updateUserProfile)
 router.post('/google-authenticate', 
   passport.authenticate('google-id-token'),
   authenticate
 )
-//router.post('/cart/:userId', addProductToCart)
+router.post('/cart/:userId', addProductToCart)
+router.get('/cart/:userId', getCart)
 
 export default router

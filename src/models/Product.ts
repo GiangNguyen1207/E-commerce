@@ -4,7 +4,11 @@ import uniqueValidator from 'mongoose-unique-validator'
 export type ProductDocument = Document & {
   name: string,
   category: string,
-  variant: string[],
+  variant: string,
+  image: string,
+  shortDescription: string,
+  longDescription: string,
+  price: number
 }
 
 const productSchema = new mongoose.Schema({
@@ -19,8 +23,24 @@ const productSchema = new mongoose.Schema({
 
   },
   variant: {
-    type: [String],
+    type: String,
     required: true,
+  },
+
+  image: {
+    type: String
+  },
+
+  shortDescription: {
+    type: String
+  },
+
+  longDescription: {
+    type: String
+  },
+
+  price: {
+    type: Number
   }
 })
 

@@ -11,8 +11,8 @@ function findAll(searchTerm?: string): Promise<ProductDocument[]> {
       if(!_isEmpty(searchTerm)) {
       return Product.find({
         $or: [
-          {name: searchTerm},
-          {category: searchTerm},
+          {name: {$regex: searchTerm}},
+          {category: {$regex: searchTerm}},
           {variant: {$in: searchTerm}}
         ]
       })
