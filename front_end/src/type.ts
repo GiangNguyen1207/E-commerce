@@ -14,6 +14,12 @@ export type Product = {
   price: number,
 }
 
+export type Details = {
+  name: string,
+  image: string,
+  price: number,
+}
+
 export type SendDataToStore = {
   type: typeof SEND_DATA
   payload: {

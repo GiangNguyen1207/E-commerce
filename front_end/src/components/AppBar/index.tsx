@@ -1,6 +1,8 @@
 import React from 'react'
+import clsx from 'clsx';
 import { useHistory } from 'react-router';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -8,18 +10,24 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Drawer from '@material-ui/core/Drawer';
 import { Link } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import _isEmpty from 'lodash'
-
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
+import DrawerComponent from '../Drawer'
+import ShoppingCart from '../Cart'
+import { AppState } from '../../type';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
+      display: 'flex'
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -27,15 +35,80 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
+    hide: {
+      display: 'none',
+    },
+    appBar: {
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      width: `calc(100% - ${320}px)`,
+      marginLeft: 320,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerPaper: {
+      width: 320,
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(0, 1),
+      ...theme.mixins.toolbar,
+      justifyContent: 'flex-end',
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      marginLeft: -320,
+    },
+    contentShift: {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    },
   }),
 );
 
 const AppBarComponent = () => {
-  const classes = useStyles();
+  const classes = useStyles()
   const history = useHistory()
-  const isLogedIn: any = localStorage.getItem('user')
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const theme = useTheme()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const open = Boolean(anchorEl)
+
+  //const shoppingCart = useSelector((state: AppState) => state.cart.productCart)
+
+  // let quantity
+  // if(!_isEmpty(cart)) {
+  //   quantity = cart.reduce((acc, q) => acc + q, 0)
+  // } else {
+  //   quantity = shoppingCart.length
+  // }
+
+  const quantity = useSelector((state: AppState) => state.cart.productCart)
+
+  const isLogedIn = localStorage.getItem('user')
+
+  const handleDrawerOpen = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpenDrawer(false);
+  };
 
   const goToSignIn = () => {
     history.push('/user/signIn')
@@ -52,23 +125,47 @@ const AppBarComponent = () => {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const goToCart = () => {
+    history.push('/cart')
+  }
   
   return (
     <div className={classes.root}>
-      <AppBar position="static" color='transparent'>
+      <CssBaseline />
+      <AppBar 
+        position="static" 
+        color='transparent'
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: openDrawer,
+        })}
+      >
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
+          {isLogedIn ? (
+          <IconButton
+            edge="start"
+            onClick={handleDrawerOpen}
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="open drawer"
+          >
+            <MenuIcon/>
           </IconButton>
+          ) : null }
           <Typography variant="h4" className={classes.title}>
             <Link href="/" style={{textDecoration:'none', color:'black'}}>
               FOREO
             </Link>
           </Typography>
-          <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
-          <Badge badgeContent={4} color="secondary">
-            <ShoppingCartIcon />
-          </Badge> 
+          <IconButton 
+            onClick={goToCart}
+            edge="end" 
+            className={classes.menuButton} 
+            color="inherit" 
+            aria-label="menu">
+            <Badge badgeContent={quantity.length} color="secondary">
+              <ShoppingCartIcon />
+            </Badge> 
           </IconButton>
           {isLogedIn ? (
             <Typography variant="subtitle2">
@@ -107,6 +204,21 @@ const AppBarComponent = () => {
           )}
         </Toolbar>
       </AppBar>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={openDrawer}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}> 
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+        <DrawerComponent/>
+      </Drawer>
   </div>
   )
 }

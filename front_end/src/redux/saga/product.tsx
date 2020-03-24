@@ -10,12 +10,12 @@ import {
 
 function* saveStateWhenAddingProduct() {
   const state = yield select()
-  yield localStorage.setItem('cart', JSON.stringify(state.cart))
+  yield localStorage.setItem('cart', JSON.stringify(state.cart.productCart))
 }
 
 function* saveStateWhenRemovingProduct() {
   const state = yield select()
-  yield localStorage.setItem('cart', JSON.stringify(state.cart))
+  yield localStorage.setItem('cart', JSON.stringify(state.cart.productCart))
 }
 
 function* saveStateWhenSendingData() {

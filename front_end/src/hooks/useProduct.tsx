@@ -10,6 +10,17 @@ const useProduct = (id?: string) => {
   const [productList, setProductList] = useState<Product[]>([])
   const [error, setError] = useState(null)
   const [details, setDetails] = useState()
+  const [cart, setCart] = useState([])
+
+  const userId = localStorage.getItem('userId')
+
+  const token = localStorage.getItem('id_token')
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
 
   useEffect(() => {
     const fetchData = async() => {
@@ -18,7 +29,7 @@ const useProduct = (id?: string) => {
         setProductList(res.data)
       } catch(err) {
         setError(err)
-        console.log(error)
+        console.log(err)
       }
     };
     fetchData()
@@ -32,15 +43,28 @@ const useProduct = (id?: string) => {
         const res = await axios.get(`http://localhost:3000/api/v1/products/${id}`)
         setDetails(res.data)
       } catch(err) {
-        setError(err)
-        console.log(error)
+        console.log(err)
       }
     };
     getDetails()
-  }, [])
+  }, [id])
+
+  // useEffect(() => {
+  //   const getProductsInCart = async() => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:3000/api/v1/users/cart/${userId}`, 
+  //       config
+  //       )
+  //       setCart(res.data)
+  //     } catch(err) {
+  //       console.log(err)
+  //     }
+  //   };
+  //   getProductsInCart()
+  // }, [])
 
 
-  return {productList, details}
+  return { productList, details }
 }
 
 export default useProduct

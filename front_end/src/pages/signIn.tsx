@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState} from 'react';
+import axios from 'axios';
+import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -53,6 +55,43 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SignIn() {
   const classes = useStyles();
+  const history = useHistory()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSignin = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try{
+      const res = await axios.post('http://localhost:3000/api/v1/users/signIn', {
+        username: username,
+        password: password,
+    })
+
+    console.log(res.data)
+    await localStorage.setItem('id_token', res.data.token)
+
+    await localStorage.setItem('user', res.data.user.username)
+
+    await localStorage.setItem('userId', res.data.user._id)
+
+    if(res.data.user) {
+      return (
+        history.push('/')
+      )
+    } 
+    } catch(error) {
+      console.log(error.response)
+      alert('Username or password incorrect')
+    }
+  }
+
+  const getUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value)
+  }
+
+  const getPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+  }
 
   return (
     <>
@@ -66,19 +105,21 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSignin}>
             <TextField
+              onChange={getUsername}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
+              onChange={getPassword}
               variant="outlined"
               margin="normal"
               required
@@ -114,8 +155,10 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
-            <GoogleSignIn />
           </form>
+        </div>
+        <div style={{textAlign: 'center', marginTop: '10px'}}> 
+          <GoogleSignIn />
         </div>
         <Box mt={8}>
           <Copyright />

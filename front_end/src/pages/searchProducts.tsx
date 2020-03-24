@@ -5,18 +5,25 @@ import ProductList from '../components/ProductList'
 import useProduct from '../hooks/useProduct';
 import SearchBar from '../components/Search'
 import axios from 'axios';
+import _isEmpty from 'lodash/isEmpty'
 
 import { Product } from '../type';
 
 const SearchProducts = () => {
   const [input, setInput] = useState('')
   const [filterProducts, setFilterProducts] = useState<Product[]>([])
-  const {productList} = useProduct()
+  const {productList} = useProduct(input)
 
-  const search = async() => {
-    const res = await axios.get(`http://localhost:3000/api/v1/products/?search=${input}`)
-      setFilterProducts(res.data)
+  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) : void=> {
+    setInput(event.target.value)
   }
+
+  const handleSearch = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const res = await axios.get(`http://localhost:3000/api/v1/products/?search=${input}`)
+    setFilterProducts(res.data)
+    console.log(filterProducts)
+  } 
 
   const localProducts = localStorage.getItem('Products')
   const localProductList: Product[] = JSON.parse(localProducts || '')
@@ -25,23 +32,20 @@ const SearchProducts = () => {
   if(localProductList) {
     list = localProductList
   } else list = productList
-
-  const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) : void => {
-    setInput(event.target.value)}
-    search()
   
   return(
     <>
       <AppBarComponent /> 
-      <div style={{backgroundColor: '#ffc0cb63'}}>
+      <div style={{backgroundColor: 'rgba(255, 192, 203, 0.24)'}}>
         <SearchBar 
           input={input}
-          handlerSearch={searchHandler}
+          inputHandler={inputHandler}
+          handleSearch={handleSearch}
         />
         <ProductList 
-          products={filterProducts? filterProducts : list}
+          products={!_isEmpty(filterProducts)? filterProducts : list}
         />
-      </div>
+      </div>  
     </>
   )
 }

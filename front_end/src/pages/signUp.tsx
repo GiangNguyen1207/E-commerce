@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, Redirect } from 'react-router';
+import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -61,8 +61,9 @@ export default function SignUp() {
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
 
-  const postSignUp = async() => {
-    try  {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
       const res = await axios.post('http://localhost:3000/api/v1/users/signUp', {
       firstName: firstName,
       lastName: lastName,
@@ -70,14 +71,14 @@ export default function SignUp() {
       email: email,
       password: password,
     })
-    
+
     if(res.data.message === 'Success') {
       return (
         history.push('/user/signIn')
       )
-     }
+    } 
     } catch(error) {
-      window.alert('Username or email is already registered. Please sign in or choose another username and email')
+        alert('Username or email is already registered. Please sign in or choose another username and email')
     }
   }
 
@@ -113,7 +114,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-         
+          <form onSubmit={handleSubmit}> 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -189,7 +190,6 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={postSignUp}
             >
               Sign Up
             </Button>
@@ -200,7 +200,7 @@ export default function SignUp() {
                 </Link>
               </Grid>
             </Grid>
-          
+          </form>
         </div>
         <Box mt={5}>
           <Copyright />

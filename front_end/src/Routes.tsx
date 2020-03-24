@@ -6,6 +6,7 @@ import SearchProducts from './pages/searchProducts';
 import ProductDetails from './pages/productDetails'
 import SignIn from './pages/signIn'
 import SignUp from './pages/signUp'
+import ShoppingCart from './pages/shoppingCart'
 
 const Routes = () => (
   <Switch>
@@ -37,6 +38,12 @@ const Routes = () => (
       exact
       path='/user/signUp'
       component={ SignUp }
+    />
+
+    <Route
+      exact
+      path='/cart'
+      component={ ShoppingCart }
     />
     
   </Switch>

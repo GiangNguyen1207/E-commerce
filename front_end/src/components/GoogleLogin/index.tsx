@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import GoogleLogin from 'react-google-login';
-import { Redirect, useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 
 const GoogleSignin= () => {
   const history = useHistory()
@@ -13,6 +13,8 @@ const GoogleSignin= () => {
     await localStorage.setItem('id_token', res.data.token)
 
     await localStorage.setItem('user', res.data.username)
+
+    await localStorage.setItem('userId', res.data._id)
   
     if(res.data) {
       history.push('/')

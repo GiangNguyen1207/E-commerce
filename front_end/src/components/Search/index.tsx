@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -7,7 +9,8 @@ import './search.css'
 
 type Props = {
   input: string,
-  handlerSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
+  inputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  handleSearch: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,25 +60,30 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SearchBar = ({ input, handlerSearch }: Props) => {
+const SearchBar = ({ input, inputHandler, handleSearch }: Props) => {
   const classes = useStyles()
+
   return(
     <div className='search'>
       <div className={classes.search}>
         <div className={classes.searchIcon}>
-          <SearchIcon />
+          <Button >
+            <SearchIcon />
+          </Button> 
         </div>
-        <InputBase
-          style={{border:'1px solid #000000', marginLeft: '25px', width: '50%'}}
-          placeholder="Search…"
-          value={input}
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ 'aria-label': 'search' }}
-          onChange={handlerSearch}
-        />
+        <form onSubmit={handleSearch}>
+          <InputBase
+            style={{border:'1px solid #000000', marginLeft: '25px', width: '50%'}}
+            placeholder="Search…"
+            value={input}
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={inputHandler} 
+          />
+        </form>
       </div>
     </div>
   )

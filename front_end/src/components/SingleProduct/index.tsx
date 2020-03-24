@@ -12,7 +12,6 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import axios from 'axios'
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 
 import { Product } from '../../type';
 import { addProductToCart } from '../../redux/actions/cart'
@@ -46,14 +45,25 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const localToken = localStorage.getItem('id_token')
+  const userId = localStorage.getItem('userId')
+
+  const token = localStorage.getItem('id_token')
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
 
   const addToCart = async() => {
-    const res = await axios.post('http://localhost:3000/api/v1/cart/', {
-      localToken,
-      name,
-      variant
-    })
+    const res = await axios.post(`http://localhost:3000/api/v1/users/cart/${userId}`, 
+    {
+      serId: userId,
+      name: name,
+      productId: _id
+    },
+    config
+    )
   }
 
   const handleAdd = () => {
@@ -72,15 +82,17 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
   return (
     <>
       <Grid item xs={12} sm={6} md={4}>
-        <Card className={classes.root} onClick={()=>takeProductId(_id)}>
-          <CardHeader
-            title={name}
-          />
-          <CardMedia
-            className={classes.media}
-            image={image} 
-            title={name}
-          />  
+        <Card className={classes.root}>
+          <div onClick={()=>takeProductId(_id)}>
+            <CardHeader
+              title={name}
+            />
+            <CardMedia
+              className={classes.media}
+              image={image} 
+              title={name}
+            />  
+          </div>
           <CardContent>
             <Typography variant='h6'>
               <b style={{marginLeft:'40%', fontSize: '26px'}}>€ {price}</b>
@@ -97,7 +109,10 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
             <IconButton aria-label="add to favorites" style={{marginLeft: '2%'}}>
               <FavoriteIcon />
             </IconButton>
-            <IconButton aria-label="add to cart" style={{marginLeft: '65%'}} onClick={handleAdd}>
+            <IconButton 
+              aria-label="add to cart" 
+              style={{marginLeft: '65%'}} 
+              onClick={handleAdd}>
               <AddShoppingCartIcon />
             </IconButton>
           </CardActions>
