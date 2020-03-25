@@ -13,9 +13,9 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import axios from 'axios'
 
 import AppBarComponent from '../components/AppBar'
+import { useUserService } from '../services/userService';
 
 function Copyright() {
   return (
@@ -61,25 +61,11 @@ export default function SignUp() {
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    try {
-      const res = await axios.post('http://localhost:3000/api/v1/users/signUp', {
-      firstName: firstName,
-      lastName: lastName,
-      username: username,
-      email: email,
-      password: password,
-    })
+  const { signUp } = useUserService(history)
 
-    if(res.data.message === 'Success') {
-      return (
-        history.push('/user/signIn')
-      )
-    } 
-    } catch(error) {
-        alert('Username or email is already registered. Please sign in or choose another username and email')
-    }
+  const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    signUp(firstName, lastName, username, email, password)
   }
 
   const getFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +100,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form onSubmit={handleSubmit}> 
+          <form onSubmit={handleSignUp}> 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField

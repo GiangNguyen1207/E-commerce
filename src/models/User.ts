@@ -7,10 +7,11 @@ type PasswordToken = {
   timeStamp: number,
 }
 
-type Cart = [{
-  name: string,
-  variant: string
-}]
+type CartType = {
+  product: object,
+  productId: string,
+  quantity: number
+}
 
 export type UserDocument = Document & {
   firstName: string,
@@ -20,7 +21,7 @@ export type UserDocument = Document & {
   email: string,
   password: string,
   forgotPassword: PasswordToken,
-  cart: Cart
+  cart: CartType[]
 }
 
 const userSchema = new mongoose.Schema({
@@ -52,8 +53,9 @@ const userSchema = new mongoose.Schema({
     timeStamp: Number,
   }, 
   cart: [{
-    name: String,
-    variant: String
+    product: Object,
+    productId: String,
+    quantity: Number
   }]
 })
 

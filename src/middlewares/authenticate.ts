@@ -11,11 +11,10 @@ export default async function (
   next: NextFunction
 ) {
   try {
-    console.log('hey')
+    //const token = (req.headers['authorization'] || '').split(' ')[1]
     const token = (req.headers['authorization'] || '').split('Bearer ')[1]
     const decoded = jwt.verify(token, JWT_SECRET) as any
-    const user = await User.findOne({email: decoded.email})
-      .exec()
+    const user = await User.findOne({email: decoded.email}).exec()
     req.user = user as any
     next()
   } catch(error) {
@@ -23,4 +22,3 @@ export default async function (
     return next(new ForbiddenError())
   }
 }
-

@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import axios from 'axios';
 import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,6 +16,7 @@ import Container from '@material-ui/core/Container';
 
 import AppBarComponent from '../components/AppBar'
 import GoogleSignIn from '../components/GoogleLogin'
+import { useUserService } from '../services/userService';
 
 function Copyright() {
   return (
@@ -59,30 +59,11 @@ export default function SignIn() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const { logIn } = useUserService(history)
+
   const handleSignin = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    try{
-      const res = await axios.post('http://localhost:3000/api/v1/users/signIn', {
-        username: username,
-        password: password,
-    })
-
-    console.log(res.data)
-    await localStorage.setItem('id_token', res.data.token)
-
-    await localStorage.setItem('user', res.data.user.username)
-
-    await localStorage.setItem('userId', res.data.user._id)
-
-    if(res.data.user) {
-      return (
-        history.push('/')
-      )
-    } 
-    } catch(error) {
-      console.log(error.response)
-      alert('Username or password incorrect')
-    }
+    logIn(username, password)
   }
 
   const getUsername = (e: React.ChangeEvent<HTMLInputElement>) => {

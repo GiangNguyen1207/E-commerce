@@ -1,9 +1,7 @@
-export const ADD_PRODUCT = 'ADD_PRODUCT';
-export const INCREASE_PRODUCT = 'INCREASE_PRODUCT';
-export const DECREASE_PRODUCT = 'DECREASE_PRODUCT'
-export const REMOVE_PRODUCT = 'REMOVE_PRODUCT'
-export const NO_PRODUCT = 'NO_PRODUCT'
+export const SEND_CART_TO_STORE = 'SEND_CART_TO_STORE';
 export const SEND_DATA = 'SEND_DATA'
+export const SEND_SINGLE_PRODUCT = 'SEND_SINGLE_PRODUCT'
+export const SEND_FILTERED_PRODUCTS = 'SEND_FILTERED_PRODUCTS'
 
 export type Product = {
   _id: string,
@@ -15,9 +13,21 @@ export type Product = {
 }
 
 export type Details = {
+  _id: string,
   name: string,
   image: string,
   price: number,
+  category: string,
+  variant: string,
+  shortDescription?: string
+  longDescription?: string,
+}
+
+export type Cart = {
+  _id: string,
+  product: Product,
+  productId: string,
+  quantity: number
 }
 
 export type SendDataToStore = {
@@ -27,59 +37,43 @@ export type SendDataToStore = {
   }
 }
 
-export type AddProduct = {
-  type: typeof ADD_PRODUCT
+export type SendSingleProduct = {
+  type: typeof SEND_SINGLE_PRODUCT
   payload: {
     product: Product
   }
 }
 
-export type IncreaseProduct = {
-  type: typeof INCREASE_PRODUCT
+export type SendFilteredProducts = {
+  type: typeof SEND_FILTERED_PRODUCTS
   payload: {
-    quantity: number
+    filteredProducts: Product[]
   }
 }
 
-export type DecreaseProduct = {
-  type: typeof DECREASE_PRODUCT
+export type SendCartToSotre = {
+  type: typeof SEND_CART_TO_STORE
   payload: {
-    quantity: number
-  }
-}
-
-export type RemoveProduct = {
-  type: typeof REMOVE_PRODUCT
-  payload: {
-    product: Product
-  }
-}
-
-export type ZeroProduct = {
-  type: typeof NO_PRODUCT
-  payload: {
-    deleted: number
+    cart: Cart[]
   }
 }
 
 export type ProductActions = 
   | SendDataToStore
+  | SendSingleProduct
+  | SendFilteredProducts
 
 export type CartActions = 
-  | AddProduct
-  | IncreaseProduct
-  | DecreaseProduct
-  | RemoveProduct
-  | ZeroProduct
+  | SendCartToSotre
 
 export type ProductState = {
-  products: Product[]
+  products: Product[],
+  singleProduct: Details,
+  filteredProducts: Product[]
 }
 
 export type CartState = {
-  productCart: Product[],
-  quantity: number,
-  deleted: number,
+  productsInCart: Cart[],
 } 
 
 export type AppState = {

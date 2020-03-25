@@ -8,10 +8,26 @@ import IconButton from '@material-ui/core/IconButton';
 
 type Props = {
   name: string,
-  image: string
+  image: string,
+  productId: string,
+  quantity: number,
+  removeProduct: (userId: string | null, productId: string) => void,
+  increaseQuantity: (userId: string | null, productId: string) => void,
+  decreaseQuantity: (userId: string | null, productId: string) => void
 }
 
-const OneProductInCart = ({ name, image }: Props) => {
+const OneProductInCart = ({ 
+  name, 
+  image, 
+  productId, 
+  quantity, 
+  removeProduct,
+  increaseQuantity,
+  decreaseQuantity
+  }: Props) => {
+
+  const userId = localStorage.getItem('userId')
+
   return (
     <>
       <Grid item xs={12} sm={5} >
@@ -21,16 +37,18 @@ const OneProductInCart = ({ name, image }: Props) => {
         <Typography variant="h6" style={{margin: '15% 0 5% 0'}}>
           <b>{name}</b>
         </Typography>
-        <IconButton>
+        <IconButton onClick={()=>decreaseQuantity(userId, productId)}>
           <RemoveIcon />
         </IconButton>
-          <span style={{fontSize: '18px'}}>2</span>
-        <IconButton>
+          <span style={{fontSize: '18px'}}>{quantity}</span>
+        <IconButton onClick={()=>increaseQuantity(userId, productId)}>
           <AddIcon />
         </IconButton>
       </Grid>
       <Grid item xs={12} sm={2}>
-        <IconButton style={{margin: '40% 0 5% 0'}} >
+        <IconButton 
+          onClick={()=>removeProduct(userId, productId)}
+          style={{margin: '40% 0 5% 0'}} >
           <DeleteIcon style={{fontSize: 40, color:'#d671ad'}}/>
         </IconButton>
       </Grid>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,12 +9,11 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import axios from 'axios'
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { Product } from '../../type';
-import { addProductToCart } from '../../redux/actions/cart'
+import { useUserService } from '../../services/userService'
 
 type Props = {
   _id: string
@@ -42,29 +41,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SingleProduct = ({ _id, name, image, category, variant, price, takeProductId}: Props) => {
-  const classes = useStyles()
   const dispatch = useDispatch()
+  const classes = useStyles()
+  const { addToCart } = useUserService('', dispatch)
 
   const userId = localStorage.getItem('userId')
-
-  const token = localStorage.getItem('id_token')
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-
-  const addToCart = async() => {
-    const res = await axios.post(`http://localhost:3000/api/v1/users/cart/${userId}`, 
-    {
-      serId: userId,
-      name: name,
-      productId: _id
-    },
-    config
-    )
-  }
 
   const handleAdd = () => {
     const product: Product = {
@@ -75,8 +56,7 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
       variant: variant,
       price: price,
     }
-    dispatch(addProductToCart(product))
-    addToCart()
+    addToCart(userId, product, _id)
   }
 
   return (

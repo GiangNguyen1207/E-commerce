@@ -9,9 +9,12 @@ import {
   validateToken,
   resetPassword,
   changePassword,
-  authenticate,
+  googleLogin,
   addProductToCart,
-  getCart
+  getCart,
+  removeProductInCart,
+  increaseQuantity,
+  decreaseQuantity
 } from '../controllers/user'
 
 
@@ -23,12 +26,16 @@ router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword', validateToken)
 router.put('/resetPassword', resetPassword)
 router.put('/changePassword/:userId', changePassword)
-router.put('/:userId', updateUserProfile)
 router.post('/google-authenticate', 
   passport.authenticate('google-id-token'),
-  authenticate
+  googleLogin
 )
 router.post('/cart/:userId', addProductToCart)
 router.get('/cart/:userId', getCart)
+router.delete('/cart/:userId', removeProductInCart)
+router.put('/cart/increase/:userId', increaseQuantity)
+router.put('/cart/decrease/:userId', decreaseQuantity)
+router.put('/:userId', updateUserProfile)
+
 
 export default router

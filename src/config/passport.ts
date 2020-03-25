@@ -2,10 +2,7 @@ import passport from 'passport'
 import passportLocal from 'passport-local'
 import passportFacebook from 'passport-facebook'
 
-import { Request, Response, NextFunction } from 'express'
 import User from '../models/User';
-import { catchClause } from '@babel/types';
-import { doesNotReject } from 'assert';
 
 const LocalStrategy = passportLocal.Strategy
 const FacebookStrategy = passportFacebook.Strategy
@@ -35,7 +32,10 @@ passport.use(
         }
         user = await User.create({
           email: payload.email,
-          username: payload.name
+          username: payload.name,
+          firstName: payload.given_name,
+          lastName: payload.family_name,
+          password: payload.name
         })
         done(null, user)
       } catch(error) {

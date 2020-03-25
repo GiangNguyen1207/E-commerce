@@ -1,58 +1,14 @@
 import {
-  Product,
-  ADD_PRODUCT,
-  INCREASE_PRODUCT,
-  DECREASE_PRODUCT,
-  REMOVE_PRODUCT,
-  NO_PRODUCT,
-  AddProduct,
-  IncreaseProduct,
-  RemoveProduct,
-  DecreaseProduct,
-  ZeroProduct,
+  Cart,
+  SEND_CART_TO_STORE,
+  SendCartToSotre,
 } from '../../type'
 
-export function addProductToCart(product: Product): AddProduct {
+export function sendCartToStore(cart: Cart[]): SendCartToSotre {
   return {
-    type: ADD_PRODUCT,
+    type: SEND_CART_TO_STORE,
     payload: {
-      product,
-    }
-  }
-}
-
-export function increaseProduct(quantity: number): IncreaseProduct {
-  return {
-    type: INCREASE_PRODUCT,
-    payload: {
-      quantity,
-    }
-  }
-}
-
-export function decreaseProduct(quantity: number): DecreaseProduct {
-  return {
-    type: DECREASE_PRODUCT,
-    payload: {
-      quantity,
-    }
-  }
-}
-
-export function removeProductFromCart(product: Product): RemoveProduct {
-  return {
-    type: REMOVE_PRODUCT,
-    payload: {
-      product,
-    }
-  }
-}
-
-export function setQuantityToZero(deleted: number): ZeroProduct {
-  return {
-    type: NO_PRODUCT,
-    payload: {
-      deleted
+      cart,
     }
   }
 }

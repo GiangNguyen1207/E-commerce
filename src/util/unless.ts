@@ -7,7 +7,6 @@ const unless = (paths: Path[], middleware: RequestHandler): RequestHandler => {
     let cut = ''
     if(req.url.includes('v1/products')) {
       cut = req.url.substring(0, req.url.indexOf('products/') + 9)
-      console.log(req.url)
     } else cut = req.url.split('?')[0]
 
     const regexPath = paths.map(p => pathToRegexp(p))

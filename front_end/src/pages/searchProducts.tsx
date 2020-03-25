@@ -1,18 +1,25 @@
-import React, {useState} from 'react'
-
-import AppBarComponent from '../components/AppBar'
-import ProductList from '../components/ProductList'
-import useProduct from '../hooks/useProduct';
-import SearchBar from '../components/Search'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import _isEmpty from 'lodash/isEmpty'
 
-import { Product } from '../type';
+import AppBarComponent from '../components/AppBar'
+import ProductList from '../components/ProductList'
+import SearchBar from '../components/Search'
+import { useProductService } from '../services/productService'
+import { Product, AppState } from '../type';
 
 const SearchProducts = () => {
+  const dispatch = useDispatch()
   const [input, setInput] = useState('')
-  const [filterProducts, setFilterProducts] = useState<Product[]>([])
-  const {productList} = useProduct(input)
+
+  const { fetchProducts, findProducts } = useProductService(dispatch)
+
+  useEffect(() => {
+    fetchProducts()
+  },[])
+
+  const productList = useSelector((state: AppState) => state.product.products)
 
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) : void=> {
     setInput(event.target.value)
@@ -20,10 +27,10 @@ const SearchProducts = () => {
 
   const handleSearch = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const res = await axios.get(`http://localhost:3000/api/v1/products/?search=${input}`)
-    setFilterProducts(res.data)
-    console.log(filterProducts)
+    findProducts(input)
   } 
+
+  const filteredProducts = useSelector((state: AppState) => state.product.filteredProducts)
 
   const localProducts = localStorage.getItem('Products')
   const localProductList: Product[] = JSON.parse(localProducts || '')
@@ -43,7 +50,7 @@ const SearchProducts = () => {
           handleSearch={handleSearch}
         />
         <ProductList 
-          products={!_isEmpty(filterProducts)? filterProducts : list}
+          products={!_isEmpty(filteredProducts)? filteredProducts : list}
         />
       </div>  
     </>

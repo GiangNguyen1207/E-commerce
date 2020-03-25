@@ -46,6 +46,7 @@ mongoose
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use(cors())
 //Authenticate
 app.use(
   '/api', 
@@ -60,7 +61,7 @@ app.use(
 
 // Express configuration
 app.set('port', process.env.PORT || 3000)
-app.use(cors())
+
 // Use common 3rd-party middlewares
 app.use(compression())
 app.use(bodyParser.json())

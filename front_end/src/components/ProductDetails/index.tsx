@@ -1,45 +1,33 @@
-import React from 'react'
-import axios from 'axios'
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react'
 import Grid from '@material-ui/core/Grid';
+import { useParams } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import banner from '../../sources/jbt3.png'
-import { useParams } from 'react-router';
-import useProduct from '../../hooks/useProduct';
-import { Product } from '../../type'
-import { addProductToCart } from '../../redux/actions/cart'
+// import useProduct from '../../hooks/useProduct';
+import { Details, AppState } from '../../type'
+import { useProductService } from '../../services/productService'
+import { useUserService } from '../../services/userService'
 
 const ProductDetails = () => {
   const dispatch = useDispatch()
-  const {productId} = useParams()
-  console.log(productId)
-  const {details} : any = useProduct(productId)
+  const { productId }  = useParams()
+  const { addToCart } = useUserService('', dispatch)
 
   const userId = localStorage.getItem('userId')
 
-  const token = localStorage.getItem('id_token')
+  const { fetchProductById } = useProductService(dispatch)
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
+  useEffect(() => {
+   fetchProductById(productId)
+  },[])
 
-  const addToCart = async() => {
-    const res = await axios.post(`http://localhost:3000/api/v1/users/cart/${userId}`, 
-    {
-      userId: userId,
-      name: details.name,
-      productId: productId
-    },
-    config,
-    )
-  }
+  const details = useSelector((state: AppState) => state.product.singleProduct)
 
   const handleAdd = () => {
-    const product: Product = {
+    const product: Details = {
       _id: productId || '',
       name: details.name,
       image: details.image,
@@ -47,12 +35,11 @@ const ProductDetails = () => {
       variant: details.variant,
       price: details.price,
     }
-    dispatch(addProductToCart(product))
-    addToCart()
+    addToCart(userId, product, productId)
   }
 
-  return(
-    <>
+   return(
+     <>
       <img src={banner} width='100%' alt='Luna 3'/>
       <Grid
         container
@@ -104,8 +91,8 @@ const ProductDetails = () => {
         </> 
       ) : <div>Loading</div>
       }
-      </Grid>
-    </>
+      </Grid> 
+     </>
   )
 }
 

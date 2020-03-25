@@ -9,12 +9,10 @@ import User from '../models/User';
 import { BadRequestError, InternalServerError, NotFoundError } from '../helpers/apiError';
 import { JWT_SECRET } from '../util/secrets';
 
-var jwtDecode = require('jwt-decode');
-
 export const createUser = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const {firstName, lastName, username, email} = req.body
@@ -187,17 +185,17 @@ export const changePassword = async (
   }
 }
 
-export const authenticate = async (
+export const googleLogin = async (
   req: Request, 
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const {email, userId, username} = req.user as any
+    const {email, _id, username} = req.user as any
     const token = await jwt.sign(
       {
         email,
-        userId,
+        _id,
         username
       }, 
       JWT_SECRET,
@@ -205,7 +203,7 @@ export const authenticate = async (
         expiresIn: '1h'
       }
       )
-    res.json({token, email, userId, username})
+    res.json({token, email, _id, username})
   } catch(error) {
     return next(new InternalServerError())
   }
@@ -217,8 +215,8 @@ export const addProductToCart = async (
   next: NextFunction
 ) => {
   try {
-    const {userId, product, variant} = req.body
-    const cart = await UserService.addProductToCart(userId, product, variant)
+    const {userId, product, productId} = req.body
+    const cart = await UserService.addProductToCart(userId, product, productId)
     res.json(cart)
   } catch(error) {
       return next(new NotFoundError('User not found', error))
@@ -236,6 +234,49 @@ export const getCart = async (
     res.json(cart)
   } catch(error) {
       return next(new NotFoundError('User not found', error))
+  }
+}
+
+export const removeProductInCart = async (
+  req: Request,
+  res: Response, 
+  next: NextFunction
+) => {
+  try {
+    const {userId, productId} = req.body
+    const cart = await UserService.removeProductInCart(userId, productId)
+    res.json(cart)
+  } catch(error) {
+    return next(new NotFoundError('User not found', error))
+  }
+}
+
+export const increaseQuantity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {userId, productId} = req.body
+    console.log(req.body)
+    const cart = await UserService.increaseQuantity(userId, productId)
+    res.json(cart)
+  } catch(error) {
+    return next(new NotFoundError('User not found', error))
+  }
+}
+
+export const decreaseQuantity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {userId, productId} = req.body
+    const cart = await UserService.decreaseQuantity(userId, productId)
+    res.json(cart)
+  } catch(error) {
+    return next(new NotFoundError('User not found', error))
   }
 }
 

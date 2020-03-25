@@ -1,7 +1,7 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,7 +13,6 @@ import Menu from '@material-ui/core/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
-import _isEmpty from 'lodash'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,8 +20,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import DrawerComponent from '../Drawer'
-import ShoppingCart from '../Cart'
 import { AppState } from '../../type';
+import { useUserService } from '../../services/userService';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,16 +88,9 @@ const AppBarComponent = () => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const open = Boolean(anchorEl)
 
-  //const shoppingCart = useSelector((state: AppState) => state.cart.productCart)
+  const shoppingCart = useSelector((state: AppState) => state.cart.productsInCart)
 
-  // let quantity
-  // if(!_isEmpty(cart)) {
-  //   quantity = cart.reduce((acc, q) => acc + q, 0)
-  // } else {
-  //   quantity = shoppingCart.length
-  // }
-
-  const quantity = useSelector((state: AppState) => state.cart.productCart)
+  const total = shoppingCart.reduce((acc, q) => acc + q.quantity, 0)
 
   const isLogedIn = localStorage.getItem('user')
 
@@ -163,7 +155,7 @@ const AppBarComponent = () => {
             className={classes.menuButton} 
             color="inherit" 
             aria-label="menu">
-            <Badge badgeContent={quantity.length} color="secondary">
+            <Badge badgeContent={total} color="secondary">
               <ShoppingCartIcon />
             </Badge> 
           </IconButton>

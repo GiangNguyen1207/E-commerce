@@ -7,13 +7,22 @@ import { AppState } from '../type';
 
 const initState: AppState = {
   product: {
-    products: []
+    products: [],
+    singleProduct: {
+      _id: '',
+      name: '',
+      image: '',
+      category: '',
+      variant: '',
+      shortDescription: '',
+      longDescription: '',
+      price: 0,
+    },
+    filteredProducts: []
   }, 
   
   cart: {
-    productCart: [],
-    quantity: 1,
-    deleted: 1
+    productsInCart: [],
   }
 };
 

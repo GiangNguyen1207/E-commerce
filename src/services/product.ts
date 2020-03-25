@@ -11,9 +11,9 @@ function findAll(searchTerm?: string): Promise<ProductDocument[]> {
       if(!_isEmpty(searchTerm)) {
       return Product.find({
         $or: [
-          {name: {$regex: searchTerm}},
+          {name: {$regex: searchTerm, $options:'i'}},
           {category: {$regex: searchTerm}},
-          {variant: {$in: searchTerm}}
+          {variant: {$regex: searchTerm}}
         ]
       })
       .exec()
@@ -85,44 +85,6 @@ function updateProduct(
 function deleteProduct(productId: string): Promise<ProductDocument | null> {
   return Product.findByIdAndDelete(productId).exec()
 }
-/*
-function update(
-  movieId: string,
-  update: Partial<MovieDocument>
-): Promise<MovieDocument> {
-  return Movie.findById(movieId)
-    .exec()
-    .then(movie => {
-      if (!movie) {
-        throw new Error(`Movie ${movieId} not found`)
-      }
-
-      if (update.name) {
-        movie.name = update.name
-      }
-      if (update.publishedYear) {
-        movie.publishedYear = update.publishedYear
-      }
-      if (update.duration) {
-        movie.duration = update.duration
-      }
-
-      // Add more fields here if needed
-      return movie.save()
-    })
-}
-
-function deleteMovie(movieId: string): Promise<MovieDocument | null> {
-  return Movie.findByIdAndDelete(movieId).exec()
-}
-
-export default {
-  create,
-  findById,
-  findAll,
-  update,
-  deleteMovie,
-}*/
 
 export default { 
   findById,

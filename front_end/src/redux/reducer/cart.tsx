@@ -1,55 +1,20 @@
 import {
   CartState,
   CartActions, 
-  ADD_PRODUCT,
-  INCREASE_PRODUCT,
-  DECREASE_PRODUCT,
-  REMOVE_PRODUCT,
-  NO_PRODUCT
+  SEND_CART_TO_STORE,
 } from '../../type'
 
 const initialState: CartState = {
-  productCart: [],
-  quantity: 1,
-  deleted: 1,
+  productsInCart: [],
 }
-
 
 const CartReducer = (state = initialState, action: CartActions): CartState => {
   switch(action.type) {
-    case ADD_PRODUCT: 
-      const addedProduct = action.payload.product
-    return {
-      ...state,
-      productCart: [...state.productCart, addedProduct]
-    }
-
-    case INCREASE_PRODUCT: 
-      const increaseQuantity = action.payload.quantity
-    return {
-      ...state,
-      quantity: state.quantity + increaseQuantity
-    }
-
-    case DECREASE_PRODUCT: 
-      const decreaseQuantity = action.payload.quantity
-    return {
-      ...state,
-      quantity: state.quantity - decreaseQuantity
-    }
-
-    case REMOVE_PRODUCT: 
-      const removedProduct = action.payload.product
-    return {
-      ...state,
-      productCart: state.productCart.filter(p => p.name !== removedProduct.name)
-    }
-
-    // case NO_PRODUCT: 
-    // return {
-    //   ...state,
-    //   deleted: action.payload.deleted
-    // }
+    case SEND_CART_TO_STORE: 
+      return {
+        ...state,
+        productsInCart: action.payload.cart
+      }
 
     default:
     return state

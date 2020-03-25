@@ -110,8 +110,8 @@ function changePassword(
 
 function addProductToCart (
   userId: string,
-  name: string,
-  variant: string 
+  product: object,
+  productId: string,
 ) : Promise<UserDocument> {
   return User.findById(userId)
     .exec()
@@ -119,7 +119,12 @@ function addProductToCart (
       if(!user) {
         throw new Error('User not found')
       }
-        user.cart.push({name, variant})
+      const existing = user.cart.find(i => i.productId === productId)
+      if(existing) {
+        existing.quantity += 1
+      } else {
+        user.cart.push({product, productId, quantity:1})
+      }
       return user.save()
     })
 }
@@ -135,6 +140,60 @@ function getCart(userId: string): Promise<UserDocument> {
     })
 }
 
+function removeProductInCart(userId: string, productId: string): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then(user => {
+      if(!user) {
+        throw new Error('User not found')
+      }
+      const existing = user.cart.find(item => item.productId === productId)
+
+      if(existing) {
+        const index = user.cart.indexOf(existing)
+        user.cart.splice(index, 1)
+      }
+      return user.save()
+    })
+}
+
+function increaseQuantity(userId: string, productId: string): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then(user => {
+      if(!user) {
+        throw new Error('User not found')
+      }
+      const existing = user.cart.find(item => item.productId === productId)
+
+      if(existing) {
+        existing.quantity ++
+      }
+      return user.save()
+    })
+}
+
+function decreaseQuantity(userId: string, productId: string): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then(user => {
+      if(!user) {
+        throw new Error('User not found')
+      }
+      const existing = user.cart.find(item => item.productId === productId)
+
+      if(existing) {
+        if(existing.quantity > 1) {
+          existing.quantity --
+        } else {
+          const index = user.cart.indexOf(existing)
+          user.cart.splice(index, 1)
+        }
+      } 
+      return user.save()
+    })
+}
+
 export default {
   createUser,
   signIn,
@@ -144,5 +203,8 @@ export default {
   resetPassword,
   changePassword,
   addProductToCart,
-  getCart
+  getCart,
+  removeProductInCart,
+  increaseQuantity,
+  decreaseQuantity
 }
