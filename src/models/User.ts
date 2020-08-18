@@ -20,8 +20,8 @@ export type UserDocument = Document & {
   key: string;
   email: string;
   password: string;
-  forgotPassword?: PasswordToken;
-  cart?: CartType[];
+  forgotPassword: PasswordToken;
+  cart: CartType[];
 }
 
 const userSchema = new mongoose.Schema({

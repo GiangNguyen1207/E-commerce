@@ -32,8 +32,18 @@ passport.use(
           lastName: payload.family_name,
           password: payload.name,
           key: payload.email,
-          forgotPassword: undefined,
-          cart: undefined,
+          forgotPassword: {
+            token: '',
+            timeOfCreated: 0,
+            timeStamp: 0,
+          },
+          cart: [
+            {
+              product: {},
+              productId: '',
+              quantity: 0,
+            },
+          ],
         })
         done(null, user)
       } catch (error) {
