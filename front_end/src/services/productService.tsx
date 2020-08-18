@@ -12,7 +12,10 @@ export const useProductService: Function = (dispatch: Function) => {
   const fetchProducts = async() => {
     const res = await axios.get('http://localhost:3000/api/v1/products/')
     dispatch(sendData(res.data))
+    
+    if(userId) {
     getCart(userId)
+    }
   }
 
   const fetchProductById = async(
@@ -20,7 +23,10 @@ export const useProductService: Function = (dispatch: Function) => {
     ) => {
     const res = await axios.get(`http://localhost:3000/api/v1/products/${productId}`)
     dispatch(sendSingleProductToStore(res.data))
-    getCart(userId)
+
+    if(userId) {
+      getCart(userId)
+    }
   }
 
   const findProducts = async(
