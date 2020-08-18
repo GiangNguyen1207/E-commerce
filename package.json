@@ -98,9 +98,15 @@
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
+    "babel-eslint": "^9.0.0",
     "chai": "^4.2.0",
     "concurrently": "^5.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^5.16.0",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
     "jest": "^24.9.0",
     "node-sass": "^4.13.1",
     "nodemon": "^1.19.4",
@@ -111,7 +117,7 @@
     "typescript": "^3.8.2"
   },
   "eslintConfig": {
-    "extends": "react-app"   
+    "extends": "react-app"
   },
   "husky": {
     "hooks": {
