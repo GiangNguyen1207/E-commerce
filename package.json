@@ -110,6 +110,9 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.8.2"
   },
+  "eslintConfig": {
+    "extends": "react-app"   
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
