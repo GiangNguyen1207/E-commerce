@@ -1,11 +1,6 @@
 import passport from 'passport'
-import passportLocal from 'passport-local'
-import passportFacebook from 'passport-facebook'
 
-import User from '../models/User';
-
-const LocalStrategy = passportLocal.Strategy
-const FacebookStrategy = passportFacebook.Strategy
+import User from '../models/User'
 
 const GoogleTokenStrategy = require('passport-google-id-token')
 
@@ -14,20 +9,20 @@ passport.serializeUser<any, any>((user, done) => {
 })
 
 passport.deserializeUser<any, any>((id, done) => {
-  User.findById(id)
-    .then(user => done(user))
+  User.findById(id).then((user) => done(user))
 })
 
 passport.use(
   new GoogleTokenStrategy(
     {
-      clientId: '827944169415-416idnak4qdkql3piho5q3a5a9ngb611.apps.googleusercontent.com'
+      clientId:
+        '827944169415-416idnak4qdkql3piho5q3a5a9ngb611.apps.googleusercontent.com',
     },
-    async function(parsedToken: any, googleId: string, done: Function) {
-      const {payload} = parsedToken
+    async function (parsedToken: any, googleId: string, done: Function) {
+      const { payload } = parsedToken
       try {
-        let user = await User.findOne({email: payload.email}).exec()
-        if(user) {
+        let user = await User.findOne({ email: payload.email }).exec()
+        if (user) {
           return done(null, user)
         }
         user = await User.create({
@@ -35,12 +30,15 @@ passport.use(
           username: payload.name,
           firstName: payload.given_name,
           lastName: payload.family_name,
-          password: payload.name
+          password: payload.name,
+          key: payload.email,
+          forgotPassword: undefined,
+          cart: undefined,
         })
         done(null, user)
-      } catch(error) {
+      } catch (error) {
         done(error)
       }
     }
-  ) 
+  )
 )

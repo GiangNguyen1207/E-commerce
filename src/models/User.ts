@@ -2,26 +2,26 @@ import mongoose, { Document } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
 type PasswordToken = {
-  token: string,
-  timeOfCreated: number,
-  timeStamp: number,
+  token: string;
+  timeOfCreated: number;
+  timeStamp: number;
 }
 
 type CartType = {
-  product: object,
-  productId: string,
-  quantity: number
+  product: object;
+  productId: string;
+  quantity: number;
 }
 
 export type UserDocument = Document & {
-  firstName: string,
-  lastName: string,
-  username: string,
-  key: string,
-  email: string,
-  password: string,
-  forgotPassword: PasswordToken,
-  cart: CartType[]
+  firstName: string;
+  lastName: string;
+  username: string;
+  key: string;
+  email: string;
+  password: string;
+  forgotPassword?: PasswordToken;
+  cart?: CartType[];
 }
 
 const userSchema = new mongoose.Schema({
@@ -51,23 +51,25 @@ const userSchema = new mongoose.Schema({
     token: String,
     timeOfCreated: Number,
     timeStamp: Number,
-  }, 
-  cart: [{
-    product: Object,
-    productId: String,
-    quantity: Number
-  }]
+  },
+  cart: [
+    {
+      product: Object,
+      productId: String,
+      quantity: Number,
+    },
+  ],
 })
 
 userSchema.plugin(uniqueValidator)
 
 userSchema.set('toJSON', {
-  transform: (document: Document, returnedObject:any) => {
+  transform: (document: Document, returnedObject: any) => {
     delete returnedObject._v
     delete returnedObject.firstName
     delete returnedObject.lastName
     delete returnedObject.password
-  }
- })
+  },
+})
 
 export default mongoose.model<UserDocument>('User', userSchema)
