@@ -13,7 +13,7 @@ jest.mock(
   () => (req: Request, res: Response, next: NextFunction) => next()
 )
 
-async function createProduct(override?: Partial<ProductDocument>) {
+async function addProduct(override?: Partial<ProductDocument>) {
   let product = {
     name: 'Luna 2',
     category: 'skincare',
@@ -43,12 +43,12 @@ describe('product controller', () => {
   })
 
   it('should create a product', async () => {
-    const res = await createProduct()
+    const res = await addProduct()
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('_id')
   })
 
-  it('should not create a movie with wrong data', async () => {
+  it('should not create a product with wrong data', async () => {
     const res = await request(app)
       .post('/api/v1/products/admin')
       .send({
@@ -58,13 +58,13 @@ describe('product controller', () => {
   })
 
   it('should return a list of products', async () => {
-    const res1 = await createProduct({
+    const res1 = await addProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
       variant: 'pearl pink',
     })
 
-    const res2 = await createProduct({
+    const res2 = await addProduct({
       name: 'Luna 3',
       category: 'skincare',
       variant: 'aqua',
@@ -79,7 +79,7 @@ describe('product controller', () => {
   })
 
   it('should return a list of products using query', async () => {
-    const res1 = await createProduct({
+    const res1 = await addProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
       variant: 'red',
@@ -99,7 +99,7 @@ describe('product controller', () => {
   })
 
   it('should not return a list of products using query', async () => {
-    const res = await createProduct()
+    const res = await addProduct()
     expect(res.status).toBe(200)
 
     const res1 = await request(app)
@@ -109,7 +109,7 @@ describe('product controller', () => {
   })
 
   it('should get back an existing product', async() => {
-    let res = await createProduct()
+    let res = await addProduct()
     expect(res.status).toBe(200)
 
     const productId = res.body._id
@@ -125,14 +125,14 @@ describe('product controller', () => {
   })
 
   it('should update an existing product', async () => {
-    let res = await createProduct()
+    let res = await addProduct()
     expect(res.status).toBe(200)
 
     const productId = res.body._id
     const update = {
       name: 'Luna 3',
       category: 'skin',
-      variant: ['pearl pink', 'blue', 'mint'],
+      variant: 'pearl pink',
     }
 
     res = await request(app)
@@ -141,13 +141,11 @@ describe('product controller', () => {
 
     expect(res.status).toEqual(200)
     expect(res.body.name).toEqual('Luna 3')
-    expect(res.body.variant).toEqual(
-      expect.arrayContaining(['mint'])
-    )
+    expect(res.body.variant).toEqual('pearl pink')
   })
 
   it('should not update an existing product', async () => {
-    let res = await createProduct()
+    let res = await addProduct()
     expect(res.status).toBe(200)
 
     const productId = res.body._id
@@ -165,7 +163,7 @@ describe('product controller', () => {
   })
 
   it('should delete an existing product', async () => {
-    let res = await createProduct()
+    let res = await addProduct()
     expect(res.status).toBe(200)
     const productId = res.body._id
 
@@ -178,5 +176,13 @@ describe('product controller', () => {
     expect(res.status).toBe(404)
   })
 
-})
+  it('should delete a fake product', async () => {
+    let res = await addProduct()
+    expect(res.status).toBe(200)
+    const productId = res.body._id
 
+    res = await request(app)
+      .delete(`/api/v1/products/admin/${fakeId}`)
+    expect(res.status).toEqual(404)
+  })
+})
