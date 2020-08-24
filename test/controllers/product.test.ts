@@ -179,7 +179,6 @@ describe('product controller', () => {
   it('should delete a fake product', async () => {
     let res = await addProduct()
     expect(res.status).toBe(200)
-    const productId = res.body._id
 
     res = await request(app)
       .delete(`/api/v1/products/admin/${fakeId}`)
