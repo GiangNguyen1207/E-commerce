@@ -215,7 +215,7 @@ describe('user service', () => {
     }
     const add = await UserService.addProductToCart(
       user._id, 
-      product.name,
+      product,
       product.variant
       )
     expect(add.cart).toEqual(
@@ -238,7 +238,7 @@ describe('user service', () => {
     }
     return UserService.addProductToCart(
       fakeUserId, 
-      product.name,
+      product,
       product.variant
     ).catch(error => {
       expect(error.message).toMatch('User not found')
@@ -257,17 +257,17 @@ describe('user service', () => {
     }
     await UserService.addProductToCart(
       user._id, 
-      product1.name,
+      product1,
       product1.variant
     )
     await UserService.addProductToCart(
       user._id, 
-      product2.name,
+      product2,
       product2.variant
     )
     const productOfUser = await UserService.getCart(user._id)
     expect(productOfUser.cart.length).toBe(2)
-    expect(productOfUser.cart[0].name).toBe('Luna 2')
+    expect(productOfUser.cart[0].product).toBe('Luna 2')
   })
 
   it('should not get cart', async() => {

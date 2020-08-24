@@ -106,7 +106,11 @@ describe('product service', () => {
     const update = {
       name: 'Luna 3',
       category: 'skin',
-      variant: ['aqua', 'purple', 'pearl pink']
+      variant: 'aqua',
+      image: '',
+      shortDescription: '',
+      longDescription: '',
+      price: 105
     }
     const updated = await ProductService.updateProduct(product._id, update)
     expect(updated).toHaveProperty('_id', product._id)
@@ -121,7 +125,12 @@ describe('product service', () => {
     const product = await createProduct()
     const update = {
       name: 'Luna 3',
-      variant: ['aqua', 'purple', 'pearl pink']
+      category: 'skin',
+      variant: 'aqua',
+      image: '',
+      shortDescription: '',
+      longDescription: '',
+      price: 105
     }
     return ProductService.updateProduct(fakeId, update).catch(error => {
       expect(error.message).toMatch(`Product ${fakeId} not found`)
