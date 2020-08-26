@@ -20,7 +20,7 @@ import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
 import './config/passport'
 import unless from './util/unless'
-import authenticate from './middlewares/authenticate';
+import authenticate from './middlewares/authenticate'
 
 const app = express()
 const mongoUrl = MONGODB_URI
@@ -33,7 +33,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+    'MongoDB connected'
   })
   .catch((err: Error) => {
     console.log(
@@ -49,14 +49,17 @@ app.use(passport.session())
 app.use(cors())
 //Authenticate
 app.use(
-  '/api', 
+  '/api',
   apiContentType,
-  unless([
-    '/v1/users/google-authenticate',
-    '/v1/products/',
-    '/v1/users/signUp',
-    '/v1/users/signIn'
-  ], authenticate)
+  unless(
+    [
+      '/v1/users/google-authenticate',
+      '/v1/products/',
+      '/v1/users/signUp',
+      '/v1/users/signIn',
+    ],
+    authenticate
+  )
 )
 
 // Express configuration

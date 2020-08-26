@@ -2,46 +2,45 @@ import mongoose, { Document } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
 export type ProductDocument = Document & {
-  name: string,
-  category: string,
-  variant: string,
-  image: string,
-  shortDescription: string,
-  longDescription: string,
-  price: number
+  name: string;
+  category: string;
+  variant: string;
+  image: string;
+  shortDescription: string;
+  longDescription: string;
+  price: number;
 }
 
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    unique: true,
-
+    required: true,
   },
   category: {
     type: String,
-    required: true
-
+    required: true,
   },
   variant: {
     type: String,
+    unique: true,
     required: true,
   },
 
   image: {
-    type: String
+    type: String,
   },
 
   shortDescription: {
-    type: String
+    type: String,
   },
 
   longDescription: {
-    type: String
+    type: String,
   },
 
   price: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 productSchema.plugin(uniqueValidator)
