@@ -5,7 +5,7 @@ import { ProductDocument } from '../../src/models/Product'
 import app from '../../src/app'
 import * as dbHelper from '../db-helper'
 
-const fakeId = '5e57b77b5744fa0b461c5573'
+const fakeId = '123456'
 
 jest.mock(
   '../../src/middlewares/authenticate',
@@ -47,10 +47,13 @@ describe('product controller', () => {
     expect(res.body).toHaveProperty('_id')
   })
 
-  it('should not create a product with wrong data', async () => {
+  it('should not create a product with duplicate data', async () => {
+    await addProduct()
     const res = await request(app)
       .post('/api/v1/products/admin')
       .send({
+        name: 'Luna 2',
+        category: 'Skincare',
         variant: 'nude'
       })
     expect(res.status).toBe(400)
@@ -158,7 +161,7 @@ describe('product controller', () => {
       .put(`/api/v1/products/admin/${fakeId}`)
       .send(update)
 
-    expect(res.status).toEqual(404)
+    expect(res.status).toBe(404)
   })
 
   it('should delete an existing product', async () => {
@@ -168,7 +171,7 @@ describe('product controller', () => {
 
     res = await request(app)
       .delete(`/api/v1/products/admin/${productId}`)
-    expect(res.status).toEqual(204)
+    expect(res.status).toBe(204)
 
     res = await request(app)
       .get(`/api/v1/products/admin/${productId}`)
@@ -176,11 +179,8 @@ describe('product controller', () => {
   })
 
   it('should delete a fake product', async () => {
-    let res = await addProduct()
-    expect(res.status).toBe(200)
-
-    res = await request(app)
+    const res = await request(app)
       .delete(`/api/v1/products/admin/${fakeId}`)
-    expect(res.status).toEqual(404)
+    expect(res.status).toBe(404)
   })
 })
