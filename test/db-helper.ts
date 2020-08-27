@@ -13,7 +13,7 @@ export const connect = async () => {
     reconnectInterval: 1000
   }
 
-  await mongoose.connect(uri, mongooseOpts)
+  await mongoose.createConnection(uri, mongooseOpts)
 }
 
 export const closeDatabase = async () => {

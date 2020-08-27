@@ -1,8 +1,7 @@
 import {Request, Response, NextFunction} from 'express'
 import request from 'supertest'
-import mongoose from 'mongoose'
 
-import Product, { ProductDocument } from '../../src/models/Product'
+import { ProductDocument } from '../../src/models/Product'
 import app from '../../src/app'
 import * as dbHelper from '../db-helper'
 
