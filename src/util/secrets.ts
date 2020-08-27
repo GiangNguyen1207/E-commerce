@@ -25,10 +25,8 @@ if (!SESSION_SECRET || !JWT_SECRET) {
 }
 
 if (!MONGODB_URI) {
-  if (prod) {
-    logger.error(
-      'No mongo connection string. Set MONGODB_URI environment variable.'
-    )
-  }
+  logger.error(
+    'No mongo connection string. Set MONGODB_URI environment variable.'
+  )
   process.exit(1)
 }
