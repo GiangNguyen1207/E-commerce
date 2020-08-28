@@ -38,12 +38,24 @@ export const addProduct = async (
   next: NextFunction
 ) => {
   try {
-    const { name, category, variant } = req.body
+    const {
+      name,
+      category,
+      variant,
+      image,
+      shortDescription,
+      longDescription,
+      price,
+    } = req.body
 
     const newProduct = new Product({
       name: name,
       category: category,
       variant: variant,
+      image: image,
+      shortDescription: shortDescription,
+      longDescription: longDescription,
+      price: price,
     })
 
     await ProductService.addProduct(newProduct)

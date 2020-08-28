@@ -6,9 +6,13 @@ const fakeId = '123456'
 
 async function createProduct() {
   const product = new Product({
-    name: 'Luna mini 2 - aqua',
+    name: 'Luna fofo - Pearl Pink',
     category: 'Skincare',
-    variant: 'Aquamarine'
+    variant: 'Pearl Pink',
+    image: '',
+    shortDescription: '',
+    longDescription: '',
+    price: 0
   })
   return await ProductService.addProduct(product)
 }
@@ -27,15 +31,9 @@ describe('product service', () => {
   })
 
   it('should create a product', async () => {
-    // console.log('in')
-    try {
-      const product = await createProduct()
-      expect(product).toHaveProperty('_id')
-    }
-    catch(error) {
-      console.log(error)
-    }
-    
+    jest.setTimeout(10000)
+    const product = await createProduct()
+    expect(product).toHaveProperty('_id')
     // expect(product).toHaveProperty('name', 'Luna mini 2 - aqua')
     // expect(product.variant).toBe('Aquamarine')
   })
