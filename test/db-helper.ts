@@ -8,9 +8,7 @@ export const connect = async () => {
 
   const mongooseOpts = {
     useNewUrlParser: true,
-    autoReconnect: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 1000
+    useUnifiedTopology: true,
   }
 
   await mongoose.createConnection(uri, mongooseOpts)
