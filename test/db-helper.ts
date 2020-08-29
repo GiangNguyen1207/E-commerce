@@ -11,7 +11,7 @@ export const connect = async () => {
     useUnifiedTopology: true,
   }
 
-  await mongoose.createConnection(uri, mongooseOpts)
+  await mongoose.connect(uri, mongooseOpts)
 }
 
 export const closeDatabase = async () => {

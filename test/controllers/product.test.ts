@@ -29,10 +29,6 @@ async function addProduct(override?: Partial<ProductDocument>) {
 }
 
 describe('product controller', () => {
-  beforeEach(async() => {
-    await dbHelper.connect()
-  })
-
   afterEach(async () => {
     await dbHelper.clearDatabase()
   })

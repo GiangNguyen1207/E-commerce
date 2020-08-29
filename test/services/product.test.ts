@@ -18,7 +18,7 @@ async function createProduct() {
 }
 
 describe('product service', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await dbHelper.connect()
   })
 
@@ -31,32 +31,37 @@ describe('product service', () => {
   })
 
   it('should create a product', async () => {
-    jest.setTimeout(10000)
     const product = await createProduct()
     expect(product).toHaveProperty('_id')
     // expect(product).toHaveProperty('name', 'Luna mini 2 - aqua')
     // expect(product.variant).toBe('Aquamarine')
   })
 
-//   it('should return a list of products', async() => {
-//     const product1 = new Product({
-//       name: 'Luna mini 2',
-//       category: 'skincare',
-//       variant: ['pearl pink', 'aqua', 'yellow', 'red'],
-//     })
-//     await ProductService.addProduct(product1)
-//     const product2 = new Product({
-//       name: 'Luna 3',
-//       category: 'skincare',
-//       variant: ['pearl pink', 'aqua', 'purple']
+  it('should return all products', async() => {
+    await createProduct()
+    const all = await ProductService.findAll()
+    expect(all.length).toBe(1)
+  })
+
+  // it('should return a list of products', async() => {
+  //   // const product1 = new Product({
+  //   //   name: 'Luna fofo - Pearl Pink',
+  //   //   category: 'skincare',
+  //   //   variant: 'Pearl Pink',
+  //   // })
+  //   // await ProductService.addProduct(product1)
+  //   // const product2 = new Product({
+  //   //   name: 'Luna fofo - Fuchsia',
+  //   //   category: 'skincare',
+  //   //   variant: 'Fuchsia'
   
-//     })
-//     await ProductService.addProduct(product2)
-//     const allProducts = await ProductService.findAll()
-//     expect(allProducts.length).toBe(2)
-//     expect(allProducts[0].name).toBe('Luna 3')
+  //   // })
+  //   // await ProductService.addProduct(product2)
+  //   // const allProducts = await ProductService.findAll()
+  //   // expect(allProducts.length).toBe(2)
+  //   // expect(allProducts[0].name).toBe('Luna 3')
      
-//   })
+  // })
 
 //   it('should return a list of products by search term', async() => {
 //     const proudct = await createProduct()
