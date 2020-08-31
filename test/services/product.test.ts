@@ -6,7 +6,7 @@ const fakeId = '123456'
 
 async function createProduct() {
   const product = new Product({
-    name: 'Luna fofo - Pearl Pink',
+    name: 'Luna 2',
     category: 'Skincare',
     variant: 'Pearl Pink',
     image: '',
@@ -33,8 +33,8 @@ describe('product service', () => {
   it('should create a product', async () => {
     const product = await createProduct()
     expect(product).toHaveProperty('_id')
-    // expect(product).toHaveProperty('name', 'Luna mini 2 - aqua')
-    // expect(product.variant).toBe('Aquamarine')
+    expect(product).toHaveProperty('name', 'Luna 2')
+    expect(product.variant).toBe('Pearl Pink')
   })
 
   it('should return all products', async() => {

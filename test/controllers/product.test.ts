@@ -17,6 +17,10 @@ async function addProduct(override?: Partial<ProductDocument>) {
     name: 'Luna 2',
     category: 'skincare',
     variant: 'pearl pink',
+    image: '',
+    shortDescription: 'abc',
+    longDescription: 'abcxyz',
+    price: 1
   }
 
   if (override) {
@@ -43,37 +47,82 @@ describe('product controller', () => {
     expect(res.body).toHaveProperty('_id')
   })
 
+  it('should create a product with data that are not required', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send ({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+      })
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('_id')
+  })
+
   it('should not create a product with duplicate data', async () => {
-    await addProduct()
+    let res = await addProduct()
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+      })
+    expect(res.status).toBe(400)
+  })
+
+  it('should not create a product when missing required data', async () => {
     const res = await request(app)
       .post('/api/v1/products/admin')
       .send({
         name: 'Luna 2',
-        category: 'Skincare',
-        variant: 'nude'
+      })
+    expect(res.status).toBe(400)
+  })
+
+  it('should not create a product with wrong data', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+        price: 0
+      })
+    expect(res.status).toBe(400)
+  })
+  
+  it('should not create a product with wrong data', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+        price: 1200
       })
     expect(res.status).toBe(400)
   })
 
   it('should return a list of products', async () => {
+    const res = await addProduct()
+    expect(res.status).toBe(200)
+
     const res1 = await addProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
       variant: 'pearl pink',
     })
+    expect(res1.status).toBe(200)
 
-    const res2 = await addProduct({
-      name: 'Luna 3',
-      category: 'skincare',
-      variant: 'aqua',
-    })
-
-    const res3 = await request(app)
+    const res2 = await request(app)
       .get(`/api/v1/products`)
 
-    expect(res3.status).toBe(200)
-    expect(res3.type).toEqual('application/json')
-    expect(res3.body.length).toEqual(2)
+    expect(res2.status).toBe(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body.length).toEqual(2)
   })
 
   it('should return a list of products using query', async () => {
@@ -174,7 +223,7 @@ describe('product controller', () => {
     expect(res.status).toBe(404)
   })
 
-  it('should delete a fake product', async () => {
+  it('should not delete a fake product', async () => {
     const res = await request(app)
       .delete(`/api/v1/products/admin/${fakeId}`)
     expect(res.status).toBe(404)
