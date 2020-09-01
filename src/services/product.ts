@@ -18,9 +18,6 @@ function findAll(searchTerm?: any): Promise<ProductDocument[]> {
         })
           .exec()
           .then((filteredProducts) => {
-            if (!_isEmpty(filteredProducts)) {
-              return filteredProducts
-            }
             if (_isEmpty(filteredProducts)) {
               throw new Error('Product not found')
             }
