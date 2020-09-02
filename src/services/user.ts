@@ -6,8 +6,8 @@ function createUser(user: UserDocument): Promise<UserDocument> {
   return user.save()
 }
 
-function signIn(username: string, password: string): Promise<UserDocument> {
-  return User.findOne({ username: username })
+function signIn(userInfo: string, password: string): Promise<UserDocument> {
+  return User.findOne({ $or: [{ username: userInfo }, { email: userInfo }] })
     .exec()
     .then(async (user) => {
       if (user) {
@@ -15,9 +15,9 @@ function signIn(username: string, password: string): Promise<UserDocument> {
         if (match) {
           return user
         }
-        throw new Error('Username or password incorrect')
+        throw new Error('Username/email or password incorrect')
       }
-      throw new Error('Username or password incorrect')
+      throw new Error('User not found')
     })
 }
 

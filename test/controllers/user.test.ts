@@ -87,12 +87,30 @@ describe('user controller', () => {
   })
 
 
-  it('should sign in a user', async() => {
+  it('should sign in a user with username', async() => {
     let res = await createUser()
     expect(res.status).toBe(200)
 
     const user = {
-      username: 'ABCD',
+      userInfo: 'ABCD',
+      password: '123456789'
+    }
+    
+    res = await request(app)
+      .post('/api/v1/users/signIn')
+      .send(user)
+
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('token')
+    expect(res.body.user).toHaveProperty('username', 'ABCD')
+  })
+
+  it('should sign in a user with email', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const user = {
+      userInfo: 'abcd@gmail.com',
       password: '123456789'
     }
     
@@ -172,17 +190,17 @@ describe('user controller', () => {
     expect(res.status).toBe(404)
   })
 
-  /*it('should send the email', async() => {
-    let res = await createUser()
-    expect(res.status).toBe(200)
+  // it('should send the email', async() => {
+  //   let res = await createUser()
+  //   expect(res.status).toBe(200)
 
-    res = await request(app)
-      .post(`/api/v1/users/forgotPassword`)
-      .send({email: 'gigixinhgai@gmail.com'})
+  //   res = await request(app)
+  //     .post(`/api/v1/users/forgotPassword`)
+  //     .send({email: 'abcd@gmail.com'})
 
-    expect(res.status).toBe(200)
-    expect(res.body).toHaveProperty('message', 'Email sent successfully')
-  })
+  //   expect(res.status).toBe(200)
+  //   expect(res.body).toHaveProperty('message', 'Email sent successfully')
+  // })
 
   it('should not send the email', async() => {
     let res = await createUser()
@@ -190,10 +208,10 @@ describe('user controller', () => {
 
     res = await request(app)
       .post(`/api/v1/users/forgotPassword`)
-      .send({email: 'chipchip@gmail.com'})
+      .send({email: 'ab@gmail.com'})
 
     expect(res.status).toBe(404)
-  })*/
+  })
 
   it('should allow changing password', async() => {
     let res = await createUser()

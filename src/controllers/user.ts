@@ -46,13 +46,13 @@ export const signIn = async (
   next: NextFunction
 ) => {
   try {
-    const { username, password } = req.body
-    const user = await UserService.signIn(username, password)
+    const { userInfo, password } = req.body
+    const user = await UserService.signIn(userInfo, password)
     const id = user.id
     const token = await jwt.sign(
       {
         id,
-        username,
+        userInfo,
       },
       JWT_SECRET,
       {
