@@ -260,7 +260,6 @@ export const increaseQuantity = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    console.log(req.body)
     const cart = await UserService.increaseQuantity(userId, productId)
     res.json(cart)
   } catch (error) {

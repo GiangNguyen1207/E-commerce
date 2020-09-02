@@ -299,11 +299,11 @@ describe('user controller', () => {
       .post(`/api/v1/users/cart/${userId}`)
       .send({userId, productName1, productId1, productVariant1})
 
-    const get = await request(app)
+    const respone = await request(app)
       .get(`/api/v1/users/cart/${userId}`)
 
-    expect(get.status).toBe(200)
-    expect(get.body.cart.length).toBe(2)
+    expect(respone.status).toBe(200)
+    expect(respone.body.cart.length).toBe(2)
   })
 
   it('should not get cart', async() => {
@@ -328,9 +328,165 @@ describe('user controller', () => {
       .post(`/api/v1/users/cart/${userId}`)
       .send({userId, productName1, productId1, productVariant1})
 
-    const get = await request(app)
+    const response = await request(app)
       .get(`/api/v1/users/cart/${userFakeId}`)
 
-    expect(get.status).toBe(404)
+    expect(response.status).toBe(404)
+  })
+
+  it('should remove a product from cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .delete(`/api/v1/users/cart/${userId}`)
+      .send({userId, productId})
+
+    expect(res.status).toBe(200)
+    expect(res.body.cart.length).toBe(0)
+  })
+
+  it('should not remove a product from cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .delete(`/api/v1/users/cart/${userFakeId}`)
+      .send({userFakeId, productId})
+
+    expect(res.status).toBe(404)
+  })
+
+  it('should increase quantity of products in cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .put(`/api/v1/users/cart/increase/${userId}`)
+      .send({userId, productId})
+
+    expect(res.status).toBe(200)
+    expect(res.body.cart).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          'quantity': 2,
+        })
+      ])
+    )
+  })
+
+  it('should not increase quantity of products in cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .put(`/api/v1/users/cart/increase/${userFakeId}`)
+      .send({userFakeId, productId})
+
+    expect(res.status).toBe(404)
+  })
+
+  it('should decrease quantity of products in cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    const productName1 = 'Luna 3'
+    const productId1 = 'e77b88b5744fa0b461c5573'
+    const productVariant1 = 'Mint'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName1, productId1, productVariant1})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .put(`/api/v1/users/cart/decrease/${userId}`)
+      .send({userId, productId})
+
+    expect(res.status).toBe(200)
+    expect(res.body.cart).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          'quantity': 1,
+        })
+      ])
+    )
+  })
+
+  it('should not decrease quantity of products in cart', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userId = res.body.user._id
+
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    res = await request(app)
+      .post(`/api/v1/users/cart/${userId}`)
+      .send({userId, productName, productId, productVariant})
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .put(`/api/v1/users/cart/decrease/${userFakeId}`)
+      .send({userFakeId, productId})
+
+    expect(res.status).toBe(404)
   })
 })
