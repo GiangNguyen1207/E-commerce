@@ -39,8 +39,9 @@ passport.use(
           },
           cart: [
             {
-              product: {},
+              productName: '',
               productId: '',
+              productVariant: '',
               quantity: 0,
             },
           ],
