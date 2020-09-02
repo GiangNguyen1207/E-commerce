@@ -212,8 +212,13 @@ export const addProductToCart = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, product, productId } = req.body
-    const cart = await UserService.addProductToCart(userId, product, productId)
+    const { userId, productName, productVariant, productId } = req.body
+    const cart = await UserService.addProductToCart(
+      userId,
+      productName,
+      productVariant,
+      productId
+    )
     res.json(cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))

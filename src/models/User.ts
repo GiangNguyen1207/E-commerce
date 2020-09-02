@@ -8,7 +8,8 @@ type PasswordToken = {
 }
 
 type CartType = {
-  product: object;
+  productName: string;
+  productVariant: string;
   productId: string;
   quantity: number;
 }
@@ -54,8 +55,9 @@ const userSchema = new mongoose.Schema({
   },
   cart: [
     {
-      product: Object,
+      productName: Object,
       productId: String,
+      productVariant: String,
       quantity: Number,
     },
   ],

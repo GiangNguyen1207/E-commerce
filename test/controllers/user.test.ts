@@ -14,10 +14,10 @@ jest.mock(
 
 async function createUser(override?: Partial<UserDocument>) {
   let user = {
-    firstName: 'Gigi',
-    lastName: 'Nguyen',
-    username: 'gigixinhgai',
-    email: 'gigixinhgai@gmail.com',
+    firstName: 'A',
+    lastName: 'B',
+    username: 'ABCD',
+    email: 'abcd@gmail.com',
     password: '123456789'
   }
   
@@ -31,14 +31,6 @@ async function createUser(override?: Partial<UserDocument>) {
 }
 
 describe('user controller', () => {
-  beforeAll(async () => {
-    jest.setTimeout(10000)
-  })
-
-  beforeEach(async () => {
-    await dbHelper.connect()
-  })
-
   afterEach(async () => {
     await dbHelper.clearDatabase()
   })
@@ -53,10 +45,45 @@ describe('user controller', () => {
     expect(res.body).toHaveProperty('message')
   })
 
-  it('should not create a user', async() => {
+  it('should not create a user with same username', async() => {
     await createUser()
-    const res1 = await createUser()
-    expect(res1.status).toBe(400)
+    const newUser = {
+      firstName: 'A',
+      lastName: 'B',
+      username: 'ABCD',
+      email: 'abdc@gmail.com',
+      password: '123456789'
+    }
+    const res = await request(app)
+      .post('/api/v1/users/signUp')
+      .send(newUser)
+    expect(res.status).toBe(400)
+  })
+
+  it('should not create a user with same email', async() => {
+    await createUser()
+    const newUser = {
+      firstName: 'A',
+      lastName: 'B',
+      username: 'ABDC',
+      email: 'abcd@gmail.com',
+      password: '123456789'
+    }
+    const res = await request(app)
+      .post('/api/v1/users/signUp')
+      .send(newUser)
+    expect(res.status).toBe(400)
+  })
+
+  it('should not create a user with mising required data', async() => {
+    const newUser = {
+      email: 'abcd@gmail.com',
+      password: '123456789'
+    }
+    const res = await request(app)
+      .post('/api/v1/users/signUp')
+      .send(newUser)
+    expect(res.status).toBe(400)
   })
 
 
@@ -65,7 +92,7 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const user = {
-      username: 'gigixinhgai',
+      username: 'ABCD',
       password: '123456789'
     }
     
@@ -75,16 +102,31 @@ describe('user controller', () => {
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('token')
-    expect(res.body.user).toHaveProperty('username', 'gigixinhgai')
+    expect(res.body.user).toHaveProperty('username', 'ABCD')
   })
 
-  it('should not sign in a user', async() => {
+  it('should not sign in a user with wrong password', async() => {
     let res = await createUser()
     expect(res.status).toBe(200)
 
     const user = {
-      username: 'gigixinhdep',
-      password: 'gigixinhgaiqua,'
+      username: 'ABCD',
+      password: '012345'
+    }
+
+    let res1 = await request(app)
+      .post('/api/v1/users/signIn')
+      .send(user)
+    expect(res1.status).toBe(404)
+  })
+
+  it('should not sign in a user with wrong username', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const user = {
+      username: 'A',
+      password: '123456789'
     }
 
     let res1 = await request(app)
@@ -100,9 +142,9 @@ describe('user controller', () => {
     const userId = res.body.user._id
 
     const update = {
-      firstName: 'chipchip',
-      lastName: 'meomeo',
-      email: 'chipchip@gmail.com'
+      firstName: 'X',
+      lastName: 'Y',
+      email: 'xyz@gmail.com'
     }
 
     res = await request(app)
@@ -110,7 +152,7 @@ describe('user controller', () => {
       .send(update)
 
     expect(res.status).toBe(200)
-    expect(res.body.email).toBe('chipchip@gmail.com')
+    expect(res.body.email).toBe('xyz@gmail.com')
   })
 
   it('should not update user profile', async () => {
@@ -118,9 +160,9 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const update = {
-      firstName: 'chipchip',
-      lastName: 'meomeo',
-      email: 'chipchip@gmail.com'
+      firstName: 'X',
+      lastName: 'Y',
+      email: 'xyz@gmail.com'
     }
 
     res = await request(app)
@@ -158,7 +200,7 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const oldPassword = '123456789'
-    const newPassword = 'gigixinhdep12'
+    const newPassword = '012345'
 
     const userId = res.body.user._id
 
@@ -175,7 +217,7 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const oldPassword = '123456789'
-    const newPassword = 'gigixinhdep12'
+    const newPassword = '012345'
 
     res = await request(app)
       .put(`/api/v1/users/changePassword/${userFakeId}`)
@@ -183,13 +225,12 @@ describe('user controller', () => {
     expect(res.status).toBe(404)
   })
 
-
-  it('should not allow changing password', async() => {
+  it('should not allow changing password when filling in wrong current password', async() => {
     let res = await createUser()
     expect(res.status).toBe(200)
 
-    const oldPassword = '0123456789'
-    const newPassword = 'gigixinhdep12'
+    const oldPassword = '12345xxxx'
+    const newPassword = '012345'
 
     const userId = res.body.user._id
 
@@ -204,17 +245,21 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const userId = res.body.user._id
-    const product = 'Luna 2'
-    const variant = 'pearl pink'
+    const productName = 'Luna 2'
+    const productId = '5e57b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userId}`)
-      .send({userId, product, variant})
+      .send({userId, productName, productId, productVariant})
 
     expect(res.status).toBe(200)
     expect(res.body.cart).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({'name': 'Luna 2', 'variant': 'pearl pink'})
+        expect.objectContaining({
+          'productName': 'Luna 2',
+          'productVariant': 'Pearl Pink'
+        })
       ])
     )
   })
@@ -224,7 +269,7 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const product = 'Luna 3'
-    const variant = 'aqua'
+    const variant = 'Aquamarine'
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userFakeId}`)
@@ -237,19 +282,22 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const userId = res.body.user._id
-    const product = 'Luna 2'
-    const variant = 'pearl pink'
 
-    const product1 = 'Luna 3'
-    const variant1 = 'aqua'
+    const productName = 'Luna 2'
+    const productId = 'e67b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    const productName1 = 'Luna 3'
+    const productId1 = 'e77b88b5744fa0b461c5573'
+    const productVariant1 = 'Mint'
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userId}`)
-      .send({userId, product, variant})
+      .send({userId, productName, productId, productVariant})
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userId}`)
-      .send({userId, product1, variant1})
+      .send({userId, productName1, productId1, productVariant1})
 
     const get = await request(app)
       .get(`/api/v1/users/cart/${userId}`)
@@ -263,24 +311,26 @@ describe('user controller', () => {
     expect(res.status).toBe(200)
 
     const userId = res.body.user._id
-    const product = 'Luna 2'
-    const variant = 'pearl pink'
 
-    const product1 = 'Luna 3'
-    const variant1 = 'aqua'
+    const productName = 'Luna 2'
+    const productId = 'e67b88b5744fa0b461c5573'
+    const productVariant = 'Pearl Pink'
+
+    const productName1 = 'Luna 3'
+    const productId1 = 'e77b88b5744fa0b461c5573'
+    const productVariant1 = 'Mint'
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userId}`)
-      .send({userId, product, variant})
+      .send({userId, productName, productId, productVariant})
 
     res = await request(app)
       .post(`/api/v1/users/cart/${userId}`)
-      .send({userId, product1, variant1})
+      .send({userId, productName1, productId1, productVariant1})
 
     const get = await request(app)
       .get(`/api/v1/users/cart/${userFakeId}`)
 
     expect(get.status).toBe(404)
   })
-
 })

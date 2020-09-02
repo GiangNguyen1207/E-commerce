@@ -114,7 +114,8 @@ function changePassword(
 
 function addProductToCart(
   userId: string,
-  product: object,
+  productName: string,
+  productVariant: string,
   productId: string
 ): Promise<UserDocument> {
   return User.findById(userId)
@@ -123,11 +124,12 @@ function addProductToCart(
       if (!user) {
         throw new Error('User not found')
       }
+
       const existing = user.cart.find((i) => i.productId === productId)
       if (existing) {
         existing.quantity += 1
       } else {
-        user.cart.push({ product, productId, quantity: 1 })
+        user.cart.push({ productName, productId, productVariant, quantity: 1 })
       }
       return user.save()
     })
