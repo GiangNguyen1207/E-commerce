@@ -17,7 +17,7 @@ function signIn(userInfo: string, password: string): Promise<UserDocument> {
         }
         throw new Error('Username/email or password incorrect')
       }
-      throw new Error('User not found')
+      throw new Error('Username/email or password incorrect')
     })
 }
 
@@ -80,10 +80,10 @@ function validateToken(query: any): Promise<UserDocument> {
 }
 
 function resetPassword(
-  username: string,
+  userInfo: string,
   newPassword: string
 ): Promise<UserDocument> {
-  return User.findOne({ username: username })
+  return User.findOne({ $or: [{ username: userInfo }, { email: userInfo }] })
     .exec()
     .then((user) => {
       if (!user) throw new Error('User not found')
@@ -124,7 +124,6 @@ function addProductToCart(
       if (!user) {
         throw new Error('User not found')
       }
-
       const existing = user.cart.find((i) => i.productId === productId)
       if (existing) {
         existing.quantity += 1

@@ -213,6 +213,70 @@ describe('user controller', () => {
     expect(res.status).toBe(404)
   })
 
+  it('should allow resetting password by username', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const newPassword = {
+      userInfo: 'ABCD',
+      newPassword: 'a1b2c3d4'
+    }
+
+    res = await request(app)
+      .put(`/api/v1/users/resetPassword`)
+      .send(newPassword)
+
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('message', 'Password has been reset successfully')
+  })
+
+  it('should allow resetting password by email', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const newPassword = {
+      userInfo: 'abcd@gmail.com',
+      newPassword: 'a1b2c3d4'
+    }
+
+    res = await request(app)
+      .put(`/api/v1/users/resetPassword`)
+      .send(newPassword)
+
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('message', 'Password has been reset successfully')
+  })
+
+  it('should not allow resetting password with wrong email', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userInfo = 'abcde@gmail.com'
+    const newPassword = 'a1b2c3d4'
+
+    res = await request(app)
+      .put('/api/v1/users/resetPassword')
+      .send({userInfo, newPassword})
+
+    expect(res.status).toBe(404)
+    expect(res.body).toHaveProperty('message', 'User not found')
+  })
+
+  it('should not allow resetting password with wrong username', async() => {
+    let res = await createUser()
+    expect(res.status).toBe(200)
+
+    const userInfo = 'AB'
+    const newPassword = 'a1b2c3d4'
+
+    res = await request(app)
+      .put('/api/v1/users/resetPassword')
+      .send({userInfo, newPassword})
+
+    expect(res.status).toBe(404)
+    expect(res.body).toHaveProperty('message', 'User not found')
+  })
+
   it('should allow changing password', async() => {
     let res = await createUser()
     expect(res.status).toBe(200)
@@ -224,7 +288,7 @@ describe('user controller', () => {
 
     res = await request(app)
       .put(`/api/v1/users/changePassword/${userId}`)
-      .send({userId, oldPassword, newPassword})
+      .send({oldPassword, newPassword})
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('message', 'Password has been changed successfully')
@@ -239,8 +303,10 @@ describe('user controller', () => {
 
     res = await request(app)
       .put(`/api/v1/users/changePassword/${userFakeId}`)
-      .send({userFakeId, oldPassword, newPassword})
+      .send({oldPassword, newPassword})
+      
     expect(res.status).toBe(404)
+    expect(res.body).toHaveProperty('message', 'User not found')
   })
 
   it('should not allow changing password when filling in wrong current password', async() => {
@@ -254,8 +320,9 @@ describe('user controller', () => {
 
     res = await request(app)
       .put(`/api/v1/users/changePassword/${userId}`)
-      .send({userId, oldPassword, newPassword})
-    expect(res.status).toBe(404)
+      .send({oldPassword, newPassword})
+    expect(res.status).toBe(400)
+    expect(res.body).toHaveProperty('message', 'Passwords not match')
   })
 
   it('should add product to cart', async() => {

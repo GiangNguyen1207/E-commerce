@@ -61,9 +61,10 @@ export const signIn = async (
     )
     res.json({ token, user })
   } catch (error) {
-    if ((error.name = 'Username or password incorrect')) {
+    if ((error.message = 'Username or password incorrect')) {
       next(new NotFoundError('Username or password incorrect', error))
     }
+    next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -121,7 +122,7 @@ export const forgotPassword = async (
       }
     })
   } catch (error) {
-    if ((error.name = 'Invalid Email')) {
+    if ((error.message = 'Invalid Email')) {
       next(new NotFoundError('Email not found', error))
     }
     next(new InternalServerError('Internal server error', error))
@@ -137,7 +138,7 @@ export const validateToken = async (
     await UserService.validateToken(req.query.token)
     res.status(200).send('Token is validated')
   } catch (error) {
-    if (error.name === 'Invalid token' || 'Wrong token') {
+    if (error.message === 'Invalid token' || 'Wrong token') {
       next(new BadRequestError('Invalid token', error))
     }
     next(new InternalServerError('Internal server error', error))
@@ -150,13 +151,14 @@ export const resetPassword = async (
   next: NextFunction
 ) => {
   try {
-    const { username, newPassword } = req.body
-    await UserService.resetPassword(username, newPassword)
+    const { userInfo, newPassword } = req.body
+    await UserService.resetPassword(userInfo, newPassword)
     res.json({ status: 200, message: 'Password has been reset successfully' })
   } catch (error) {
-    if (error.name === 'User not found') {
+    if (error.message === 'User not found') {
       next(new NotFoundError('User not found', error))
     }
+    next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -172,10 +174,10 @@ export const changePassword = async (
     await UserService.changePassword(userId, oldPassword, newHashedPassword)
     res.json({ status: 200, message: 'Password has been changed successfully' })
   } catch (error) {
-    if ((error.name = 'User not found')) {
+    if (error.message === 'User not found') {
       next(new NotFoundError('User not found', error))
     }
-    if ((error.name = 'Passwords not match')) {
+    if (error.message === 'Passwords not match') {
       next(new BadRequestError('Passwords not match', error))
     }
     next(new InternalServerError('Internal server error', error))
