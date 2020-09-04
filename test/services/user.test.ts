@@ -5,6 +5,7 @@ import User from '../../src/models/User'
 import UserService from '../../src/services/user'
 import * as dbHelper from '../db-helper'
 import { JWT_SECRET } from '../../src/util/secrets';
+import { error } from 'winston'
 
 const fakeUserId = '5e57b77b5744fa0b461c7906'
 const token = '5e57b77b5744fa0b461c7906'
@@ -307,23 +308,27 @@ describe('user service', () => {
       name: 'Luna 2',
       variant: 'Pearl Pink',
     }
-    const product2 = {
-      id: '5e57b77b5795fa0b461c5573',
-      name: 'Luna 3',
-      variant: 'Aquamarine'
-    }
+
     await UserService.addProductToCart(
       user._id, 
       product1.name,
       product1.variant,
       product1.id
     )
+
+    const product2 = {
+      id: '5e57b77b5795fa0b461c5573',
+      name: 'Luna 3',
+      variant: 'Aquamarine'
+    }
+    
     await UserService.addProductToCart(
       user._id, 
       product2.name,
       product2.variant,
       product2.id
     )
+
     const cart = await UserService.getCart(user._id)
     expect(cart.cart.length).toBe(2)
     expect(cart.cart[0].productName).toBe('Luna 2')
@@ -335,5 +340,259 @@ describe('user service', () => {
     return UserService.getCart(fakeUserId).catch(error => {
       expect(error.message).toMatch('User not found')
     })
+  })
+
+  it('remove a product from cart', async() => {
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    const product1 = {
+      id: '5e57b77b5795fa0b461c5573',
+      name: 'Luna 3',
+      variant: 'Aquamarine'
+    }
+    
+    await UserService.addProductToCart(
+      user._id, 
+      product1.name,
+      product1.variant,
+      product1.id
+    )
+
+    const cart = await UserService.removeProductInCart(user._id, product1.id)
+    expect(cart.cart.length).toBe(1)
+    expect(cart.cart[0].productName).toBe('Luna 2')
+  })
+
+  it('should not remove a product from cart with wrong productId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    const product1 = {
+      id: '5e57b77b5795fa0b461c5573',
+      name: 'Luna 3',
+      variant: 'Aquamarine'
+    }
+    
+    await UserService.addProductToCart(
+      user._id, 
+      product1.name,
+      product1.variant,
+      product1.id
+    )
+
+    return UserService.removeProductInCart(user._id, '5e57b5b5795fa0b461c5573')
+      .catch(error => {
+        expect(error.message).toMatch('Product not match')
+    })
+  })
+
+  it('should not remove a product from cart with wrong userId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    const product1 = {
+      id: '5e57b77b5795fa0b461c5573',
+      name: 'Luna 3',
+      variant: 'Aquamarine'
+    }
+    
+    await UserService.addProductToCart(
+      user._id, 
+      product1.name,
+      product1.variant,
+      product1.id
+    )
+
+    return UserService.removeProductInCart(fakeUserId, product1.id)
+      .catch(error => {
+        expect(error.message).toMatch('User not found')
+    })
+  })
+
+  it('should increase quantity', async() => {
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    const cart = await UserService.increaseQuantity(user._id, product.id)
+    expect(cart.cart.length).toBe(1)
+    expect(cart.cart[0].productName).toBe('Luna 2')
+    expect(cart.cart[0].quantity).toBe(2)
+  })
+
+  it('should not increase quantity with wrong productId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    return await UserService.increaseQuantity(user._id, '5e57b87b5745fa0b461c5573')
+      .catch(error => {
+        expect(error.message).toBe('Product not match')
+      })
+  })
+
+  it('should not increase quantity with wrong userId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    return await UserService.increaseQuantity(fakeUserId, product.id)
+      .catch(error => {
+        expect(error.message).toBe('User not found')
+      })
+  })
+
+  it('should decrease quantity - case quantity > 1', async() => {
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+    
+    let cart = await UserService.increaseQuantity(user._id, product.id)
+    cart = await UserService.decreaseQuantity(user._id, product.id)
+    expect(cart.cart.length).toBe(1)
+    expect(cart.cart[0].productName).toBe('Luna 2')
+    expect(cart.cart[0].quantity).toBe(1)
+  })
+
+  it('should decrease quantity case quantity = 1', async() => {
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+    
+    const cart = await UserService.decreaseQuantity(user._id, product.id)
+    expect(cart.cart.length).toBe(0)
+  })
+
+  it('should not decrease quantity with wrong productId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    return await UserService.decreaseQuantity(user._id, '5e57b87b5745fa0b461c5573')
+      .catch(error => {
+        expect(error.message).toBe('Product not match')
+      })
+  })
+
+  it('should not decrease quantity with wrong userId', async() => {
+    expect.assertions(1)
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    return await UserService.decreaseQuantity(fakeUserId, product.id)
+      .catch(error => {
+        expect(error.message).toBe('User not found')
+      })
   })
 })

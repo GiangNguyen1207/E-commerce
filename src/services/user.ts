@@ -161,6 +161,9 @@ function removeProductInCart(
         const index = user.cart.indexOf(existing)
         user.cart.splice(index, 1)
       }
+      if (!existing) {
+        throw new Error('Product not match')
+      }
       return user.save()
     })
 }
@@ -179,6 +182,9 @@ function increaseQuantity(
 
       if (existing) {
         existing.quantity++
+      }
+      if (!existing) {
+        throw new Error('Product not match')
       }
       return user.save()
     })
@@ -203,6 +209,9 @@ function decreaseQuantity(
           const index = user.cart.indexOf(existing)
           user.cart.splice(index, 1)
         }
+      }
+      if (!existing) {
+        throw new Error('Product not match')
       }
       return user.save()
     })
