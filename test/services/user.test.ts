@@ -129,6 +129,26 @@ describe('user service', () => {
       })
   })
 
+  it('should validate token', async() => {
+    let user = new User({
+      firstName: 'A',
+      lastName: 'B',
+      username: 'ABCD',
+      email: 'abcd@gmail.com',
+      password: '123456789',
+      forgotPassword: {
+        token: token,
+        timeOfCreated: Date.now(),
+        timeStamp: 3600000
+      }
+    })
+    user.password = await bcrypt.hash(user.password, 10)
+    await UserService.createUser(user)
+
+    user = await UserService.validateToken(token)
+    expect(JSON.stringify(user.forgotPassword)).toBe(JSON.stringify(null))
+  })
+
   // it('should send token to email', async() => {
   //   let user = await createUser()
   //   const email = 'giang.nguyen@integrify.io'
@@ -147,13 +167,34 @@ describe('user service', () => {
     })
   })
 
-  it('should not validate token', async() => {
+  it('should not return fake token', async() => {
     expect.assertions(1)
     let user = await createUser()
     const email = 'abcd@gmail.com'
     user = await UserService.forgotPassword(email, token) 
     return UserService.validateToken(fakeToken).catch(error => {
       expect(error.message).toMatch('Wrong token')
+    })
+  })
+
+  it('should invalidate token', async() => {
+    let user = new User({
+      firstName: 'A',
+      lastName: 'B',
+      username: 'ABCD',
+      email: 'abcd@gmail.com',
+      password: '123456789',
+      forgotPassword: {
+        token: token,
+        timeOfCreated: Date.now() - 4000000,
+        timeStamp: 3600000
+      }
+    })
+    user.password = await bcrypt.hash(user.password, 10)
+    await UserService.createUser(user)
+
+    return UserService.validateToken(token).catch(error => {
+      expect(error.message).toMatch('Invalid token')
     })
   })
 
@@ -271,6 +312,42 @@ describe('user service', () => {
       product.variant,
       product.id
       )
+    expect(cart.cart).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({'productName': 'Luna 2'})
+      ])
+    )
+    expect(cart.cart).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({'productVariant': 'Pearl Pink'})
+      ])
+    )
+  })
+
+  it('should increase quantity when adding existing product to cart', async() => {
+    const user = await createUser()
+    const product = {
+      id: '5e57b77b5745fa0b461c5573',
+      name: 'Luna 2',
+      variant: 'Pearl Pink',
+    }
+
+    let cart = await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    cart = await UserService.addProductToCart(
+      user._id, 
+      product.name,
+      product.variant,
+      product.id
+    )
+
+    expect(cart.cart.length).toBe(1)
+    expect(cart.cart[0].quantity).toBe(2)
     expect(cart.cart).toEqual(
       expect.arrayContaining([
         expect.objectContaining({'productName': 'Luna 2'})
@@ -484,7 +561,7 @@ describe('user service', () => {
 
     return await UserService.increaseQuantity(user._id, '5e57b87b5745fa0b461c5573')
       .catch(error => {
-        expect(error.message).toBe('Product not match')
+        expect(error.message).toMatch('Product not match')
       })
   })
 
@@ -506,7 +583,7 @@ describe('user service', () => {
 
     return await UserService.increaseQuantity(fakeUserId, product.id)
       .catch(error => {
-        expect(error.message).toBe('User not found')
+        expect(error.message).toMatch('User not found')
       })
   })
 
@@ -554,7 +631,7 @@ describe('user service', () => {
   it('should not decrease quantity with wrong productId', async() => {
     expect.assertions(1)
     const user = await createUser()
-    
+
     const product = {
       id: '5e57b77b5745fa0b461c5573',
       name: 'Luna 2',
@@ -570,7 +647,7 @@ describe('user service', () => {
 
     return await UserService.decreaseQuantity(user._id, '5e57b87b5745fa0b461c5573')
       .catch(error => {
-        expect(error.message).toBe('Product not match')
+        expect(error.message).toMatch('Product not match')
       })
   })
 
@@ -592,7 +669,7 @@ describe('user service', () => {
 
     return await UserService.decreaseQuantity(fakeUserId, product.id)
       .catch(error => {
-        expect(error.message).toBe('User not found')
+        expect(error.message).toMatch('User not found')
       })
   })
 })
