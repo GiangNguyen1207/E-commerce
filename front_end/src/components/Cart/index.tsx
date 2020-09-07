@@ -49,7 +49,7 @@ const ShoppingCart = () => {
 
   useEffect(() => {
     getCart(userId)
-  },[])
+  },[getCart, userId])
 
   const productsInCart = useSelector((state: AppState) => state.cart.productsInCart)
   

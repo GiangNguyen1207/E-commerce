@@ -22,7 +22,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
    fetchProductById(productId)
-  },[])
+  },[fetchProductById, productId])
 
   const details = useSelector((state: AppState) => state.product.singleProduct)
 

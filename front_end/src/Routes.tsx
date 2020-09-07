@@ -1,12 +1,12 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import Home from './pages/home'
-import SearchProducts from './pages/searchProducts';
-import ProductDetails from './pages/productDetails'
-import SignIn from './pages/signIn'
-import SignUp from './pages/signUp'
-import ShoppingCart from './pages/shoppingCart'
+import Home from 'pages/home'
+import SearchProducts from 'pages/searchProducts';
+import ProductDetails from 'pages/displayProduct'
+import SignIn from 'pages/login'
+import SignUp from 'pages/signup'
+import ShoppingCart from 'pages/checkout'
 
 const Routes = () => (
   <Switch>

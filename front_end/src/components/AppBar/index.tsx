@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -21,7 +21,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import DrawerComponent from '../Drawer'
 import { AppState } from '../../type';
-import { useUserService } from '../../services/userService';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

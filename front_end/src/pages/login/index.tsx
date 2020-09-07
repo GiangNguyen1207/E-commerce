@@ -14,9 +14,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
-import AppBarComponent from '../components/AppBar'
-import GoogleSignIn from '../components/GoogleLogin'
-import { useUserService } from '../services/userService';
+import GoogleSignIn from 'components/GoogleLogin'
+import { useUserService } from 'services/userService';
 
 function Copyright() {
   return (
@@ -76,7 +75,6 @@ export default function SignIn() {
 
   return (
     <>
-      <AppBarComponent />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import _isEmpty from 'lodash/isEmpty'
 
-import AppBarComponent from '../components/AppBar'
-import ProductList from '../components/ProductList'
-import SearchBar from '../components/Search'
-import { useProductService } from '../services/productService'
-import { Product, AppState } from '../type';
+import ProductList from 'components/ProductList'
+import SearchBar from 'components/Search'
+import { useProductService } from 'services/productService'
+import { Product, AppState } from 'type';
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
@@ -17,7 +15,7 @@ const SearchProducts = () => {
 
   useEffect(() => {
     fetchProducts()
-  },[])
+  },[fetchProducts])
 
   const productList = useSelector((state: AppState) => state.product.products)
 
@@ -42,7 +40,6 @@ const SearchProducts = () => {
   
   return(
     <>
-      <AppBarComponent /> 
       <div style={{backgroundColor: 'rgba(255, 192, 203, 0.24)'}}>
         <SearchBar 
           input={input}

@@ -1,12 +1,10 @@
 import React from 'react'
 
-import AppBarComponent from '../components/AppBar'
-import Product from '../components/ProductDetails'
+import Product from 'components/ProductDetails'
 
 const ProductDetails = () => {
   return(
     <>
-      <AppBarComponent />
       <Product />
     </>
   )
