@@ -9,6 +9,8 @@ export type Product = {
   category: string,
   variant: string,
   image: string,
+  shortDescription: string,
+  longDescription: string
   price: number,
 }
 

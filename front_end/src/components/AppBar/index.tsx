@@ -87,9 +87,9 @@ const AppBarComponent = () => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const open = Boolean(anchorEl)
 
-  const shoppingCart = useSelector((state: AppState) => state.cart.productsInCart)
+  // const shoppingCart = useSelector((state: AppState) => state.cart.productsInCart)
 
-  const total = shoppingCart.reduce((acc, q) => acc + q.quantity, 0)
+  // const total = shoppingCart.reduce((acc, q) => acc + q.quantity, 0)
 
   const isLogedIn = localStorage.getItem('user')
 
@@ -154,9 +154,9 @@ const AppBarComponent = () => {
             className={classes.menuButton} 
             color="inherit" 
             aria-label="menu">
-            <Badge badgeContent={total} color="secondary">
+            {/* <Badge badgeContent={total} color="secondary">
               <ShoppingCartIcon />
-            </Badge> 
+            </Badge>  */}
           </IconButton>
           {isLogedIn ? (
             <Typography variant="subtitle2">

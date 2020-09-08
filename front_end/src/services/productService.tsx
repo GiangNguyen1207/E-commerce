@@ -1,44 +1,45 @@
-import axios from 'axios'
+import React from 'react'
+//import axios from 'axios'
 
-import { sendData, sendSingleProductToStore, sendFilteredProductToStore } from '../redux/actions/product'
-import { useUserService } from '../services/userService'
+// import { sendData, sendSingleProductToStore, sendFilteredProductToStore } from '../redux/actions/product'
+// import { useUserService } from '../services/userService'
 
-export const useProductService: Function = (dispatch: Function) => {
+// export const useProductService: Function = (dispatch: Function) => {
 
-  const { getCart } = useUserService('', dispatch)
+//   const { getCart } = useUserService('', dispatch)
   
-  const userId = localStorage.getItem('userId')
+//   const userId = localStorage.getItem('userId')
 
-  const fetchProducts = async() => {
-    const res = await axios.get('http://localhost:3000/api/v1/products/')
-    dispatch(sendData(res.data))
+//   const fetchProducts = async() => {
+//     const res = await axios.get('http://localhost:3000/api/v1/products/')
+//     dispatch(sendData(res.data))
     
-    if(userId) {
-    getCart(userId)
-    }
-  }
+//     if(userId) {
+//     getCart(userId)
+//     }
+//   }
 
-  const fetchProductById = async(
-    productId: string
-    ) => {
-    const res = await axios.get(`http://localhost:3000/api/v1/products/${productId}`)
-    dispatch(sendSingleProductToStore(res.data))
+//   const fetchProductById = async(
+//     productId: string
+//     ) => {
+//     const res = await axios.get(`http://localhost:3000/api/v1/products/${productId}`)
+//     dispatch(sendSingleProductToStore(res.data))
 
-    if(userId) {
-      getCart(userId)
-    }
-  }
+//     if(userId) {
+//       getCart(userId)
+//     }
+//   }
 
-  const findProducts = async(
-    input: string
-  ) => {
-    const res = await axios.get(`http://localhost:3000/api/v1/products/?search=${input}`)
-    dispatch(sendFilteredProductToStore(res.data))
-  }
+//   const findProducts = async(
+//     input: string
+//   ) => {
+//     const res = await axios.get(`http://localhost:3000/api/v1/products/?search=${input}`)
+//     dispatch(sendFilteredProductToStore(res.data))
+//   }
 
-  return {
-    fetchProducts,
-    fetchProductById,
-    findProducts
-  }
-} 
+//   return {
+//     fetchProducts,
+//     fetchProductById,
+//     findProducts
+//   }
+// } 

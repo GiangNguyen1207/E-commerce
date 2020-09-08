@@ -18,7 +18,7 @@ const Routes = () => (
 
     <Route
       exact
-      path='/products/'
+      path='/products'
       component={ SearchProducts }
     />
 

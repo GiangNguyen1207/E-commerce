@@ -21,6 +21,8 @@ type Props = {
   image: string,
   category: string,
   variant: string,
+  shortDescription: string, 
+  longDescription: string
   price: number,
   takeProductId: (_id: string) => void
 }
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SingleProduct = ({ _id, name, image, category, variant, price, takeProductId}: Props) => {
+const SingleProduct = ({ _id, name, image, category, variant, shortDescription, longDescription, price, takeProductId}: Props) => {
   const dispatch = useDispatch()
   const classes = useStyles()
   const { addToCart } = useUserService('', dispatch)
@@ -54,6 +56,8 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
       image: image,
       category: category,
       variant: variant,
+      shortDescription: shortDescription,
+      longDescription: longDescription,
       price: price,
     }
     addToCart(userId, product, _id)
@@ -70,7 +74,7 @@ const SingleProduct = ({ _id, name, image, category, variant, price, takeProduct
             <CardMedia
               className={classes.media}
               image={image} 
-              title={name}
+              title={name.split('-')[0]}
             />  
           </div>
           <CardContent>

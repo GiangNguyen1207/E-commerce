@@ -1,21 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 
-import CarouselComponent from 'components/Carousel';
-import { useProductService } from 'services/productService'
+import Banner from 'components/Banner';
 
 const Home = () => {
-  const dispatch = useDispatch()
-
-  const { fetchProducts } = useProductService(dispatch)
-
-  useEffect(() => {
-    fetchProducts()
-  },[fetchProducts])
 
   return (
     <div>
-      <CarouselComponent />
+      <Banner/>
     </div>
   )
 }

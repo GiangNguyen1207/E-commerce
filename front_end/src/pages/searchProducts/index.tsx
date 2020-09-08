@@ -1,53 +1,29 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react'
+import { useDispatch } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty'
 
 import ProductList from 'components/ProductList'
 import SearchBar from 'components/Search'
-import { useProductService } from 'services/productService'
-import { Product, AppState } from 'type';
+import useProduct from './hooks/useProduct';
+import { findProducts } from './redux/actions';
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
-  const [input, setInput] = useState('')
+  const { allProducts, filteredProducts} = useProduct('')
 
-  const { fetchProducts, findProducts } = useProductService(dispatch)
-
-  useEffect(() => {
-    fetchProducts()
-  },[fetchProducts])
-
-  const productList = useSelector((state: AppState) => state.product.products)
-
-  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) : void=> {
-    setInput(event.target.value)
-  }
-
-  const handleSearch = async(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    findProducts(input)
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    dispatch(findProducts(event.target.value))
   } 
-
-  const filteredProducts = useSelector((state: AppState) => state.product.filteredProducts)
-
-  const localProducts = localStorage.getItem('Products')
-  const localProductList: Product[] = JSON.parse(localProducts || '')
-
-  let list: Product[] = []
-  if(localProductList) {
-    list = localProductList
-  } else list = productList
   
   return(
     <>
       <div style={{backgroundColor: 'rgba(255, 192, 203, 0.24)'}}>
         <SearchBar 
-          input={input}
-          inputHandler={inputHandler}
           handleSearch={handleSearch}
         />
         <ProductList 
-          products={!_isEmpty(filteredProducts)? filteredProducts : list}
+          products={!_isEmpty(filteredProducts)? filteredProducts : allProducts}
         />
       </div>  
     </>

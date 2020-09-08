@@ -7,9 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import './search.css'
 
 type Props = {
-  input: string,
-  inputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  handleSearch: (e: React.FormEvent<HTMLFormElement>) => void
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SearchBar = ({ input, inputHandler, handleSearch }: Props) => {
+const SearchBar = ({ handleSearch }: Props) => {
   const classes = useStyles()
 
   return(
@@ -70,19 +68,16 @@ const SearchBar = ({ input, inputHandler, handleSearch }: Props) => {
             <SearchIcon />
           </Button> 
         </div>
-        <form onSubmit={handleSearch}>
-          <InputBase
-            style={{border:'1px solid #000000', marginLeft: '25px', width: '50%'}}
-            placeholder="Search…"
-            value={input}
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={inputHandler} 
-          />
-        </form>
+        <InputBase 
+          style={{border:'1px solid #000000', marginLeft: '25px', width: '50%'}}
+          placeholder="Search…"
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          inputProps={{ 'aria-label': 'search' }}
+          onChange={handleSearch} 
+        />
       </div>
     </div>
   )

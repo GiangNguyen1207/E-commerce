@@ -13,8 +13,8 @@ type ListProps = {
 const ProductList = ({ products }: ListProps) => {
   const history = useHistory()
 
-  const takeProductId = (id: string) => {
-    history.push(`/products/${id}`)
+  const takeProductId = (productId: string) => {
+    history.push(`/products/${productId}`)
   }
 
   return (
@@ -32,10 +32,12 @@ const ProductList = ({ products }: ListProps) => {
             <SingleProduct 
               _id={p._id}
               key={p.name}
-              name={p.name}
+              name={p.name.split('-')[0]}
               image={p.image}
               category={p.category}
               variant={p.variant}
+              shortDescription={p.shortDescription}
+              longDescription={p.longDescription}
               price={p.price}
               takeProductId={takeProductId}
             />

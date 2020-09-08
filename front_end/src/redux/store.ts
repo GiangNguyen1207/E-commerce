@@ -2,12 +2,12 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import rootSaga from './saga'
-import rootReducer from './reducer';
-import { AppState } from '../type';
+import rootReducer, { RootState } from './reducer';
 
-const initState: AppState = {
+const initState: RootState = {
   product: {
     products: [],
+    filteredProducts: [],
     singleProduct: {
       _id: '',
       name: '',
@@ -18,12 +18,25 @@ const initState: AppState = {
       longDescription: '',
       price: 0,
     },
-    filteredProducts: []
-  }, 
-  
-  cart: {
-    productsInCart: [],
   }
+  // product: {
+  //   products: [],
+  //   singleProduct: {
+  //     _id: '',
+  //     name: '',
+  //     image: '',
+  //     category: '',
+  //     variant: '',
+  //     shortDescription: '',
+  //     longDescription: '',
+  //     price: 0,
+  //   },
+  //   filteredProducts: []
+  // }, 
+  
+  // cart: {
+  //   productsInCart: [],
+  // }
 };
 
 export default function makeStore(initialState = initState) {
@@ -38,7 +51,7 @@ export default function makeStore(initialState = initState) {
   }
 
   const store = createStore(
-    rootReducer(),
+    rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );
