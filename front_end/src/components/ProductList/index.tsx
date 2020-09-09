@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router';
 
 import { Product } from '../../type';
-import SingleProduct from '../SingleProduct'
+import ProductCard from '../ProductCard'
 import './product.css'
 
 type ListProps = {
@@ -29,7 +29,7 @@ const ProductList = ({ products }: ListProps) => {
       >
         {products.map(p => {
           return(
-            <SingleProduct 
+            <ProductCard 
               _id={p._id}
               key={p.name}
               name={p.name.split('-')[0]}

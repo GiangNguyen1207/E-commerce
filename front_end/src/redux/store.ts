@@ -8,38 +8,25 @@ const initState: RootState = {
   product: {
     products: [],
     filteredProducts: [],
-    singleProduct: {
-      _id: '',
-      name: '',
-      image: '',
-      category: '',
-      variant: '',
-      shortDescription: '',
-      longDescription: '',
-      price: 0,
-    },
+    singleProduct: undefined
+  }, 
+  auth: {
+    token: '',
+    user: undefined
   }
-  // product: {
-  //   products: [],
-  //   singleProduct: {
-  //     _id: '',
-  //     name: '',
-  //     image: '',
-  //     category: '',
-  //     variant: '',
-  //     shortDescription: '',
-  //     longDescription: '',
-  //     price: 0,
-  //   },
-  //   filteredProducts: []
-  // }, 
-  
   // cart: {
   //   productsInCart: [],
   // }
 };
 
-export default function makeStore(initialState = initState) {
+export default function makeStore() {
+  let initialState;
+  const loadedState = localStorage.getItem('state')
+
+  if(loadedState !== null) {
+    initialState = JSON.parse(loadedState)
+  } else initialState = initState
+
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];
   let composeEnhancers = compose;
@@ -57,13 +44,6 @@ export default function makeStore(initialState = initState) {
   );
 
   sagaMiddleware.run(rootSaga);
-
-  if ((module as any).hot) {
-    (module as any).hot.accept('./reducer', () => {
-      const nextReducer = require('./reducer').default;
-      store.replaceReducer(nextReducer);
-    });
-  }
 
   return store;
 }

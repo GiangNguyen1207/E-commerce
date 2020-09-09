@@ -1,4 +1,6 @@
 import React, { useState} from 'react';
+import { useDispatch } from 'react-redux';
+
 import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -15,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 import GoogleSignIn from 'components/GoogleLogin'
-import { useUserService } from 'services/userService';
+import { signin } from 'pages/auth/redux/actions' 
 
 function Copyright() {
   return (
@@ -55,18 +57,17 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function SignIn() {
   const classes = useStyles();
   const history = useHistory()
-  const [username, setUsername] = useState('')
+  const dispatch = useDispatch()
+  const [userInfo, setUserInfo] = useState('')
   const [password, setPassword] = useState('')
-
-  const { logIn } = useUserService(history)
 
   const handleSignin = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    logIn(username, password)
+    dispatch(signin(userInfo, password, history))
   }
 
-  const getUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
+  const getUserInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo(e.target.value)
   }
 
   const getPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,13 +87,13 @@ export default function SignIn() {
           </Typography>
           <form className={classes.form} onSubmit={handleSignin}>
             <TextField
-              onChange={getUsername}
+              onChange={getUserInfo}
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="username"
-              label="Username"
+              label="Username or Email"
               name="username"
               autoComplete="username"
               autoFocus

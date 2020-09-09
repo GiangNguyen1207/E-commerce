@@ -9,19 +9,10 @@ import {
 const initialState: ProductState = {
   products: [],
   filteredProducts: [],
-  singleProduct: {
-    _id: '',
-    name: '',
-    image: '',
-    category: '',
-    variant: '',
-    shortDescription: '',
-    longDescription: '',
-    price: 0,
-  },
+  singleProduct: undefined
 }
 
-export function product(state: ProductState = initialState, action: ProductActions) {
+export function product(state: ProductState = initialState, action: ProductActions) : ProductState {
   switch(action.type) {
     case FETCH_ALL_PRODUCTS_SUCCESS: 
       return {

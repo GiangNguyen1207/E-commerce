@@ -20,7 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import DrawerComponent from '../Drawer'
-import { AppState } from '../../type';
+import useAuth from 'pages/auth/hooks/useAuth'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,12 +86,11 @@ const AppBarComponent = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const open = Boolean(anchorEl)
+  const user = useAuth()
 
   // const shoppingCart = useSelector((state: AppState) => state.cart.productsInCart)
 
   // const total = shoppingCart.reduce((acc, q) => acc + q.quantity, 0)
-
-  const isLogedIn = localStorage.getItem('user')
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -132,7 +131,7 @@ const AppBarComponent = () => {
         })}
       >
         <Toolbar>
-          {isLogedIn ? (
+          {user ? (
           <IconButton
             edge="start"
             onClick={handleDrawerOpen}
@@ -158,9 +157,9 @@ const AppBarComponent = () => {
               <ShoppingCartIcon />
             </Badge>  */}
           </IconButton>
-          {isLogedIn ? (
+          {user ? (
             <Typography variant="subtitle2">
-              {isLogedIn}
+              {user.user?.username}
             </Typography>
           ) : (
             <div>

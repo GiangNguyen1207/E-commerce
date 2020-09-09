@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -14,7 +15,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
-import { useUserService } from 'services/userService';
+import { signup } from 'pages/auth/redux/actions'
 
 function Copyright() {
   return (
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SignUp() {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const history = useHistory()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -60,11 +62,10 @@ export default function SignUp() {
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
 
-  const { signUp } = useUserService(history)
 
   const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    signUp(firstName, lastName, username, email, password)
+    dispatch(signup(firstName, lastName, username, email, password, history))
   }
 
   const getFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {

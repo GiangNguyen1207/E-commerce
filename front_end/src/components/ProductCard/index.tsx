@@ -74,7 +74,7 @@ const SingleProduct = ({ _id, name, image, category, variant, shortDescription, 
             <CardMedia
               className={classes.media}
               image={image} 
-              title={name.split('-')[0]}
+              title={name}
             />  
           </div>
           <CardContent>

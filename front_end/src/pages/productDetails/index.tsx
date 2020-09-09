@@ -6,10 +6,10 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import banner from 'assets/images/product_banner.png'
-import useProduct from 'pages/searchProducts/hooks/useProduct';
+import useProduct from 'pages/productList/hooks/useProduct';
 import { useUserService } from '../../services/userService'
 
-const ProductsingleProduct = () => {
+const SingleProduct = () => {
   const dispatch = useDispatch()
   const { productId } = useParams()
   const { addToCart } = useUserService('', dispatch)
@@ -75,4 +75,4 @@ const ProductsingleProduct = () => {
   )
 }
 
-export default ProductsingleProduct
+export default SingleProduct

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty'
 
 import ProductList from 'components/ProductList'
-import SearchBar from 'components/Search'
+import SearchBar from 'components/SearchBar'
 import useProduct from './hooks/useProduct';
 import { findProducts } from './redux/actions';
 
