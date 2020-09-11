@@ -7,16 +7,20 @@ import Button from '@material-ui/core/Button';
 
 import banner from 'assets/images/product_banner.png'
 import useProduct from 'pages/productList/hooks/useProduct';
-import { useUserService } from '../../services/userService'
+import useAuth from 'pages/auth/hooks/useAuth'
+import { addProductToCart } from 'pages/cart/redux/actions'
 
 const SingleProduct = () => {
   const dispatch = useDispatch()
   const { productId } = useParams()
-  const { addToCart } = useUserService('', dispatch)
-
-  const userId = localStorage.getItem('userId')
-
   const { singleProduct } = useProduct(productId)
+  const { user } = useAuth()
+
+  const handleClick = () => {
+    if(user) {
+      dispatch(addProductToCart(user._id, singleProduct.name, singleProduct.variant, singleProduct._id))
+    } 
+  }
 
    return(
      <>
@@ -53,6 +57,7 @@ const SingleProduct = () => {
             <Typography variant='body2' style={{fontSize: '24px'}}>
               <b>€ {singleProduct.price}</b>
               <Button 
+                onClick={handleClick}
                 variant="contained" 
                 size='large' 
                 style={{backgroundColor: '#e7accf', marginLeft: '65%'}}>

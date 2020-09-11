@@ -68,8 +68,6 @@ userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {
   transform: (document: Document, returnedObject: any) => {
     delete returnedObject._v
-    delete returnedObject.firstName
-    delete returnedObject.lastName
     delete returnedObject.password
   },
 })

@@ -4,6 +4,8 @@ import {
   USER_SIGN_UP,
   USER_SIGN_IN,
   USER_SIGN_IN_SUCCESS,
+  GOGGLE_SIGN_IN,
+  USER_SIGN_OUT,
   AuthActions,
   User,
 } from './types'
@@ -47,5 +49,21 @@ export function signinSuccess(token: string, user: User) : AuthActions{
       token,
       user
     }
+  }
+}
+
+export function googleSignin(id_token: string, history: History) : AuthActions{
+  return {
+    type: GOGGLE_SIGN_IN,
+    payload: {
+      id_token,
+      history
+    }
+  }
+}
+
+export function signout() : AuthActions {
+  return {
+    type: USER_SIGN_OUT,
   }
 }

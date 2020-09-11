@@ -13,10 +13,10 @@ const initState: RootState = {
   auth: {
     token: '',
     user: undefined
+  },
+  cart: {
+    cart: undefined
   }
-  // cart: {
-  //   productsInCart: [],
-  // }
 };
 
 export default function makeStore() {

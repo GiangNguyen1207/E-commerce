@@ -1,7 +1,8 @@
 import {
   USER_SIGN_IN_SUCCESS,
+  USER_SIGN_OUT,
   AuthState,
-  AuthActions
+  AuthActions,
 } from './types'
 
 const initialState: AuthState = {
@@ -16,6 +17,13 @@ export function auth(state: AuthState = initialState, action: AuthActions) : Aut
         ...state,
         token: action.payload.token,
         user: action.payload.user
+      }
+
+    case USER_SIGN_OUT: 
+      delete state.token
+      delete state.user
+      return {
+        ...state
       }
 
     default: 

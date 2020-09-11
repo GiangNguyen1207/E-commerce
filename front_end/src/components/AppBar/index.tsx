@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -21,6 +20,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import DrawerComponent from '../Drawer'
 import useAuth from 'pages/auth/hooks/useAuth'
+import useCart from 'pages/cart/hooks/useCart'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,11 +86,8 @@ const AppBarComponent = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const open = Boolean(anchorEl)
-  const user = useAuth()
-
-  // const shoppingCart = useSelector((state: AppState) => state.cart.productsInCart)
-
-  // const total = shoppingCart.reduce((acc, q) => acc + q.quantity, 0)
+  const { user } = useAuth()
+  const cart = useCart()
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -153,13 +150,13 @@ const AppBarComponent = () => {
             className={classes.menuButton} 
             color="inherit" 
             aria-label="menu">
-            {/* <Badge badgeContent={total} color="secondary">
+            <Badge badgeContent={cart.cart?.length} color="secondary">
               <ShoppingCartIcon />
-            </Badge>  */}
+            </Badge> 
           </IconButton>
           {user ? (
             <Typography variant="subtitle2">
-              {user.user?.username}
+              {user.username}
             </Typography>
           ) : (
             <div>

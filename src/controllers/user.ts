@@ -190,19 +190,17 @@ export const googleLogin = async (
   next: NextFunction
 ) => {
   try {
-    const { email, _id, username } = req.user as any
+    const user = req.user
     const token = await jwt.sign(
       {
-        email,
-        _id,
-        username,
+        user,
       },
       JWT_SECRET,
       {
         expiresIn: '1h',
       }
     )
-    res.json({ token, email, _id, username })
+    res.json({ token, user })
   } catch (error) {
     return next(new InternalServerError())
   }
@@ -215,13 +213,13 @@ export const addProductToCart = async (
 ) => {
   try {
     const { userId, productName, productVariant, productId } = req.body
-    const cart = await UserService.addProductToCart(
+    const user = await UserService.addProductToCart(
       userId,
       productName,
       productVariant,
       productId
     )
-    res.json(cart)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }

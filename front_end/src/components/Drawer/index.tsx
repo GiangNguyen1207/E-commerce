@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,10 +10,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
+import { signout } from 'pages/auth/redux/actions'
+
 const LeftDrawer = () => {
-  
+  const dispatch = useDispatch()
+
   const logout = () => {
-    localStorage.clear()
+    dispatch(signout())
     window.location.href = '/';
   }
 
