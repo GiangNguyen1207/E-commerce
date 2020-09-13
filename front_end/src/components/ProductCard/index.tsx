@@ -13,7 +13,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { Product } from '../../type';
-import { useUserService } from '../../services/userService'
 
 type Props = {
   _id: string
@@ -45,23 +44,23 @@ const useStyles = makeStyles((theme: Theme) =>
 const SingleProduct = ({ _id, name, image, category, variant, shortDescription, longDescription, price, takeProductId}: Props) => {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const { addToCart } = useUserService('', dispatch)
+  // const { addToCart } = useUserService('', dispatch)
 
-  const userId = localStorage.getItem('userId')
+  // const userId = localStorage.getItem('userId')
 
-  const handleAdd = () => {
-    const product: Product = {
-      _id: _id,
-      name: name,
-      image: image,
-      category: category,
-      variant: variant,
-      shortDescription: shortDescription,
-      longDescription: longDescription,
-      price: price,
-    }
-    addToCart(userId, product, _id)
-  }
+  // const handleAdd = () => {
+  //   const product: Product = {
+  //     _id: _id,
+  //     name: name,
+  //     image: image,
+  //     category: category,
+  //     variant: variant,
+  //     shortDescription: shortDescription,
+  //     longDescription: longDescription,
+  //     price: price,
+  //   }
+  //   addToCart(userId, product, _id)
+  // }
 
   return (
     <>
@@ -96,7 +95,8 @@ const SingleProduct = ({ _id, name, image, category, variant, shortDescription, 
             <IconButton 
               aria-label="add to cart" 
               style={{marginLeft: '65%'}} 
-              onClick={handleAdd}>
+              // onClick={handleAdd}
+              >
               <AddShoppingCartIcon />
             </IconButton>
           </CardActions>

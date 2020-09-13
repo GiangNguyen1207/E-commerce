@@ -88,6 +88,11 @@ const AppBarComponent = () => {
   const open = Boolean(anchorEl)
   const { user } = useAuth()
   const cart = useCart()
+  let quantity: Number | undefined = 0
+
+  if(cart.cart?.length) {
+    quantity = cart.cart?.map(c => c.quantity).reduce((a,b) => a + b)
+  }
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -150,7 +155,7 @@ const AppBarComponent = () => {
             className={classes.menuButton} 
             color="inherit" 
             aria-label="menu">
-            <Badge badgeContent={cart.cart?.length} color="secondary">
+            <Badge badgeContent={quantity} color="secondary">
               <ShoppingCartIcon />
             </Badge> 
           </IconButton>
