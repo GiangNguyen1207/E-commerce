@@ -8,30 +8,29 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 
 import useAuth from 'pages/auth/hooks/useAuth'
-import { deleteProduct } from 'pages/cart/redux/actions'
+import { deleteProduct, increaseQuantity, decreaseQuantity } from 'pages/cart/redux/actions'
 
 type Props = {
   name: string,
   // image: string,
   productId: string,
   quantity: number,
-  // increaseQuantity: (userId: string | null, productId: string) => void,
-  // decreaseQuantity: (userId: string | null, productId: string) => void
 }
 
-const CardList = ({ 
-  name, 
-  // image, 
-  productId, 
-  quantity, 
-  // increaseQuantity,
-  // decreaseQuantity
-  }: Props) => {
+const CardList = ({ name, productId, quantity, }: Props) => {
     const dispatch = useDispatch()
     const { user } = useAuth()
 
     const removeProduct = () => {
       dispatch(deleteProduct(user?._id, productId))
+    }
+
+    const increase = () => {
+      dispatch(increaseQuantity(user?._id, productId))
+    }
+
+    const decrease = () => {
+      dispatch(decreaseQuantity(user?._id, productId))
     }
 
   return (
@@ -43,13 +42,13 @@ const CardList = ({
         <Typography variant="h6" style={{margin: '15% 0 5% 0'}}>
           <b>{name}</b>
         </Typography>
-        {/* <IconButton onClick={()=>decreaseQuantity(userId, productId)}>
+        <IconButton onClick={decrease}>
           <RemoveIcon />
         </IconButton>
           <span style={{fontSize: '18px'}}>{quantity}</span>
-        <IconButton onClick={()=>increaseQuantity(userId, productId)}>
+        <IconButton onClick={increase}>
           <AddIcon />
-        </IconButton> */}
+        </IconButton>
       </Grid>
       <Grid item xs={12} sm={2}>
         <IconButton 

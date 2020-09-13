@@ -260,8 +260,8 @@ export const increaseQuantity = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    const cart = await UserService.increaseQuantity(userId, productId)
-    res.json(cart)
+    const user = await UserService.increaseQuantity(userId, productId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
@@ -274,8 +274,8 @@ export const decreaseQuantity = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    const cart = await UserService.decreaseQuantity(userId, productId)
-    res.json(cart)
+    const user = await UserService.decreaseQuantity(userId, productId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }

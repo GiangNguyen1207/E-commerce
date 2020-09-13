@@ -1,14 +1,24 @@
 import { takeEvery, put, call, fork, select } from 'redux-saga/effects'
 
 import API from '../services/api'
-import { addProductToCartSuccess, getCartSuccess, deleteProductSuccess } from './actions'
+import { 
+  addProductToCartSuccess, 
+  getCartSuccess, 
+  deleteProductSuccess,
+  increaseQuantitySuccess,
+  decreaseQuantitySuccess
+  } from './actions'
 import { RootState } from 'redux/reducer'
 import {
   ADD_PRODUCT_TO_CART,
   GET_CART,
   DELETE_PRODUCT,
+  INCREASE_QUANTITY,
+  DECREASE_QUANTITY,
   AddProductToCartAction,
-  DeleteProductAction
+  DeleteProductAction,
+  IncreaseQuantityAction,
+  DecreaseQuantityAction
 } from './types'
 
 
@@ -60,4 +70,39 @@ function* deleteProduct() {
   })
 }
 
-export default [addProductToCart, getCart, deleteProduct].map(fork)
+function* increaseQuantity() {
+  yield takeEvery(INCREASE_QUANTITY, function*(action: IncreaseQuantityAction) {
+    try {
+      const { userId, productId } = action.payload
+      if(userId) {
+        const cart = yield call(API.increaseQuantity, userId, productId)
+        yield put(increaseQuantitySuccess(cart))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+function* decreaseQuantity() {
+  yield takeEvery(DECREASE_QUANTITY, function*(action: DecreaseQuantityAction) {
+    try {
+      const { userId, productId } = action.payload
+      if(userId) {
+        const cart = yield call(API.decreaseQuantity, userId, productId)
+        yield put(decreaseQuantitySuccess(cart))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+
+export default [
+  addProductToCart, 
+  getCart, 
+  deleteProduct, 
+  increaseQuantity, 
+  decreaseQuantity
+].map(fork)

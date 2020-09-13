@@ -6,6 +6,10 @@ import {
   GET_CART_SUCCESS,
   DELETE_PRODUCT,
   DELETE_PRODUCT_SUCCESS,
+  INCREASE_QUANTITY,
+  INCREASE_QUANTITY_SUCCESS,
+  DECREASE_QUANTITY,
+  DECREASE_QUANTITY_SUCCESS,
   CartActions,
 } from './types'
 
@@ -60,6 +64,40 @@ export function deleteProduct(userId: string | undefined, productId: string) : C
 export function deleteProductSuccess(cart: Cart[]) : CartActions {
   return {
     type: DELETE_PRODUCT_SUCCESS,
+    payload: cart
+  }
+}
+
+export function increaseQuantity(userId: string | undefined, productId: string) : CartActions {
+  return {
+    type: INCREASE_QUANTITY,
+    payload: {
+      userId,
+      productId
+    }
+  }
+}
+
+export function increaseQuantitySuccess(cart: Cart[]) : CartActions {
+  return {
+    type: INCREASE_QUANTITY_SUCCESS,
+    payload: cart
+  }
+}
+
+export function decreaseQuantity(userId: string | undefined, productId: string) : CartActions {
+  return {
+    type: DECREASE_QUANTITY,
+    payload: {
+      userId,
+      productId
+    }
+  }
+}
+
+export function decreaseQuantitySuccess(cart: Cart[]) : CartActions {
+  return {
+    type: DECREASE_QUANTITY_SUCCESS,
     payload: cart
   }
 }
