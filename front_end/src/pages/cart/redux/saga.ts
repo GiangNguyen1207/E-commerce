@@ -47,6 +47,7 @@ function* getCart() {
     try {
       const state: RootState = yield select()
       if(state.auth.user) {
+        console.log('in')
         const cart = yield call(API.getCart, state.auth.user?._id)
         yield put(getCartSuccess(cart))
       }
