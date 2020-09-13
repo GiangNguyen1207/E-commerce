@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react'
 import { useHistory } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,14 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import Avatar from '@material-ui/core/Avatar';
-
 import Button from '@material-ui/core/Button';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
-import { AppState } from '../../type';
-import OneProductInCart from '../CartOneProduct'
-import { useUserService } from '../../services/userService';
+import CardList from 'components/CartList'
+import useCart from 'pages/cart/hooks/useCart';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,18 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const ShoppingCart = () => {
   const classes = useStyles()
   const history = useHistory()
-  const dispatch = useDispatch()
+  const cart = useCart()
 
-  const userId = localStorage.getItem('userId')
-
-  const { getCart, deleteProduct, increaseQuantity, decreaseQuantity } = useUserService('', dispatch)
-
-  useEffect(() => {
-    getCart(userId)
-  },[getCart, userId])
-
-  const productsInCart = useSelector((state: AppState) => state.cart.productsInCart)
-  
   return(
     <>
       <Container component="main" maxWidth="md">
@@ -71,18 +58,17 @@ const ShoppingCart = () => {
               height: '.5',
               borderColor : '#cccccc',
               marginTop: '2%'}} />
-          <Grid container spacing={2}> 
-            {productsInCart.map(p => {
+          <Grid container spacing={2}>
+            {cart.cart?.map(c => {
               return (
-                <OneProductInCart 
-                  key={p.product._id}
-                  productId={p.productId}
-                  name={p.product.name}
-                  image={p.product.image}
-                  quantity={p.quantity}
-                  removeProduct={deleteProduct}
-                  increaseQuantity={increaseQuantity}
-                  decreaseQuantity={decreaseQuantity}
+                <CardList 
+                  key={c.productId}
+                  productId={c.productId}
+                  name={c.productName}
+                  // image={c.}
+                  quantity={c.quantity}
+                  // increaseQuantity={increaseQuantity}
+                  // decreaseQuantity={decreaseQuantity}
                 />
               )
             })}

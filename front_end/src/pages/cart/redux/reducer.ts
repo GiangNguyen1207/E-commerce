@@ -1,7 +1,9 @@
 import {
   ADD_PRODUCT_TO_CART_SUCCESS,
+  GET_CART_SUCCESS,
+  DELETE_PRODUCT_SUCCESS,
   CartActions,
-  CartState
+  CartState,
 } from './types'
 
 const initialState: CartState = {
@@ -15,6 +17,19 @@ export function cart(state: CartState = initialState, action: CartActions) : Car
         ...state,
         cart: action.payload
       }
+
+    case GET_CART_SUCCESS: 
+      return {
+        ...state,
+        cart: action.payload
+      }
+    
+    case DELETE_PRODUCT_SUCCESS: 
+      return {
+        ...state,
+        cart: action.payload
+      }
+
     default: 
       return state
   }

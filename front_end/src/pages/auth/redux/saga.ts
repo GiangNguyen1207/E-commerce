@@ -32,6 +32,7 @@ function* signin() {
     const { userInfo, password, history } = action.payload
     try {
       const { token, user } = yield call(API.signin, userInfo, password)
+      console.log('token', token)
       yield put(signinSuccess(token, user))
       axios.defaults.headers.common[
         'Authorization'

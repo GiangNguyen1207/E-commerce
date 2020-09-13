@@ -6,7 +6,7 @@ import SearchProducts from 'pages/productList';
 import ProductDetails from 'pages/productDetails'
 import SignIn from 'pages/auth/components/login'
 import SignUp from 'pages/auth/components/signup'
-import ShoppingCart from 'pages/checkout'
+import ShoppingCart from 'pages/cart'
 
 const Routes = () => (
   <Switch>
