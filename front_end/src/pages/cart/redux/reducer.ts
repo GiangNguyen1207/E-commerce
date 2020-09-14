@@ -4,12 +4,14 @@ import {
   DELETE_PRODUCT_SUCCESS,
   INCREASE_QUANTITY_SUCCESS,
   DECREASE_QUANTITY_SUCCESS,
+  ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
   CartActions,
   CartState,
 } from './types'
 
 const initialState: CartState = {
-  cart: undefined
+  cart: undefined,
+  favoriteList: undefined
 }
 
 export function cart(state: CartState = initialState, action: CartActions) : CartState {
@@ -43,6 +45,12 @@ export function cart(state: CartState = initialState, action: CartActions) : Car
         ...state,
         cart: action.payload
     }
+
+    case ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS:
+      return {
+        ...state,
+        favoriteList: action.payload
+      }
 
     default: 
       return state

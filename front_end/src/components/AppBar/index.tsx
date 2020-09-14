@@ -150,7 +150,7 @@ const AppBarComponent = () => {
             </Link>
           </Typography>
           <IconButton 
-            onClick={goToCart}
+            onClick={user ? goToCart : goToSignIn}
             edge="end" 
             className={classes.menuButton} 
             color="inherit" 

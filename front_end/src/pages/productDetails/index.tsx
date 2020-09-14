@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router';
 import Grid from '@material-ui/core/Grid';
 import { useParams } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -12,6 +13,7 @@ import { addProductToCart } from 'pages/cart/redux/actions'
 
 const SingleProduct = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { productId } = useParams()
   const { singleProduct } = useProduct(productId)
   const { user } = useAuth()
@@ -19,7 +21,9 @@ const SingleProduct = () => {
   const handleClick = () => {
     if(user) {
       dispatch(addProductToCart(user._id, singleProduct.name, singleProduct.variant, singleProduct._id))
-    } 
+    } else {
+      history.push('/user/signIn')
+    }
   }
 
    return(

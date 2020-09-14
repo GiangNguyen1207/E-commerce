@@ -32,6 +32,11 @@ passport.use(
           lastName: payload.family_name,
           password: payload.name,
           key: payload.email,
+          favoriteList: [
+            {
+              productId: '',
+            },
+          ],
           forgotPassword: {
             token: '',
             timeOfCreated: 0,

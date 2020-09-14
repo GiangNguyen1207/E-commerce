@@ -14,6 +14,10 @@ type CartType = {
   quantity: number;
 }
 
+type FavoriteList = {
+  productId: string;
+}
+
 export type UserDocument = Document & {
   firstName: string;
   lastName: string;
@@ -21,6 +25,7 @@ export type UserDocument = Document & {
   key: string;
   email: string;
   password: string;
+  favoriteList: FavoriteList[];
   forgotPassword: PasswordToken;
   cart: CartType[];
 }
@@ -48,6 +53,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  favoriteList: [
+    {
+      productId: String,
+    },
+  ],
   forgotPassword: {
     token: String,
     timeOfCreated: Number,

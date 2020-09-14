@@ -217,6 +217,28 @@ function decreaseQuantity(
     })
 }
 
+function addToFavoriteList(
+  userId: string,
+  productId: string
+): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found')
+      }
+      const existingProduct = user.favoriteList.find(
+        (i) => i.productId === productId
+      )
+      if (existingProduct) {
+        throw new Error('Product has been added already')
+      } else {
+        user.favoriteList.push({ productId })
+      }
+      return user.save()
+    })
+}
+
 export default {
   createUser,
   signIn,
@@ -230,4 +252,5 @@ export default {
   removeProductInCart,
   increaseQuantity,
   decreaseQuantity,
+  addToFavoriteList,
 }

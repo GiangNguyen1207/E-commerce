@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -12,16 +13,14 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { Product } from '../../type';
+import useAuth from 'pages/auth/hooks/useAuth'
+import { addProductToCart, addProductToFavoriteList } from 'pages/cart/redux/actions'
 
 type Props = {
   _id: string
   name: string,
   image: string,
-  category: string,
   variant: string,
-  shortDescription: string, 
-  longDescription: string
   price: number,
   takeProductId: (_id: string) => void
 }
@@ -41,26 +40,27 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SingleProduct = ({ _id, name, image, category, variant, shortDescription, longDescription, price, takeProductId}: Props) => {
+const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const classes = useStyles()
-  // const { addToCart } = useUserService('', dispatch)
+  const { user } = useAuth()
 
-  // const userId = localStorage.getItem('userId')
+  const addToFavorite = () => {
+    if(user) {
+      dispatch(addProductToFavoriteList(user?._id, _id))
+    } else {
+      history.push('/user/signIn')
+    }
+  }
 
-  // const handleAdd = () => {
-  //   const product: Product = {
-  //     _id: _id,
-  //     name: name,
-  //     image: image,
-  //     category: category,
-  //     variant: variant,
-  //     shortDescription: shortDescription,
-  //     longDescription: longDescription,
-  //     price: price,
-  //   }
-  //   addToCart(userId, product, _id)
-  // }
+  const addToCart = () => {
+    if(user) {
+      dispatch(addProductToCart(user?._id, name, variant, _id))
+    } else {
+      history.push('/user/signIn')
+    }
+  }
 
   return (
     <>
@@ -89,15 +89,18 @@ const SingleProduct = ({ _id, name, image, category, variant, shortDescription, 
                   borderColor : '#cccccc',
                   marginBottom: '2%'}} />
           <CardActions>
-            <IconButton aria-label="add to favorites" style={{marginLeft: '2%'}}>
-              <FavoriteIcon />
+            <IconButton 
+              onClick={addToFavorite}
+              aria-label="add to favorites"
+              style={{marginLeft: '2%'}}>
+                <FavoriteIcon />
             </IconButton>
             <IconButton 
               aria-label="add to cart" 
               style={{marginLeft: '65%'}} 
-              // onClick={handleAdd}
+              onClick={addToCart}
               >
-              <AddShoppingCartIcon />
+                <AddShoppingCartIcon />
             </IconButton>
           </CardActions>
         </Card>
@@ -106,4 +109,4 @@ const SingleProduct = ({ _id, name, image, category, variant, shortDescription, 
   )
 }
 
-export default SingleProduct
+export default ProductCard

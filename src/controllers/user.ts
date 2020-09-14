@@ -223,6 +223,7 @@ export const addProductToCart = async (
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const getCart = async (
@@ -237,6 +238,7 @@ export const getCart = async (
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const removeProductInCart = async (
@@ -251,6 +253,7 @@ export const removeProductInCart = async (
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const increaseQuantity = async (
@@ -265,6 +268,7 @@ export const increaseQuantity = async (
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const decreaseQuantity = async (
@@ -278,5 +282,27 @@ export const decreaseQuantity = async (
     res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
+  }
+  return next(new InternalServerError())
+}
+
+export const addToFavoriteList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId, productId } = req.body
+    const user = await UserService.addToFavoriteList(userId, productId)
+    res.json(user.favoriteList)
+  } catch (error) {
+    console.log(error.message)
+    if (error.message === 'Product has been added already') {
+      return next(new BadRequestError('Product has been added already', error))
+    }
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
 }

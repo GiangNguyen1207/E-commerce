@@ -48,5 +48,15 @@ export default {
           productId: productId
         })
       .then(res => res.data)
+  },
+
+  async addProductToFavoriteList(userId: string, productId: string) {
+    return await axios
+      .post(`http://localhost:3000/api/v1/users/favorite/${userId}`, 
+      {
+        userId: userId,
+        productId: productId
+      })
+      .then(res => res.data)
   }
 }

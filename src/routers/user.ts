@@ -14,9 +14,9 @@ import {
   getCart,
   removeProductInCart,
   increaseQuantity,
-  decreaseQuantity
+  decreaseQuantity,
+  addToFavoriteList,
 } from '../controllers/user'
-
 
 const router = express.Router()
 
@@ -26,16 +26,17 @@ router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword', validateToken)
 router.put('/resetPassword', resetPassword)
 router.put('/changePassword/:userId', changePassword)
-router.post('/google-authenticate', 
+router.post(
+  '/google-authenticate',
   passport.authenticate('google-id-token'),
   googleLogin
 )
 router.post('/cart/:userId', addProductToCart)
 router.get('/cart/:userId', getCart)
 router.delete('/cart/:userId', removeProductInCart)
+router.post('/favorite/:userId', addToFavoriteList)
 router.put('/cart/increase/:userId', increaseQuantity)
 router.put('/cart/decrease/:userId', decreaseQuantity)
 router.put('/:userId', updateUserProfile)
-
 
 export default router

@@ -10,11 +10,14 @@ import {
   INCREASE_QUANTITY_SUCCESS,
   DECREASE_QUANTITY,
   DECREASE_QUANTITY_SUCCESS,
+  ADD_PRODUCT_TO_FAVORITE_LIST,
+  ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
   CartActions,
+  FavoriteList,
 } from './types'
 
 export function addProductToCart(
-  userId: string,
+  userId: string | undefined,
   productName: string,
   productVariant: string,
   productId: string
@@ -99,5 +102,22 @@ export function decreaseQuantitySuccess(cart: Cart[]) : CartActions {
   return {
     type: DECREASE_QUANTITY_SUCCESS,
     payload: cart
+  }
+}
+
+export function addProductToFavoriteList(userId: string | undefined, productId: string) : CartActions {
+  return {
+    type: ADD_PRODUCT_TO_FAVORITE_LIST,
+    payload: {
+      userId,
+      productId
+    }
+  }
+}
+
+export function addProductToFavoriteListSuccess(favoriteList: FavoriteList[]) : CartActions {
+  return {
+    type: ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
+    payload: favoriteList
   }
 }

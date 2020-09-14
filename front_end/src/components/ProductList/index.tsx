@@ -34,10 +34,7 @@ const ProductList = ({ products }: ListProps) => {
               key={p.name}
               name={p.name.split('-')[0]}
               image={p.image}
-              category={p.category}
               variant={p.variant}
-              shortDescription={p.shortDescription}
-              longDescription={p.longDescription}
               price={p.price}
               takeProductId={takeProductId}
             />

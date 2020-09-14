@@ -15,7 +15,8 @@ const initState: RootState = {
     user: undefined
   },
   cart: {
-    cart: undefined
+    cart: undefined,
+    favoriteList: undefined
   }
 };
 

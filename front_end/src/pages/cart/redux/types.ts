@@ -10,11 +10,13 @@ export const INCREASE_QUANTITY = 'INCREASE_QUANTITY'
 export const INCREASE_QUANTITY_SUCCESS = 'INCREASE_QUANTITY_SUCCESS'
 export const DECREASE_QUANTITY = 'DECREASE_QUANTITY'
 export const DECREASE_QUANTITY_SUCCESS = 'DECREASE_QUANTITY_SUCCESS'
+export const ADD_PRODUCT_TO_FAVORITE_LIST = 'ADD_PRODUCT_TO_FAVORITE_LIST'
+export const ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS = 'ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS'
 
 export type AddProductToCartAction = {
   type: typeof ADD_PRODUCT_TO_CART,
   payload: {
-    userId: string,
+    userId: string | undefined,
     productName: string,
     productVariant: string,
     productId: string
@@ -75,8 +77,26 @@ export type DecreaseQuantitySuccessAction = {
   payload: Cart[]
 }
 
+export type FavoriteList = {
+  productId: string
+}
+
+export type AddProductToFavoriteListAction = {
+  type: typeof ADD_PRODUCT_TO_FAVORITE_LIST,
+  payload: {
+    userId: string | undefined,
+    productId: string
+  }
+}
+
+export type AddProductToFavoriteListSuccessAction = {
+  type: typeof ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
+  payload: FavoriteList[]
+}
+
 export type CartState = {
-  cart?: Cart[]
+  cart?: Cart[],
+  favoriteList?: FavoriteList[]
 }
 
 export type CartActions = 
@@ -90,3 +110,5 @@ export type CartActions =
   | IncreaseQuantitySuccessAction
   | DecreaseQuantityAction
   | DecreaseQuantitySuccessAction
+  | AddProductToFavoriteListAction
+  | AddProductToFavoriteListSuccessAction

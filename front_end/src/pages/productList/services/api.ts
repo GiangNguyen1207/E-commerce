@@ -14,5 +14,5 @@ export default {
   async fetchOneProduct(productId: string) {
     return await axios.get(`http://localhost:3000/api/v1/products/${productId}`)
       .then(res => res.data)
-  },
+  }
 }
