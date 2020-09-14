@@ -12,6 +12,7 @@ export type Cart = {
   productVariant: string;
   productId: string;
   quantity: number;
+  price: number
 }
 
 export type PasswordToken = {

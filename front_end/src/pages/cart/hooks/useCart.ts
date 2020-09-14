@@ -8,11 +8,18 @@ import useAuth from 'pages/auth/hooks/useAuth';
 export default function useCart() {
   const dispatch = useDispatch()
   const { user } = useAuth()
-  const cart = useSelector((state: RootState) => state.cart)
+  const { cart, favoriteList } = useSelector((state: RootState) => ({
+    cart: state.cart.cart,
+    favoriteList: state.cart.favoriteList
+  })
+  )
 
   useEffect(() => {
     dispatch(getCart(user?._id))
   }, [dispatch, user])
   
-  return cart
+  return {
+    cart,
+    favoriteList
+  }
 }

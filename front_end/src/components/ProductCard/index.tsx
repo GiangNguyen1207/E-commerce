@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -43,12 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation()
   const classes = useStyles()
   const { user } = useAuth()
 
   const addToFavorite = () => {
     if(user) {
-      dispatch(addProductToFavoriteList(user?._id, _id))
+      dispatch(addProductToFavoriteList(user?._id, _id, name, variant, price))
     } else {
       history.push('/user/signIn')
     }
@@ -56,7 +57,7 @@ const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) 
 
   const addToCart = () => {
     if(user) {
-      dispatch(addProductToCart(user?._id, name, variant, _id))
+      dispatch(addProductToCart(user?._id, name, variant, _id, price))
     } else {
       history.push('/user/signIn')
     }
@@ -81,28 +82,32 @@ const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) 
               <b style={{marginLeft:'40%', fontSize: '26px'}}>€ {price}</b>
             </Typography>
           </CardContent>
-          <hr style={{
-                  width:'100%', 
-                  color: '#000000',
-                  backgroundColor: '#000000',
-                  height: '.5',
-                  borderColor : '#cccccc',
-                  marginBottom: '2%'}} />
-          <CardActions>
-            <IconButton 
-              onClick={addToFavorite}
-              aria-label="add to favorites"
-              style={{marginLeft: '2%'}}>
-                <FavoriteIcon />
-            </IconButton>
-            <IconButton 
-              aria-label="add to cart" 
-              style={{marginLeft: '65%'}} 
-              onClick={addToCart}
-              >
-                <AddShoppingCartIcon />
-            </IconButton>
-          </CardActions>
+          {location.pathname !== '/favorite' ? (
+            <>
+              <hr style={{
+                width:'100%', 
+                color: '#000000',
+                backgroundColor: '#000000',
+                height: '.5',
+                borderColor : '#cccccc',
+                marginBottom: '2%'}} />
+              <CardActions>
+                <IconButton 
+                  onClick={addToFavorite}
+                  aria-label="add to favorites"
+                  style={{marginLeft: '2%'}}>
+                    <FavoriteIcon />
+                </IconButton>
+                <IconButton 
+                  aria-label="add to cart" 
+                  style={{marginLeft: '65%'}} 
+                  onClick={addToCart}
+                  >
+                    <AddShoppingCartIcon />
+                </IconButton>
+              </CardActions>
+            </>
+          ) : null}
         </Card>
       </Grid> 
     </>

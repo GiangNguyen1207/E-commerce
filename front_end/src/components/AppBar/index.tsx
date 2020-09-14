@@ -87,11 +87,11 @@ const AppBarComponent = () => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const open = Boolean(anchorEl)
   const { user } = useAuth()
-  const cart = useCart()
+  const { cart } = useCart()
   let quantity: Number | undefined = 0
 
-  if(cart.cart?.length) {
-    quantity = cart.cart?.map(c => c.quantity).reduce((a,b) => a + b)
+  if(cart?.length) {
+    quantity = cart.map(c => c.quantity).reduce((a,b) => a + b)
   }
 
   const handleDrawerOpen = () => {

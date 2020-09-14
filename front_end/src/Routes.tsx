@@ -7,6 +7,7 @@ import ProductDetails from 'pages/productDetails'
 import SignIn from 'pages/auth/components/login'
 import SignUp from 'pages/auth/components/signup'
 import ShoppingCart from 'pages/cart'
+import FavoriteList from 'pages/favoriteList'
 
 const Routes = () => (
   <Switch>
@@ -44,6 +45,12 @@ const Routes = () => (
       exact
       path='/cart'
       component={ ShoppingCart }
+    />
+
+    <Route
+      exact
+      path='/favorite'
+      component={ FavoriteList }
     />
     
   </Switch>

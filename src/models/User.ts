@@ -11,11 +11,15 @@ type CartType = {
   productName: string;
   productVariant: string;
   productId: string;
+  price: number;
   quantity: number;
 }
 
 type FavoriteList = {
   productId: string;
+  productName: string;
+  productVariant: string;
+  price: number;
 }
 
 export type UserDocument = Document & {
@@ -56,6 +60,9 @@ const userSchema = new mongoose.Schema({
   favoriteList: [
     {
       productId: String,
+      productName: String,
+      productVariant: String,
+      price: Number,
     },
   ],
   forgotPassword: {

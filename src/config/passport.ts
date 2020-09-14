@@ -35,6 +35,9 @@ passport.use(
           favoriteList: [
             {
               productId: '',
+              productName: '',
+              productVariant: '',
+              price: 0,
             },
           ],
           forgotPassword: {
@@ -47,6 +50,7 @@ passport.use(
               productName: '',
               productId: '',
               productVariant: '',
+              price: 0,
               quantity: 0,
             },
           ],

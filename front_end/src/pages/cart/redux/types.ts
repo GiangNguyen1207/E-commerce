@@ -19,7 +19,8 @@ export type AddProductToCartAction = {
     userId: string | undefined,
     productName: string,
     productVariant: string,
-    productId: string
+    productId: string,
+    price: number
   }
 }
 
@@ -78,14 +79,20 @@ export type DecreaseQuantitySuccessAction = {
 }
 
 export type FavoriteList = {
-  productId: string
+  productId: string,
+  productName: string,
+  productVariant: string,
+  price: number
 }
 
 export type AddProductToFavoriteListAction = {
   type: typeof ADD_PRODUCT_TO_FAVORITE_LIST,
   payload: {
     userId: string | undefined,
-    productId: string
+    productId: string,
+    productName: string,
+    productVariant: string,
+    price: number
   }
 }
 

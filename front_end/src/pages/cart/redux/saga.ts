@@ -27,7 +27,7 @@ import {
 
 function* addProductToCart() {
   yield takeEvery(ADD_PRODUCT_TO_CART, function*(action: AddProductToCartAction) {
-    const { productName, productVariant, productId} = action.payload
+    const { productName, productVariant, productId, price } = action.payload
     try {
       const state: RootState = yield select()
       if(state.auth.user) {
@@ -35,7 +35,8 @@ function* addProductToCart() {
           state.auth.user?._id, 
           productName, 
           productVariant,  
-          productId
+          productId,
+          price
         )
         yield put(addProductToCartSuccess(cart))
       }
@@ -104,9 +105,9 @@ function* decreaseQuantity() {
 function* addToFavoriteList() {
   yield takeEvery(ADD_PRODUCT_TO_FAVORITE_LIST, function*(action: AddProductToFavoriteListAction) {
     try {
-      const { userId, productId } = action.payload
+      const { userId, productId, productName, productVariant, price } = action.payload
       if(userId) {
-        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId)
+        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, price)
         yield put(addProductToFavoriteListSuccess(favoriteList))
       }
     } catch (error) {

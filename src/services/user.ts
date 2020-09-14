@@ -116,7 +116,8 @@ function addProductToCart(
   userId: string,
   productName: string,
   productVariant: string,
-  productId: string
+  productId: string,
+  price: number
 ): Promise<UserDocument> {
   return User.findById(userId)
     .exec()
@@ -128,7 +129,13 @@ function addProductToCart(
       if (existing) {
         existing.quantity += 1
       } else {
-        user.cart.push({ productName, productId, productVariant, quantity: 1 })
+        user.cart.push({
+          productName,
+          productId,
+          productVariant,
+          price,
+          quantity: 1,
+        })
       }
       return user.save()
     })
@@ -219,7 +226,10 @@ function decreaseQuantity(
 
 function addToFavoriteList(
   userId: string,
-  productId: string
+  productId: string,
+  productName: string,
+  productVariant: string,
+  price: number
 ): Promise<UserDocument> {
   return User.findById(userId)
     .exec()
@@ -233,7 +243,12 @@ function addToFavoriteList(
       if (existingProduct) {
         throw new Error('Product has been added already')
       } else {
-        user.favoriteList.push({ productId })
+        user.favoriteList.push({
+          productId,
+          productName,
+          productVariant,
+          price,
+        })
       }
       return user.save()
     })

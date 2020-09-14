@@ -212,12 +212,13 @@ export const addProductToCart = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, productName, productVariant, productId } = req.body
+    const { userId, productName, productVariant, productId, price } = req.body
     const user = await UserService.addProductToCart(
       userId,
       productName,
       productVariant,
-      productId
+      productId,
+      price
     )
     res.json(user.cart)
   } catch (error) {
@@ -292,8 +293,16 @@ export const addToFavoriteList = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, productId } = req.body
-    const user = await UserService.addToFavoriteList(userId, productId)
+    console.log(req.body)
+    const { userId, productId, productName, productVariant, price } = req.body
+
+    const user = await UserService.addToFavoriteList(
+      userId,
+      productId,
+      productName,
+      productVariant,
+      price
+    )
     res.json(user.favoriteList)
   } catch (error) {
     console.log(error.message)

@@ -20,7 +20,7 @@ const SingleProduct = () => {
 
   const handleClick = () => {
     if(user) {
-      dispatch(addProductToCart(user._id, singleProduct.name, singleProduct.variant, singleProduct._id))
+      dispatch(addProductToCart(user._id, singleProduct.name, singleProduct.variant, singleProduct._id, singleProduct.price))
     } else {
       history.push('/user/signIn')
     }

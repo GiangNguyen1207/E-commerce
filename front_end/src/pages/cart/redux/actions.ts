@@ -20,7 +20,8 @@ export function addProductToCart(
   userId: string | undefined,
   productName: string,
   productVariant: string,
-  productId: string
+  productId: string,
+  price: number
 ) : CartActions {
   return {
     type: ADD_PRODUCT_TO_CART,
@@ -28,7 +29,8 @@ export function addProductToCart(
       userId,
       productName,
       productVariant,
-      productId
+      productId,
+      price
     }
   }
 }
@@ -105,12 +107,21 @@ export function decreaseQuantitySuccess(cart: Cart[]) : CartActions {
   }
 }
 
-export function addProductToFavoriteList(userId: string | undefined, productId: string) : CartActions {
+export function addProductToFavoriteList(
+  userId: string | undefined, 
+  productId: string,
+  productName: string,
+  productVariant: string,
+  price: number
+  ) : CartActions {
   return {
     type: ADD_PRODUCT_TO_FAVORITE_LIST,
     payload: {
       userId,
-      productId
+      productId,
+      productName,
+      productVariant,
+      price
     }
   }
 }
