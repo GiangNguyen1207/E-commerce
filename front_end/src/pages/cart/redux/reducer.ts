@@ -5,6 +5,7 @@ import {
   INCREASE_QUANTITY_SUCCESS,
   DECREASE_QUANTITY_SUCCESS,
   ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
+  GET_FAVORITE_LIST_SUCCESS,
   CartActions,
   CartState,
 } from './types'
@@ -47,6 +48,12 @@ export function cart(state: CartState = initialState, action: CartActions) : Car
     }
 
     case ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS:
+      return {
+        ...state,
+        favoriteList: action.payload
+      }
+
+    case GET_FAVORITE_LIST_SUCCESS: 
       return {
         ...state,
         favoriteList: action.payload

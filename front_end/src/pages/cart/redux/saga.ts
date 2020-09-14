@@ -7,7 +7,8 @@ import {
   deleteProductSuccess,
   increaseQuantitySuccess,
   decreaseQuantitySuccess,
-  addProductToFavoriteListSuccess
+  addProductToFavoriteListSuccess,
+  getFavoriteListSuccess
   } from './actions'
 import { RootState } from 'redux/reducer'
 import {
@@ -17,11 +18,13 @@ import {
   INCREASE_QUANTITY,
   DECREASE_QUANTITY,
   ADD_PRODUCT_TO_FAVORITE_LIST,
+  GET_FAVORITE_LIST,
   AddProductToCartAction,
   DeleteProductAction,
   IncreaseQuantityAction,
   DecreaseQuantityAction,
   AddProductToFavoriteListAction,
+  GetFavoriteListAction
 } from './types'
 
 
@@ -116,11 +119,27 @@ function* addToFavoriteList() {
   })
 }
 
+
+function* getFavoriteList() {
+  yield takeEvery(GET_FAVORITE_LIST, function*(action: GetFavoriteListAction) {
+    try {
+      const userId = action.payload
+      if(userId) {
+        const favoriteList = yield call(API.getFavoriteList, userId)
+        yield put(getFavoriteListSuccess(favoriteList))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
 export default [
   addProductToCart, 
   getCart, 
   deleteProduct, 
   increaseQuantity, 
   decreaseQuantity,
-  addToFavoriteList
+  addToFavoriteList,
+  getFavoriteList
 ].map(fork)

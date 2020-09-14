@@ -254,6 +254,17 @@ function addToFavoriteList(
     })
 }
 
+function getFavoriteList(userId: string): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found')
+      }
+      return user
+    })
+}
+
 export default {
   createUser,
   signIn,
@@ -268,4 +279,5 @@ export default {
   increaseQuantity,
   decreaseQuantity,
   addToFavoriteList,
+  getFavoriteList,
 }

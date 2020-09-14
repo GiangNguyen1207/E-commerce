@@ -74,5 +74,10 @@ export default {
           price: price
         })
         .then(res => res.data)
+  },
+
+  async getFavoriteList(userId: string) {
+    return await axios.get(`http://localhost:3000/api/v1/users/favorite/${userId}`)
+      .then(res => res.data)
   }
 }

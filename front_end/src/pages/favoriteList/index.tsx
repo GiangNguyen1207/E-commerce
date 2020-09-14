@@ -7,13 +7,14 @@ import ProductCard from 'components/ProductCard'
 
 const FavoriteList = () => {
   const history = useHistory()
+
   const { favoriteList } = useCart()
 
   const takeProductId = (productId: string) => {
     history.push(`/products/${productId}`)
   }
   return(
-    <>
+    <div className='list'>
       <Grid
         container
         spacing={3}
@@ -35,7 +36,7 @@ const FavoriteList = () => {
           )
         })}
       </Grid>
-    </>
+    </div>
   )
 }
 

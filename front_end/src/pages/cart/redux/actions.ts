@@ -12,6 +12,8 @@ import {
   DECREASE_QUANTITY_SUCCESS,
   ADD_PRODUCT_TO_FAVORITE_LIST,
   ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
+  GET_FAVORITE_LIST,
+  GET_FAVORITE_LIST_SUCCESS,
   CartActions,
   FavoriteList,
 } from './types'
@@ -129,6 +131,20 @@ export function addProductToFavoriteList(
 export function addProductToFavoriteListSuccess(favoriteList: FavoriteList[]) : CartActions {
   return {
     type: ADD_PRODUCT_TO_FAVORITE_LIST_SUCCESS,
+    payload: favoriteList
+  }
+}
+
+export function getFavoriteList(userId: string | undefined) : CartActions {
+  return {
+    type: GET_FAVORITE_LIST,
+    payload: userId
+  }
+}
+
+export function getFavoriteListSuccess(favoriteList: FavoriteList[]) : CartActions {
+  return {
+    type: GET_FAVORITE_LIST_SUCCESS,
     payload: favoriteList
   }
 }

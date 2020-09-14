@@ -295,7 +295,6 @@ export const addToFavoriteList = async (
   try {
     console.log(req.body)
     const { userId, productId, productName, productVariant, price } = req.body
-
     const user = await UserService.addToFavoriteList(
       userId,
       productId,
@@ -314,4 +313,19 @@ export const addToFavoriteList = async (
     }
     return next(new InternalServerError())
   }
+}
+
+export const getFavoriteList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId
+    const user = await UserService.getFavoriteList(userId)
+    res.json(user.favoriteList)
+  } catch (error) {
+    return next(new NotFoundError('User not found', error))
+  }
+  return next(new InternalServerError())
 }

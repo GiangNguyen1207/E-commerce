@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/reducer";
 
-import { getCart } from 'pages/cart/redux/actions'
+import { getCart, getFavoriteList } from 'pages/cart/redux/actions'
 import useAuth from 'pages/auth/hooks/useAuth';
 
 export default function useCart() {
@@ -15,7 +15,10 @@ export default function useCart() {
   )
 
   useEffect(() => {
-    dispatch(getCart(user?._id))
+    if(user) {
+      dispatch(getCart(user?._id))
+      dispatch(getFavoriteList(user?._id))
+    }
   }, [dispatch, user])
   
   return {
