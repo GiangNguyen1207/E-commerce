@@ -21,7 +21,9 @@ const SearchProducts = () => {
   } 
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelect(event.target.value as string)
+    if (event.target.value === 'none') {
+      setSelect('')
+    } else setSelect(event.target.value as string)
   }
 
   if (select === 'priceAsc') {

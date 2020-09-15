@@ -31,17 +31,19 @@ const Sort = ({ select, handleChange }: Props) => {
       <b className='sort-text'>Sort</b>
       <FormControl className={classes.formControl}>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId='select-label'
+          id='select'
           value={select}
           onChange={handleChange}
         >
+          <MenuItem value={'none'}>None</MenuItem>
           <MenuItem value={'priceAsc'}>Price (Low to High)</MenuItem>
           <MenuItem value={'priceDesc'}>Price (Higt to Low)</MenuItem>
           <MenuItem value={'nameAsc'}>Name (Asc)</MenuItem>
           <MenuItem value={'nameDesc'}>Name (Desc)</MenuItem>
         </Select>
       </FormControl>
+
     </div>
   )
 }
