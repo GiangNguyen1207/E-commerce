@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Sort = ({ select, handleChange }: Props) => {
   const classes = useStyles();
+  const sortValues = ['None', 'Price (Low to High)', 'Price (High to Low)', 'Name (Asc)', 'Name (Desc)']
 
   return(
     <div className='sort'>
@@ -36,11 +37,9 @@ const Sort = ({ select, handleChange }: Props) => {
           value={select}
           onChange={handleChange}
         >
-          <MenuItem value={'none'}>None</MenuItem>
-          <MenuItem value={'priceAsc'}>Price (Low to High)</MenuItem>
-          <MenuItem value={'priceDesc'}>Price (Higt to Low)</MenuItem>
-          <MenuItem value={'nameAsc'}>Name (Asc)</MenuItem>
-          <MenuItem value={'nameDesc'}>Name (Desc)</MenuItem>
+          {sortValues.map(value => (
+            <MenuItem key={value} value={value}>{value}</MenuItem>
+          ))}
         </Select>
       </FormControl>
 
