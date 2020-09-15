@@ -4,7 +4,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-import './search.css'
+import './styles.css'
 
 type Props = {
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void

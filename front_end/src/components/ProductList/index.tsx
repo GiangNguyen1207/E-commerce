@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 
 import { Product } from '../../type';
 import ProductCard from '../ProductCard'
-import './product.css'
+import './styles.css'
 
 type ListProps = {
   products: Product[]

@@ -1,0 +1,11 @@
+.sort {
+  width: 80%;
+  margin: 30px auto;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+
+.sort-text {
+  padding-right: 10px;
+}
