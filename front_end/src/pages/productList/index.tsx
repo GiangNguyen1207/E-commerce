@@ -52,9 +52,11 @@ const SearchProducts = () => {
         </div>
         <ProductList 
           products={
-            select ? sortedProducts 
-            : !_isEmpty(filteredProducts) ? filteredProducts 
-            : allProducts
+            select ? 
+              sortedProducts 
+              : !_isEmpty(filteredProducts) ? 
+                filteredProducts 
+                : allProducts
           }
           />
         </div>

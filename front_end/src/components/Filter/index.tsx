@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import './styles.css'
+import useProduct from 'pages/productList/hooks/useProduct';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,9 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const Filter = () => {
   const classes = useStyles();
   const [personName, setPersonName] = React.useState<string[]>([]);
-  const names = ['Luna mini 2']
-  const category = ['Skincare']
-  const variant = ['Combination Skin', 'Sensitive Skin', 'Oily Skin', 'Pearl Pink']
+  const { allProducts } = useProduct('')
+  const names = Array.from(new Set(allProducts.map(p => p.name.split('-')[0])))
+  const category = Array.from(new Set(allProducts.map(p => p.category)))
+  const variant = Array.from(new Set(allProducts.map(p => p.variant)))
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setPersonName(event.target.value as string[]);
