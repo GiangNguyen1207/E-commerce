@@ -32,6 +32,14 @@ passport.use(
           lastName: payload.family_name,
           password: payload.name,
           key: payload.email,
+          favoriteList: [
+            {
+              productId: '',
+              productName: '',
+              productVariant: '',
+              price: 0,
+            },
+          ],
           forgotPassword: {
             token: '',
             timeOfCreated: 0,
@@ -39,8 +47,10 @@ passport.use(
           },
           cart: [
             {
-              product: {},
+              productName: '',
               productId: '',
+              productVariant: '',
+              price: 0,
               quantity: 0,
             },
           ],

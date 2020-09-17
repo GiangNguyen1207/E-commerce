@@ -46,13 +46,13 @@ export const signIn = async (
   next: NextFunction
 ) => {
   try {
-    const { username, password } = req.body
-    const user = await UserService.signIn(username, password)
+    const { userInfo, password } = req.body
+    const user = await UserService.signIn(userInfo, password)
     const id = user.id
     const token = await jwt.sign(
       {
         id,
-        username,
+        userInfo,
       },
       JWT_SECRET,
       {
@@ -61,9 +61,10 @@ export const signIn = async (
     )
     res.json({ token, user })
   } catch (error) {
-    if ((error.name = 'Username or password incorrect')) {
+    if ((error.message = 'Username or password incorrect')) {
       next(new NotFoundError('Username or password incorrect', error))
     }
+    next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -121,7 +122,7 @@ export const forgotPassword = async (
       }
     })
   } catch (error) {
-    if ((error.name = 'Invalid Email')) {
+    if ((error.message = 'Invalid Email')) {
       next(new NotFoundError('Email not found', error))
     }
     next(new InternalServerError('Internal server error', error))
@@ -137,7 +138,7 @@ export const validateToken = async (
     await UserService.validateToken(req.query.token)
     res.status(200).send('Token is validated')
   } catch (error) {
-    if (error.name === 'Invalid token' || 'Wrong token') {
+    if (error.message === 'Invalid token' || 'Wrong token') {
       next(new BadRequestError('Invalid token', error))
     }
     next(new InternalServerError('Internal server error', error))
@@ -150,13 +151,14 @@ export const resetPassword = async (
   next: NextFunction
 ) => {
   try {
-    const { username, newPassword } = req.body
-    await UserService.resetPassword(username, newPassword)
+    const { userInfo, newPassword } = req.body
+    await UserService.resetPassword(userInfo, newPassword)
     res.json({ status: 200, message: 'Password has been reset successfully' })
   } catch (error) {
-    if (error.name === 'User not found') {
+    if (error.message === 'User not found') {
       next(new NotFoundError('User not found', error))
     }
+    next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -172,10 +174,10 @@ export const changePassword = async (
     await UserService.changePassword(userId, oldPassword, newHashedPassword)
     res.json({ status: 200, message: 'Password has been changed successfully' })
   } catch (error) {
-    if ((error.name = 'User not found')) {
+    if (error.message === 'User not found') {
       next(new NotFoundError('User not found', error))
     }
-    if ((error.name = 'Passwords not match')) {
+    if (error.message === 'Passwords not match') {
       next(new BadRequestError('Passwords not match', error))
     }
     next(new InternalServerError('Internal server error', error))
@@ -188,19 +190,17 @@ export const googleLogin = async (
   next: NextFunction
 ) => {
   try {
-    const { email, _id, username } = req.user as any
+    const user = req.user
     const token = await jwt.sign(
       {
-        email,
-        _id,
-        username,
+        user,
       },
       JWT_SECRET,
       {
         expiresIn: '1h',
       }
     )
-    res.json({ token, email, _id, username })
+    res.json({ token, user })
   } catch (error) {
     return next(new InternalServerError())
   }
@@ -212,12 +212,19 @@ export const addProductToCart = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, product, productId } = req.body
-    const cart = await UserService.addProductToCart(userId, product, productId)
-    res.json(cart)
+    const { userId, productName, productVariant, productId, price } = req.body
+    const user = await UserService.addProductToCart(
+      userId,
+      productName,
+      productVariant,
+      productId,
+      price
+    )
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const getCart = async (
@@ -227,11 +234,12 @@ export const getCart = async (
 ) => {
   try {
     const userId = req.params.userId
-    const cart = await UserService.getCart(userId)
-    res.json(cart)
+    const user = await UserService.getCart(userId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const removeProductInCart = async (
@@ -241,11 +249,12 @@ export const removeProductInCart = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    const cart = await UserService.removeProductInCart(userId, productId)
-    res.json(cart)
+    const user = await UserService.removeProductInCart(userId, productId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const increaseQuantity = async (
@@ -255,12 +264,12 @@ export const increaseQuantity = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    console.log(req.body)
-    const cart = await UserService.increaseQuantity(userId, productId)
-    res.json(cart)
+    const user = await UserService.increaseQuantity(userId, productId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
 }
 
 export const decreaseQuantity = async (
@@ -270,9 +279,53 @@ export const decreaseQuantity = async (
 ) => {
   try {
     const { userId, productId } = req.body
-    const cart = await UserService.decreaseQuantity(userId, productId)
-    res.json(cart)
+    const user = await UserService.decreaseQuantity(userId, productId)
+    res.json(user.cart)
   } catch (error) {
     return next(new NotFoundError('User not found', error))
   }
+  return next(new InternalServerError())
+}
+
+export const addToFavoriteList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log(req.body)
+    const { userId, productId, productName, productVariant, price } = req.body
+    const user = await UserService.addToFavoriteList(
+      userId,
+      productId,
+      productName,
+      productVariant,
+      price
+    )
+    res.json(user.favoriteList)
+  } catch (error) {
+    console.log(error.message)
+    if (error.message === 'Product has been added already') {
+      return next(new BadRequestError('Product has been added already', error))
+    }
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
+  }
+}
+
+export const getFavoriteList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId
+    const user = await UserService.getFavoriteList(userId)
+    res.json(user.favoriteList)
+  } catch (error) {
+    return next(new NotFoundError('User not found', error))
+  }
+  return next(new InternalServerError())
 }

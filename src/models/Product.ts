@@ -15,6 +15,7 @@ const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   category: {
     type: String,
@@ -22,7 +23,6 @@ const productSchema = new mongoose.Schema({
   },
   variant: {
     type: String,
-    unique: true,
     required: true,
   },
 
@@ -40,6 +40,8 @@ const productSchema = new mongoose.Schema({
 
   price: {
     type: Number,
+    min: 1,
+    max: 999,
   },
 })
 

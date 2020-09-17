@@ -5,7 +5,7 @@ import {
   findAll,
   addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 } from '../controllers/product'
 
 const router = express.Router()
@@ -15,8 +15,6 @@ router.get('/', findAll)
 router.get('/:productId', findById)
 router.post('/admin', addProduct)
 router.put('/admin/:productId', updateProduct)
-router.post('/admin/:productId', deleteProduct)
 router.delete('/admin/:productId', deleteProduct)
-
 
 export default router

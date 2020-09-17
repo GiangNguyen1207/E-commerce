@@ -2,31 +2,32 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import rootSaga from './saga'
-import rootReducer from './reducer';
-import { AppState } from '../type';
+import rootReducer, { RootState } from './reducer';
 
-const initState: AppState = {
+const initState: RootState = {
   product: {
     products: [],
-    singleProduct: {
-      _id: '',
-      name: '',
-      image: '',
-      category: '',
-      variant: '',
-      shortDescription: '',
-      longDescription: '',
-      price: 0,
-    },
-    filteredProducts: []
+    filteredProducts: [],
+    singleProduct: undefined
   }, 
-  
+  auth: {
+    token: '',
+    user: undefined
+  },
   cart: {
-    productsInCart: [],
+    cart: undefined,
+    favoriteList: undefined
   }
 };
 
-export default function makeStore(initialState = initState) {
+export default function makeStore() {
+  let initialState;
+  const loadedState = localStorage.getItem('state')
+
+  if(loadedState !== null) {
+    initialState = JSON.parse(loadedState)
+  } else initialState = initState
+
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];
   let composeEnhancers = compose;
@@ -38,19 +39,12 @@ export default function makeStore(initialState = initState) {
   }
 
   const store = createStore(
-    rootReducer(),
+    rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );
 
   sagaMiddleware.run(rootSaga);
-
-  if ((module as any).hot) {
-    (module as any).hot.accept('./reducer', () => {
-      const nextReducer = require('./reducer').default;
-      store.replaceReducer(nextReducer);
-    });
-  }
 
   return store;
 }

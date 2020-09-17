@@ -1,24 +1,15 @@
 import React from 'react'
-import axios from 'axios'
 import GoogleLogin from 'react-google-login';
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+
+import { googleSignin } from 'pages/auth/redux/actions'
 
 const GoogleSignin= () => {
   const history = useHistory()
+  const dispatch = useDispatch()
   async function ResponseGoogle (response: any) { 
-    const res = await axios.post('http://localhost:3000/api/v1/users/google-authenticate', {
-      id_token: response.tokenObj.id_token
-    })
-
-    await localStorage.setItem('id_token', res.data.token)
-
-    await localStorage.setItem('user', res.data.username)
-
-    await localStorage.setItem('userId', res.data._id)
-  
-    if(res.data) {
-      history.push('/')
-    }
+    dispatch(googleSignin(response.tokenObj.id_token, history))
   }
 
   return (

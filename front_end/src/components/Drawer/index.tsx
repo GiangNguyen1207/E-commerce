@@ -1,4 +1,6 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,31 +11,35 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
+import { signout } from 'pages/auth/redux/actions'
+
 const LeftDrawer = () => {
-  
+  const dispatch = useDispatch()
+  const history = useHistory()
+
   const logout = () => {
-    localStorage.clear()
-    window.location.href = '/';
+    dispatch(signout())
+    window.location.href = '/'
   }
 
   return(
     <>
       <Divider />
         <List>
-          <ListItem >
-            <ListItemIcon style={{cursor:'pointer'}}>
+          <ListItem style={{cursor:'pointer'}}>
+            <ListItemIcon>
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary={'User profile'} />
           </ListItem>
-          <ListItem >
-            <ListItemIcon style={{cursor:'pointer'}}>
+          <ListItem style={{cursor:'pointer'}}>
+            <ListItemIcon>
               <LockOpenIcon />
             </ListItemIcon>
             <ListItemText primary={'Change password'} />
           </ListItem>
-          <ListItem >
-            <ListItemIcon style={{cursor:'pointer'}}>
+          <ListItem onClick={() => history.push('/favorite')} style={{cursor:'pointer'}}>
+            <ListItemIcon>
               <FavoriteIcon />
             </ListItemIcon>
             <ListItemText primary={'Favourite List'} />

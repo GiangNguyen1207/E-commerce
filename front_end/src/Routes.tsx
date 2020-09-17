@@ -1,12 +1,13 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import Home from './pages/home'
-import SearchProducts from './pages/searchProducts';
-import ProductDetails from './pages/productDetails'
-import SignIn from './pages/signIn'
-import SignUp from './pages/signUp'
-import ShoppingCart from './pages/shoppingCart'
+import Home from 'pages/home'
+import SearchProducts from 'pages/productList';
+import ProductDetails from 'pages/productDetails'
+import SignIn from 'pages/auth/components/login'
+import SignUp from 'pages/auth/components/signup'
+import ShoppingCart from 'pages/cart'
+import FavoriteList from 'pages/favoriteList'
 
 const Routes = () => (
   <Switch>
@@ -18,7 +19,7 @@ const Routes = () => (
 
     <Route
       exact
-      path='/products/'
+      path='/products'
       component={ SearchProducts }
     />
 
@@ -44,6 +45,12 @@ const Routes = () => (
       exact
       path='/cart'
       component={ ShoppingCart }
+    />
+
+    <Route
+      exact
+      path='/favorite'
+      component={ FavoriteList }
     />
     
   </Switch>

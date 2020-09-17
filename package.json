@@ -52,7 +52,7 @@
     "lodash": "^4.17.20",
     "lusca": "^1.6.1",
     "mongodb-memory-server": "^6.6.5",
-    "mongoose": "^5.9.2",
+    "mongoose": "^5.10.1",
     "mongoose-unique-validator": "^2.0.3",
     "nodemailer": "^6.4.3",
     "passport": "^0.4.1",

@@ -15,7 +15,9 @@ const prod = ENVIRONMENT === 'production' // Anything else is treated as 'dev'
 
 export const SESSION_SECRET = process.env['SESSION_SECRET'] as string
 export const JWT_SECRET = process.env['SESSION_SECRET'] as string
-export const MONGODB_URI = process.env['MONGODB_URI'] as string
+export const MONGODB_URI = (prod
+  ? process.env['MONGODB_URI_TEST']
+  : process.env['MONGODB_URI']) as string
 
 if (!SESSION_SECRET || !JWT_SECRET) {
   logger.error(
@@ -25,14 +27,8 @@ if (!SESSION_SECRET || !JWT_SECRET) {
 }
 
 if (!MONGODB_URI) {
-  if (prod) {
-    logger.error(
-      'No mongo connection string. Set MONGODB_URI environment variable.'
-    )
-  } else {
-    logger.error(
-      'No mongo connection string. Set MONGODB_URI_LOCAL environment variable.'
-    )
-  }
+  logger.error(
+    'No mongo connection string. Set MONGODB_URI environment variable.'
+  )
   process.exit(1)
 }

@@ -9,7 +9,7 @@ import {
 } from '../helpers/apiError'
 
 export const findAll = async (
-  req: Request, 
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -27,7 +27,7 @@ export const findById = async (
 ) => {
   try {
     res.json(await ProductService.findById(req.params.productId))
-  } catch(error) {
+  } catch (error) {
     next(new NotFoundError('Product not found', error))
   }
 }
@@ -38,21 +38,33 @@ export const addProduct = async (
   next: NextFunction
 ) => {
   try {
-  const {name, category, variant} = req.body
+    const {
+      name,
+      category,
+      variant,
+      image,
+      shortDescription,
+      longDescription,
+      price,
+    } = req.body
 
-  const newProduct = new Product({
-    name: name,
-    category: category,
-    variant: variant
-  })
+    const newProduct = new Product({
+      name: name,
+      category: category,
+      variant: variant,
+      image: image,
+      shortDescription: shortDescription,
+      longDescription: longDescription,
+      price: price,
+    })
 
-  await ProductService.addProduct(newProduct)
-  res.json(newProduct)
-  } catch(error) {
-    if(error.name = 'ValidationError') {
+    await ProductService.addProduct(newProduct)
+    res.json(newProduct)
+  } catch (error) {
+    if (error.name.includes('ValidationError')) {
       next(new BadRequestError(error.message, error))
-  } 
-      next(new InternalServerError('Internal Server Error', error))
+    }
+    next(new InternalServerError('Internal Server Error', error))
   }
 }
 
@@ -62,13 +74,16 @@ export const updateProduct = async (
   next: NextFunction
 ) => {
   try {
-  const product = req.body
-  const productId = req.params.productId
-  const updatedProduct = await ProductService.updateProduct(productId, product)
-  res.json(updatedProduct)
-} catch (error) {
-  next (new NotFoundError('Product not found', error))
-}
+    const product = req.body
+    const productId = req.params.productId
+    const updatedProduct = await ProductService.updateProduct(
+      productId,
+      product
+    )
+    res.json(updatedProduct)
+  } catch (error) {
+    next(new NotFoundError('Product not found', error))
+  }
 }
 
 export const deleteProduct = async (
@@ -83,4 +98,3 @@ export const deleteProduct = async (
     next(new NotFoundError('Product not found', error))
   }
 }
-

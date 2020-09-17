@@ -6,8 +6,8 @@ function createUser(user: UserDocument): Promise<UserDocument> {
   return user.save()
 }
 
-function signIn(username: string, password: string): Promise<UserDocument> {
-  return User.findOne({ username: username })
+function signIn(userInfo: string, password: string): Promise<UserDocument> {
+  return User.findOne({ $or: [{ username: userInfo }, { email: userInfo }] })
     .exec()
     .then(async (user) => {
       if (user) {
@@ -15,9 +15,9 @@ function signIn(username: string, password: string): Promise<UserDocument> {
         if (match) {
           return user
         }
-        throw new Error('Username or password incorrect')
+        throw new Error('Username/email or password incorrect')
       }
-      throw new Error('Username or password incorrect')
+      throw new Error('Username/email or password incorrect')
     })
 }
 
@@ -80,10 +80,10 @@ function validateToken(query: any): Promise<UserDocument> {
 }
 
 function resetPassword(
-  username: string,
+  userInfo: string,
   newPassword: string
 ): Promise<UserDocument> {
-  return User.findOne({ username: username })
+  return User.findOne({ $or: [{ username: userInfo }, { email: userInfo }] })
     .exec()
     .then((user) => {
       if (!user) throw new Error('User not found')
@@ -114,8 +114,10 @@ function changePassword(
 
 function addProductToCart(
   userId: string,
-  product: object,
-  productId: string
+  productName: string,
+  productVariant: string,
+  productId: string,
+  price: number
 ): Promise<UserDocument> {
   return User.findById(userId)
     .exec()
@@ -127,7 +129,13 @@ function addProductToCart(
       if (existing) {
         existing.quantity += 1
       } else {
-        user.cart.push({ product, productId, quantity: 1 })
+        user.cart.push({
+          productName,
+          productId,
+          productVariant,
+          price,
+          quantity: 1,
+        })
       }
       return user.save()
     })
@@ -160,6 +168,9 @@ function removeProductInCart(
         const index = user.cart.indexOf(existing)
         user.cart.splice(index, 1)
       }
+      if (!existing) {
+        throw new Error('Product not match')
+      }
       return user.save()
     })
 }
@@ -178,6 +189,9 @@ function increaseQuantity(
 
       if (existing) {
         existing.quantity++
+      }
+      if (!existing) {
+        throw new Error('Product not match')
       }
       return user.save()
     })
@@ -203,7 +217,51 @@ function decreaseQuantity(
           user.cart.splice(index, 1)
         }
       }
+      if (!existing) {
+        throw new Error('Product not match')
+      }
       return user.save()
+    })
+}
+
+function addToFavoriteList(
+  userId: string,
+  productId: string,
+  productName: string,
+  productVariant: string,
+  price: number
+): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found')
+      }
+      const existingProduct = user.favoriteList.find(
+        (i) => i.productId === productId
+      )
+      if (existingProduct) {
+        throw new Error('Product has been added already')
+      } else {
+        user.favoriteList.push({
+          productId,
+          productName,
+          productVariant,
+          price,
+        })
+      }
+      return user.save()
+    })
+}
+
+function getFavoriteList(userId: string): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found')
+      }
+      return user
     })
 }
 
@@ -220,4 +278,6 @@ export default {
   removeProductInCart,
   increaseQuantity,
   decreaseQuantity,
+  addToFavoriteList,
+  getFavoriteList,
 }

@@ -8,9 +8,18 @@ type PasswordToken = {
 }
 
 type CartType = {
-  product: object;
+  productName: string;
+  productVariant: string;
   productId: string;
+  price: number;
   quantity: number;
+}
+
+type FavoriteList = {
+  productId: string;
+  productName: string;
+  productVariant: string;
+  price: number;
 }
 
 export type UserDocument = Document & {
@@ -20,6 +29,7 @@ export type UserDocument = Document & {
   key: string;
   email: string;
   password: string;
+  favoriteList: FavoriteList[];
   forgotPassword: PasswordToken;
   cart: CartType[];
 }
@@ -47,6 +57,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  favoriteList: [
+    {
+      productId: String,
+      productName: String,
+      productVariant: String,
+      price: Number,
+    },
+  ],
   forgotPassword: {
     token: String,
     timeOfCreated: Number,
@@ -54,8 +72,9 @@ const userSchema = new mongoose.Schema({
   },
   cart: [
     {
-      product: Object,
+      productName: Object,
       productId: String,
+      productVariant: String,
       quantity: Number,
     },
   ],
@@ -66,8 +85,6 @@ userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {
   transform: (document: Document, returnedObject: any) => {
     delete returnedObject._v
-    delete returnedObject.firstName
-    delete returnedObject.lastName
     delete returnedObject.password
   },
 })

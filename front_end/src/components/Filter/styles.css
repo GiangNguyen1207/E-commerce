@@ -1,0 +1,15 @@
+.filter {
+  width: 65%;
+  margin: 30px 0 30px 100px;
+  display: flex;
+  align-items: center;
+}
+
+.MuiInput-formControl {
+  margin: 0 !important
+}
+
+#checkbox-label {
+  font-size: 12px;
+  margin-top: -16px
+}

@@ -1,12 +1,11 @@
 import {Request, Response, NextFunction} from 'express'
 import request from 'supertest'
-import mongoose from 'mongoose'
 
-import Product, { ProductDocument } from '../../src/models/Product'
+import { ProductDocument } from '../../src/models/Product'
 import app from '../../src/app'
 import * as dbHelper from '../db-helper'
 
-const fakeId = '5e57b77b5744fa0b461c5573'
+const fakeId = '123456'
 
 jest.mock(
   '../../src/middlewares/authenticate',
@@ -18,6 +17,10 @@ async function addProduct(override?: Partial<ProductDocument>) {
     name: 'Luna 2',
     category: 'skincare',
     variant: 'pearl pink',
+    image: '',
+    shortDescription: 'abc',
+    longDescription: 'abcxyz',
+    price: 1
   }
 
   if (override) {
@@ -30,10 +33,6 @@ async function addProduct(override?: Partial<ProductDocument>) {
 }
 
 describe('product controller', () => {
-  beforeEach(async() => {
-    await dbHelper.connect()
-  })
-
   afterEach(async () => {
     await dbHelper.clearDatabase()
   })
@@ -48,34 +47,82 @@ describe('product controller', () => {
     expect(res.body).toHaveProperty('_id')
   })
 
+  it('should create a product with data that are not required', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send ({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+      })
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('_id')
+  })
+
+  it('should not create a product with duplicate data', async () => {
+    let res = await addProduct()
+    expect(res.status).toBe(200)
+
+    res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+      })
+    expect(res.status).toBe(400)
+  })
+
+  it('should not create a product when missing required data', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+      })
+    expect(res.status).toBe(400)
+  })
+
   it('should not create a product with wrong data', async () => {
     const res = await request(app)
       .post('/api/v1/products/admin')
       .send({
-        variant: 'nude'
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+        price: 0
+      })
+    expect(res.status).toBe(400)
+  })
+  
+  it('should not create a product with wrong data', async () => {
+    const res = await request(app)
+      .post('/api/v1/products/admin')
+      .send({
+        name: 'Luna 2',
+        category: 'skincare',
+        variant: 'pearl pink',
+        price: 1200
       })
     expect(res.status).toBe(400)
   })
 
   it('should return a list of products', async () => {
+    const res = await addProduct()
+    expect(res.status).toBe(200)
+
     const res1 = await addProduct({
       name: 'Luna 2 mini',
       category: 'skincare',
       variant: 'pearl pink',
     })
+    expect(res1.status).toBe(200)
 
-    const res2 = await addProduct({
-      name: 'Luna 3',
-      category: 'skincare',
-      variant: 'aqua',
-    })
-
-    const res3 = await request(app)
+    const res2 = await request(app)
       .get(`/api/v1/products`)
 
-    expect(res3.status).toBe(200)
-    expect(res3.type).toEqual('application/json')
-    expect(res3.body.length).toEqual(2)
+    expect(res2.status).toBe(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body.length).toEqual(2)
   })
 
   it('should return a list of products using query', async () => {
@@ -159,7 +206,7 @@ describe('product controller', () => {
       .put(`/api/v1/products/admin/${fakeId}`)
       .send(update)
 
-    expect(res.status).toEqual(404)
+    expect(res.status).toBe(404)
   })
 
   it('should delete an existing product', async () => {
@@ -169,19 +216,16 @@ describe('product controller', () => {
 
     res = await request(app)
       .delete(`/api/v1/products/admin/${productId}`)
-    expect(res.status).toEqual(204)
+    expect(res.status).toBe(204)
 
     res = await request(app)
       .get(`/api/v1/products/admin/${productId}`)
     expect(res.status).toBe(404)
   })
 
-  it('should delete a fake product', async () => {
-    let res = await addProduct()
-    expect(res.status).toBe(200)
-
-    res = await request(app)
+  it('should not delete a fake product', async () => {
+    const res = await request(app)
       .delete(`/api/v1/products/admin/${fakeId}`)
-    expect(res.status).toEqual(404)
+    expect(res.status).toBe(404)
   })
 })
