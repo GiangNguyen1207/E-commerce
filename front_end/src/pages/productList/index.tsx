@@ -2,21 +2,42 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty'
 import _orderBy from 'lodash/orderBy'
+import _filter from 'lodash/filter'
 
 import ProductList from 'components/ProductList'
 import SearchBar from 'components/SearchBar'
 import useProduct from './hooks/useProduct';
 import Sort from 'components/Sort';
 import Filter from 'components/Filter';
+import { Product } from 'pages/productList/redux/types';
 import { findProducts } from './redux/actions';
 import './styles.css'
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
-  const { allProducts, filteredProducts} = useProduct('')
+  const { allProducts, searchedProducts } = useProduct('')
   const [sortValue, setsortValue] = useState<string>('')
   const [filterValues, setFilterValues] = useState<string[]>([])
   let sortedProducts;
+  let arr: Product[] = []
+  let filteredProducts: Product[] = []; 
+
+  _filter(allProducts, 
+    p => {
+      filterValues.map(value => {
+        if(p.name.split(' -')[0] === value ||
+        p.category === value ||
+        p.variant === value) {
+          arr.push(p)
+        }
+        return filteredProducts = arr.filter((p, index) =>
+          arr.indexOf(p) === index)
+      }
+      ) 
+    }
+  ) 
+
+  console.log(filteredProducts)
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -64,8 +85,8 @@ const SearchProducts = () => {
           products={
             sortValue ? 
               sortedProducts 
-              : !_isEmpty(filteredProducts) ? 
-                filteredProducts 
+              : !_isEmpty(searchedProducts) ? 
+                searchedProducts
                 : allProducts
           }
           />

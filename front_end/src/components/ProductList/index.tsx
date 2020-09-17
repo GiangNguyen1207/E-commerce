@@ -2,7 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router';
 
-import { Product } from '../../type';
+import { Product } from 'pages/productList/redux/types';
 import ProductCard from '../ProductCard'
 
 type ListProps = {

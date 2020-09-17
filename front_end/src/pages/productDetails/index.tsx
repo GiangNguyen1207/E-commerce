@@ -19,7 +19,7 @@ const SingleProduct = () => {
   const { user } = useAuth()
 
   const handleClick = () => {
-    if(user) {
+    if(user && singleProduct) {
       dispatch(addProductToCart(user._id, singleProduct.name, singleProduct.variant, singleProduct._id, singleProduct.price))
     } else {
       history.push('/user/signIn')

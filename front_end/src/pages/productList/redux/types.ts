@@ -47,7 +47,7 @@ export type FetchOneProductSuccessAction = {
 
 export type ProductState = {
   products: Product[]
-  filteredProducts: Product[],
+  searchedProducts: Product[],
   singleProduct?: Product
 }
 
