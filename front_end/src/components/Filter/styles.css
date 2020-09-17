@@ -3,6 +3,8 @@
   margin: 30px 0 30px 100px;
   display: flex;
   align-items: center;
+  text-transform: uppercase;
+  flex-wrap: wrap;
 }
 
 .MuiInput-formControl {
@@ -12,4 +14,27 @@
 #checkbox-label {
   font-size: 12px;
   margin-top: -16px
+}
+
+.filter-button {
+  margin-left: 30px;
+}
+
+@media screen and (max-width: 900px) {
+  .filter {
+    width: 100%;
+    margin: 20px 0 40px
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .filter {
+    margin-bottom: 30px
+  }
+
+  .filter-button {
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 0
+  }
 }

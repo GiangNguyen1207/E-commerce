@@ -12,5 +12,10 @@
 .products-action {
   display: flex;
   align-items: center;
-  text-transform: uppercase;
+}
+
+@media screen and (max-width: 900px) {
+  .products-action {
+    flex-wrap: wrap;
+  }
 }
