@@ -11,6 +11,7 @@
 
 .products-action {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 

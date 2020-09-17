@@ -13,8 +13,9 @@ import './styles.css'
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
-  const [select, setSelect] = useState('')
   const { allProducts, filteredProducts} = useProduct('')
+  const [sortValue, setsortValue] = useState<string>('')
+  const [filterValues, setFilterValues] = useState<string[]>([])
   let sortedProducts;
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,15 +25,19 @@ const SearchProducts = () => {
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'None') {
-      setSelect('')
-    } else setSelect(event.target.value as string)
+      setsortValue('')
+    } else setsortValue(event.target.value as string)
   }
 
-  if (select === 'Price (Low to High)') {
+  const handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setFilterValues(event.target.value as string[]);
+  };
+
+  if (sortValue === 'Price (Low to High)') {
     sortedProducts = _orderBy(allProducts, 'price', 'asc')
-  } else if (select === 'Price (High to Low)') {
+  } else if (sortValue === 'Price (High to Low)') {
     sortedProducts = _orderBy(allProducts, 'price', 'desc')
-  } else if (select === 'Name (Asc)') {
+  } else if (sortValue === 'Name (Asc)') {
     sortedProducts = _orderBy(allProducts, 'name', 'asc')
   } else sortedProducts = _orderBy(allProducts, 'name', 'desc')
   
@@ -45,14 +50,19 @@ const SearchProducts = () => {
           />
         <div className='products-action'>
           <Sort 
-            select={select}
+            sortValue={sortValue}
             handleChange={handleChange}
           />
-          <Filter />
+          <Filter 
+            allProducts={allProducts}
+            filterValues={filterValues}
+            handleChange={handleFilterChange}
+            onButtonClick={()=>setFilterValues([])}
+          />
         </div>
         <ProductList 
           products={
-            select ? 
+            sortValue ? 
               sortedProducts 
               : !_isEmpty(filteredProducts) ? 
                 filteredProducts 

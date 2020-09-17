@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import './styles.css'
 
 type Props = {
-  select: string,
+  sortValue: string,
   handleChange: (event: React.ChangeEvent<{ value: unknown }>) => void
 }
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Sort = ({ select, handleChange }: Props) => {
+const Sort = ({ sortValue, handleChange }: Props) => {
   const classes = useStyles();
   const sortValues = ['None', 'Price (Low to High)', 'Price (High to Low)', 'Name (Asc)', 'Name (Desc)']
 
@@ -34,7 +34,7 @@ const Sort = ({ select, handleChange }: Props) => {
         <Select
           labelId='select-label'
           id='select'
-          value={select}
+          value={sortValue}
           onChange={handleChange}
         >
           {sortValues.map(value => (
