@@ -11,11 +11,12 @@ import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
 
 import './styles.css'
-import { Product } from 'pages/productList/redux/types';
 
 type Props = {
-  allProducts: Product[]
   filterValues: string[],
+  names: string[],
+  categories: string[],
+  variants: string[],
   handleChange: (event: React.ChangeEvent<{ value: unknown }>) => void,
   onButtonClick: () => void
 }
@@ -50,13 +51,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Filter = ({ allProducts, filterValues, handleChange, onButtonClick }: Props) => {
+const Filter = ({ filterValues, names, categories, variants, handleChange, onButtonClick }: Props) => {
   const classes = useStyles();
   const inputLabels = ['By name', 'By category', 'By variant'] 
-  const names = Array.from(new Set(allProducts.map(p => p.name.split(' -')[0])))
-  const categories = Array.from(new Set(allProducts.map(p => p.category)))
-  const variants = Array.from(new Set(allProducts.map(p => p.variant)))
-
   return (
     <div className='filter'>
       <b>Filter</b>

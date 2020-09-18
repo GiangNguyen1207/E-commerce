@@ -18,26 +18,14 @@ const SearchProducts = () => {
   const { allProducts, searchedProducts } = useProduct('')
   const [sortValue, setsortValue] = useState<string>('')
   const [filterValues, setFilterValues] = useState<string[]>([])
+  const names = Array.from(new Set(allProducts.map(p => p.name.split(' -')[0])))
+  const categories = Array.from(new Set(allProducts.map(p => p.category)))
+  const variants = Array.from(new Set(allProducts.map(p => p.variant)))
   let sortedProducts;
-  let arr: Product[] = []
+  let filterByName: string[] = []
+  let filterByCategory: string[] = []
+  let filterByVariant: string[] = []
   let filteredProducts: Product[] = []; 
-
-  _filter(allProducts, 
-    p => {
-      filterValues.map(value => {
-        if(p.name.split(' -')[0] === value ||
-        p.category === value ||
-        p.variant === value) {
-          arr.push(p)
-        }
-        return filteredProducts = arr.filter((p, index) =>
-          arr.indexOf(p) === index)
-      }
-      ) 
-    }
-  ) 
-
-  console.log(filteredProducts)
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -54,14 +42,57 @@ const SearchProducts = () => {
     setFilterValues(event.target.value as string[]);
   };
 
+  filterValues.map(value => {
+    names.includes(value) ? 
+      filterByName.push(value) : 
+    categories.includes(value) ? 
+      filterByCategory.push(value) :
+      filterByVariant.push(value)
+  })
+
+  if(!_isEmpty(filterByName)) {
+    filterByName.map(value => {
+      const newArr = allProducts.filter(p => p.name.split(' -')[0] === value)
+      filteredProducts = [...filteredProducts, ...newArr]
+    })
+    if(!_isEmpty(filterByCategory)) {
+      filterByCategory.map(value => {
+        filteredProducts = filteredProducts.filter(p => p.category === value)
+      })
+    }
+    if(!_isEmpty(filterByVariant)) {
+      filterByVariant.map(value => {
+        filteredProducts = filteredProducts.filter(p => p.variant === value)
+      })
+    } 
+  } else if(_isEmpty(filterByName)) {
+      if(!_isEmpty(filterByCategory)) {
+        filterByCategory.map(value => {
+          const newArr = allProducts.filter(p => p.category === value)
+          filteredProducts = [...filteredProducts, ...newArr]
+        })
+        if(!_isEmpty(filterByVariant)) {
+          filterByCategory.map(value => {
+            filteredProducts = filteredProducts.filter(p => p.variant === value)
+          })
+        }
+      }
+      if(!_isEmpty(filterByVariant)) {
+        filterByVariant.map(value => {
+          const newArr = allProducts.filter(p => p.variant === value)
+          filteredProducts = [...filteredProducts, ...newArr]
+        })
+      }
+  }
+
   if (sortValue === 'Price (Low to High)') {
-    sortedProducts = _orderBy(allProducts, 'price', 'asc')
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'asc')
   } else if (sortValue === 'Price (High to Low)') {
-    sortedProducts = _orderBy(allProducts, 'price', 'desc')
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'desc')
   } else if (sortValue === 'Name (Asc)') {
-    sortedProducts = _orderBy(allProducts, 'name', 'asc')
-  } else sortedProducts = _orderBy(allProducts, 'name', 'desc')
-  
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'name', 'asc')
+  } else sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'name', 'desc')
+
   return(
     <>
       <div className='product-container'>
@@ -75,19 +106,20 @@ const SearchProducts = () => {
             handleChange={handleChange}
           />
           <Filter 
-            allProducts={allProducts}
+            names={names}
+            categories={categories}
+            variants={variants}
             filterValues={filterValues}
             handleChange={handleFilterChange}
             onButtonClick={()=>setFilterValues([])}
           />
         </div>
         <ProductList 
-          products={
-            sortValue ? 
-              sortedProducts 
-              : !_isEmpty(searchedProducts) ? 
-                searchedProducts
-                : allProducts
+          products={ 
+              sortValue ? sortedProducts 
+              : !_isEmpty(filteredProducts) ? filteredProducts 
+              : !_isEmpty(searchedProducts) ? searchedProducts
+              : allProducts
           }
           />
         </div>
