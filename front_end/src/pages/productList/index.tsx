@@ -85,8 +85,6 @@ const SearchProducts = () => {
       }
   }
 
-  console.log(filteredProducts)
-
   if (sortValue === 'Price (Low to High)') {
     sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'asc')
   } else if (sortValue === 'Price (High to Low)') {
