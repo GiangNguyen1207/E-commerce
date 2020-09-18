@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty'
 import _orderBy from 'lodash/orderBy'
-import _filter from 'lodash/filter'
 
 import ProductList from 'components/ProductList'
 import SearchBar from 'components/SearchBar'
@@ -43,47 +42,50 @@ const SearchProducts = () => {
   };
 
   filterValues.map(value => {
-    names.includes(value) ? 
-      filterByName.push(value) : 
-    categories.includes(value) ? 
-      filterByCategory.push(value) :
-      filterByVariant.push(value)
+    if(names.includes(value)) {
+      filterByName.push(value) 
+    } else if( categories.includes(value)) {
+      filterByCategory.push(value)
+    } else filterByVariant.push(value)
+    return { filterByName, filterByCategory, filterByVariant}
   })
 
   if(!_isEmpty(filterByName)) {
     filterByName.map(value => {
       const newArr = allProducts.filter(p => p.name.split(' -')[0] === value)
-      filteredProducts = [...filteredProducts, ...newArr]
+      return filteredProducts = [...filteredProducts, ...newArr]
     })
     if(!_isEmpty(filterByCategory)) {
       filterByCategory.map(value => {
-        filteredProducts = filteredProducts.filter(p => p.category === value)
+        return filteredProducts = filteredProducts.filter(p => p.category === value)
       })
     }
     if(!_isEmpty(filterByVariant)) {
       filterByVariant.map(value => {
-        filteredProducts = filteredProducts.filter(p => p.variant === value)
+        return filteredProducts = filteredProducts.filter(p => p.variant === value)
       })
     } 
   } else if(_isEmpty(filterByName)) {
       if(!_isEmpty(filterByCategory)) {
         filterByCategory.map(value => {
           const newArr = allProducts.filter(p => p.category === value)
-          filteredProducts = [...filteredProducts, ...newArr]
+          return filteredProducts = [...filteredProducts, ...newArr]
         })
         if(!_isEmpty(filterByVariant)) {
           filterByCategory.map(value => {
-            filteredProducts = filteredProducts.filter(p => p.variant === value)
+            return filteredProducts = filteredProducts.filter(p => p.variant === value)
           })
         }
       }
       if(!_isEmpty(filterByVariant)) {
         filterByVariant.map(value => {
           const newArr = allProducts.filter(p => p.variant === value)
-          filteredProducts = [...filteredProducts, ...newArr]
+          return filteredProducts = [...filteredProducts, ...newArr]
         })
       }
   }
+
+  console.log(filteredProducts)
 
   if (sortValue === 'Price (Low to High)') {
     sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'asc')
@@ -118,6 +120,7 @@ const SearchProducts = () => {
           products={ 
               sortValue ? sortedProducts 
               : !_isEmpty(filteredProducts) ? filteredProducts 
+              : (_isEmpty(filteredProducts) && !_isEmpty(filterValues)) ? []
               : !_isEmpty(searchedProducts) ? searchedProducts
               : allProducts
           }
