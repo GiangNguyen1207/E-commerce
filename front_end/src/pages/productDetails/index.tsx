@@ -6,7 +6,10 @@ import { useDispatch } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
-import banner from 'assets/images/product_banner.png'
+import lunaBanner from 'assets/images/luna_banner_1.png'
+import issaBanner from 'assets/images/issa_banner_1.jpg'
+import lunaBanner2 from 'assets/images/luna_banner_2.jpg'
+import issaBanner2 from 'assets/images/issa_banner_2.jpg'
 import useProduct from 'pages/productList/hooks/useProduct';
 import useAuth from 'pages/auth/hooks/useAuth'
 import { addProductToCart } from 'pages/cart/redux/actions'
@@ -28,17 +31,20 @@ const SingleProduct = () => {
 
    return(
      <>
-      <img src={banner} width='100%' alt='Luna 3'/>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        wrap='wrap'
-        style={{width: '90%', margin: '80px auto'}}
-      > 
-      {singleProduct ? (
-        <>
+      {singleProduct?.name && singleProduct?.name.includes('Luna') ? 
+        <img src={lunaBanner} width='100%' alt='banner'/>
+        : 
+        <img src={issaBanner} width='100%' alt='banner'/>
+      }
+      {singleProduct?.name ? (
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          wrap='wrap'
+          style={{width: '90%', margin: '80px auto'}}
+        > 
           <Grid item xs={4}>
             <img src={singleProduct.image} alt={singleProduct.name} width='80%'/>
           </Grid>
@@ -58,14 +64,14 @@ const SingleProduct = () => {
                   backgroundColor: '#000000',
                   height: '.1',
                   borderColor : '#cccccc',
-                  marginBottom: '5%'}} />
+                  marginBottom: '20px'}} />
             <Typography variant='body2' style={{fontSize: '24px', display: 'flex', justifyContent: 'space-between'}}>
-              <b>€ {singleProduct.price}</b>
+              <b style={{color: '#e6427a'}}>€ {singleProduct.price}</b>
               <Button 
                 onClick={handleClick}
                 variant="contained" 
                 size='large' 
-                style={{backgroundColor: '#e7accf'}}>
+                style={{backgroundColor: '#e7accf', width: '100px'}}>
                 <b>BUY</b>
               </Button>
             </Typography>
@@ -75,12 +81,13 @@ const SingleProduct = () => {
                 backgroundColor: '#000000',
                 height: '.1',
                 borderColor : '#cccccc',
-                marginTop: '5%'}} />
+                marginTop: '20px'}} />
           </Grid>
-        </> 
-      ) : <div>Loading</div>
+        </Grid> 
+        ) : <div>Loading</div>
       }
-      </Grid> 
+      <img src={lunaBanner2} width='100%' alt='banner'/>
+      <img src={issaBanner2} width='100%' alt='banner'/>
      </>
   )
 }
