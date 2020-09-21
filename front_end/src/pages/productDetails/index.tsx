@@ -35,13 +35,14 @@ const SingleProduct = () => {
         justify="center"
         alignItems="center"
         wrap='wrap'
+        style={{width: '90%', margin: '80px auto'}}
       > 
       {singleProduct ? (
         <>
-          <Grid item xs={6}>
-            <img src={singleProduct.image} alt={singleProduct.name} style={{margin: '5% 0 0 40%'}} width='50%'/>
+          <Grid item xs={4}>
+            <img src={singleProduct.image} alt={singleProduct.name} width='80%'/>
           </Grid>
-          <Grid item xs={6} style={{paddingRight: '18%'}}>
+          <Grid item xs={8}>
             <Typography variant='h4' style={{marginBottom: '5%'}}>
               <b>{singleProduct.name}</b>
             </Typography>
@@ -58,13 +59,13 @@ const SingleProduct = () => {
                   height: '.1',
                   borderColor : '#cccccc',
                   marginBottom: '5%'}} />
-            <Typography variant='body2' style={{fontSize: '24px'}}>
+            <Typography variant='body2' style={{fontSize: '24px', display: 'flex', justifyContent: 'space-between'}}>
               <b>€ {singleProduct.price}</b>
               <Button 
                 onClick={handleClick}
                 variant="contained" 
                 size='large' 
-                style={{backgroundColor: '#e7accf', marginLeft: '65%'}}>
+                style={{backgroundColor: '#e7accf'}}>
                 <b>BUY</b>
               </Button>
             </Typography>
@@ -72,8 +73,8 @@ const SingleProduct = () => {
                 width:'100%', 
                 color: '#000000',
                 backgroundColor: '#000000',
-                height: '.5',
-                borderColor : '#000000',
+                height: '.1',
+                borderColor : '#cccccc',
                 marginTop: '5%'}} />
           </Grid>
         </> 

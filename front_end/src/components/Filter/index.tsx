@@ -58,9 +58,9 @@ const Filter = ({ filterValues, names, categories, variants, handleChange, onBut
     <div className='filter'>
       <b>Filter</b>
       {inputLabels.map(label => (
-        <FormControl className={classes.formControl}>
-        <InputLabel id="checkbox-label">{label}</InputLabel>
-        <Select
+        <FormControl className={classes.formControl} key={label}>
+          <InputLabel id="checkbox-label">{label}</InputLabel>
+          <Select
           labelId="multiple-select-label"
           id="multiple-select"
           multiple
