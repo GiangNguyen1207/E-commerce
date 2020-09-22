@@ -1,14 +1,18 @@
 import React from 'react'
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 
 import useCart from 'pages/cart/hooks/useCart'
+import useAuth from 'pages/auth/hooks/useAuth'
 import ProductCard from 'components/ProductCard'
+import { deleteProductFavoriteList } from 'pages/cart/redux/actions'
 import './styles.css'
 
 const FavoriteList = () => {
   const history = useHistory()
-
+  const dispatch = useDispatch()
+  const { user } = useAuth()
   const { favoriteList } = useCart()
 
   const takeProductId = (productId: string) => {
@@ -16,7 +20,7 @@ const FavoriteList = () => {
   }
 
     const onButtonClick = (productId: string) => {
-      console.log(productId)
+      dispatch(deleteProductFavoriteList(user?._id, productId))
     }
 
   return(

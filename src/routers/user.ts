@@ -17,6 +17,7 @@ import {
   decreaseQuantity,
   addToFavoriteList,
   getFavoriteList,
+  removeProductInFavoriteList,
 } from '../controllers/user'
 
 const router = express.Router()
@@ -36,6 +37,7 @@ router.post('/cart/:userId', addProductToCart)
 router.get('/cart/:userId', getCart)
 router.delete('/cart/:userId', removeProductInCart)
 router.post('/favorite/:userId', addToFavoriteList)
+router.delete('/favorite/:userId', removeProductInFavoriteList)
 router.get('/favorite/:userId', getFavoriteList)
 router.put('/cart/increase/:userId', increaseQuantity)
 router.put('/cart/decrease/:userId', decreaseQuantity)
