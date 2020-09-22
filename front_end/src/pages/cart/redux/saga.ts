@@ -108,9 +108,9 @@ function* decreaseQuantity() {
 function* addToFavoriteList() {
   yield takeEvery(ADD_PRODUCT_TO_FAVORITE_LIST, function*(action: AddProductToFavoriteListAction) {
     try {
-      const { userId, productId, productName, productVariant, price } = action.payload
+      const { userId, productId, productName, productVariant, image, price } = action.payload
       if(userId) {
-        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, price)
+        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, image, price)
         yield put(addProductToFavoriteListSuccess(favoriteList))
       }
     } catch (error) {

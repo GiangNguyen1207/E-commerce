@@ -114,6 +114,7 @@ export function addProductToFavoriteList(
   productId: string,
   productName: string,
   productVariant: string,
+  image: string,
   price: number
   ) : CartActions {
   return {
@@ -123,6 +124,7 @@ export function addProductToFavoriteList(
       productId,
       productName,
       productVariant,
+      image,
       price
     }
   }

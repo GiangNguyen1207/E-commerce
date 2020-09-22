@@ -12,6 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import useAuth from 'pages/auth/hooks/useAuth'
 import { addProductToCart, addProductToFavoriteList } from 'pages/cart/redux/actions'
@@ -22,7 +23,8 @@ type Props = {
   image: string,
   variant: string,
   price: number,
-  takeProductId: (_id: string) => void
+  takeProductId: (_id: string) => void,
+  onButtonClick?: (_id: string) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) => {
+const ProductCard = ({ _id, name, image, variant, price, takeProductId, onButtonClick }: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
@@ -49,7 +51,7 @@ const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) 
 
   const addToFavorite = () => {
     if(user) {
-      dispatch(addProductToFavoriteList(user?._id, _id, name, variant, price))
+      dispatch(addProductToFavoriteList(user?._id, _id, name, variant, image, price))
     } else {
       history.push('/user/signIn')
     }
@@ -67,15 +69,21 @@ const ProductCard = ({ _id, name, image, variant, price, takeProductId}: Props) 
     <>
       <Grid item xs={12} sm={6} md={4}>
         <Card className={classes.root}>
-          <div onClick={()=>takeProductId(_id)}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
             <CardHeader
               title={name}
             />
+            {location.pathname === '/favorite' && onButtonClick ? 
+              <DeleteIcon style={{ fontSize: 30, color: '#d671ad'}} onClick={()=>onButtonClick(_id)}/>
+              : null
+            }
+          </div>
+          <div onClick={()=>takeProductId(_id)}>
             <CardMedia
               className={classes.media}
               image={image} 
               title={name}
-            />  
+            /> 
           </div>
           <CardContent>
             <Typography variant='h6'>

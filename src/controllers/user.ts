@@ -293,13 +293,20 @@ export const addToFavoriteList = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body)
-    const { userId, productId, productName, productVariant, price } = req.body
+    const {
+      userId,
+      productId,
+      productName,
+      productVariant,
+      image,
+      price,
+    } = req.body
     const user = await UserService.addToFavoriteList(
       userId,
       productId,
       productName,
       productVariant,
+      image,
       price
     )
     res.json(user.favoriteList)

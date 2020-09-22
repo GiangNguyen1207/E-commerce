@@ -19,6 +19,7 @@ type FavoriteList = {
   productId: string;
   productName: string;
   productVariant: string;
+  image: string;
   price: number;
 }
 
@@ -62,6 +63,7 @@ const userSchema = new mongoose.Schema({
       productId: String,
       productName: String,
       productVariant: String,
+      image: String,
       price: Number,
     },
   ],

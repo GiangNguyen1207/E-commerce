@@ -229,6 +229,7 @@ function addToFavoriteList(
   productId: string,
   productName: string,
   productVariant: string,
+  image: string,
   price: number
 ): Promise<UserDocument> {
   return User.findById(userId)
@@ -247,6 +248,7 @@ function addToFavoriteList(
           productId,
           productName,
           productVariant,
+          image,
           price,
         })
       }

@@ -62,6 +62,7 @@ export default {
     productId: string,
     productName: string,
     productVariant: string,
+    image: string,
     price: number
     ) {
       return await axios
@@ -71,6 +72,7 @@ export default {
           productId: productId,
           productName: productName,
           productVariant: productVariant,
+          image: image,
           price: price
         })
         .then(res => res.data)

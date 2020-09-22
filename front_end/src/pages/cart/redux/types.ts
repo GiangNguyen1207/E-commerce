@@ -84,6 +84,7 @@ export type FavoriteList = {
   productId: string,
   productName: string,
   productVariant: string,
+  image: string,
   price: number
 }
 
@@ -94,6 +95,7 @@ export type AddProductToFavoriteListAction = {
     productId: string,
     productName: string,
     productVariant: string,
+    image: string,
     price: number
   }
 }

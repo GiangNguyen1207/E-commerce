@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 
 import useCart from 'pages/cart/hooks/useCart'
 import ProductCard from 'components/ProductCard'
+import './styles.css'
 
 const FavoriteList = () => {
   const history = useHistory()
@@ -13,6 +14,11 @@ const FavoriteList = () => {
   const takeProductId = (productId: string) => {
     history.push(`/products/${productId}`)
   }
+
+    const onButtonClick = (productId: string) => {
+      console.log(productId)
+    }
+
   return(
     <div className='list'>
       <Grid
@@ -26,12 +32,14 @@ const FavoriteList = () => {
         {favoriteList?.map(p => {
           return (
             <ProductCard 
+              key={p.productId}
               _id={p.productId}
               name={p.productName}
               variant={p.productVariant}
-              image={p.productName}
+              image={p.image}
               price={p.price}
               takeProductId={takeProductId}
+              onButtonClick={onButtonClick}
             />
           )
         })}
