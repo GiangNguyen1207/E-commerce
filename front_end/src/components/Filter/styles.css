@@ -1,8 +1,11 @@
 .filter {
-  width: 65%;
-  margin: 30px 0 30px 100px;
+  width: 100%;
+  margin: 10px 0 50px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  flex-wrap: wrap;
 }
 
 .MuiInput-formControl {

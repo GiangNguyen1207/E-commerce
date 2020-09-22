@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputRoot: {
       color: 'inherit',
+      borderRadius: '5px'
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
         '&:focus': {
           width: 200,
         },
-      }
+      },
     }
   }),
 );

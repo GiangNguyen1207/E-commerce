@@ -2,13 +2,8 @@ import { takeEvery, put, call, fork, select } from 'redux-saga/effects'
 
 import API from '../services/api'
 import { 
-  addProductToCartSuccess, 
   getCartSuccess, 
-  deleteProductSuccess,
-  increaseQuantitySuccess,
-  decreaseQuantitySuccess,
-  addProductToFavoriteListSuccess,
-  getFavoriteListSuccess
+  getFavoriteListSuccess,
   } from './actions'
 import { RootState } from 'redux/reducer'
 import {
@@ -19,12 +14,14 @@ import {
   DECREASE_QUANTITY,
   ADD_PRODUCT_TO_FAVORITE_LIST,
   GET_FAVORITE_LIST,
+  DELETE_PRODUCT_FAVORITE_LIST,
   AddProductToCartAction,
   DeleteProductAction,
   IncreaseQuantityAction,
   DecreaseQuantityAction,
   AddProductToFavoriteListAction,
-  GetFavoriteListAction
+  GetFavoriteListAction,
+  DeleteProductInFavoriteListAction
 } from './types'
 
 
@@ -41,7 +38,7 @@ function* addProductToCart() {
           productId,
           price
         )
-        yield put(addProductToCartSuccess(cart))
+        yield put(getCartSuccess(cart))
       }
     } catch (error) {
       console.log(error)
@@ -69,7 +66,7 @@ function* deleteProduct() {
       const { userId, productId } = action.payload 
       if(userId) {
         const cart = yield call(API.deleteProduct, userId, productId)
-        yield put(deleteProductSuccess(cart))
+        yield put(getCartSuccess(cart))
       }
     } catch (error) {
       console.log(error)
@@ -83,7 +80,7 @@ function* increaseQuantity() {
       const { userId, productId } = action.payload
       if(userId) {
         const cart = yield call(API.increaseQuantity, userId, productId)
-        yield put(increaseQuantitySuccess(cart))
+        yield put(getCartSuccess(cart))
       }
     } catch (error) {
       console.log(error)
@@ -97,7 +94,7 @@ function* decreaseQuantity() {
       const { userId, productId } = action.payload
       if(userId) {
         const cart = yield call(API.decreaseQuantity, userId, productId)
-        yield put(decreaseQuantitySuccess(cart))
+        yield put(getCartSuccess(cart))
       }
     } catch (error) {
       console.log(error)
@@ -108,10 +105,10 @@ function* decreaseQuantity() {
 function* addToFavoriteList() {
   yield takeEvery(ADD_PRODUCT_TO_FAVORITE_LIST, function*(action: AddProductToFavoriteListAction) {
     try {
-      const { userId, productId, productName, productVariant, price } = action.payload
+      const { userId, productId, productName, productVariant, image, price } = action.payload
       if(userId) {
-        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, price)
-        yield put(addProductToFavoriteListSuccess(favoriteList))
+        const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, image, price)
+        yield put(getFavoriteListSuccess(favoriteList))
       }
     } catch (error) {
       console.log(error)
@@ -134,6 +131,20 @@ function* getFavoriteList() {
   })
 }
 
+function* deleteProductFavoriteList() {
+  yield takeEvery(DELETE_PRODUCT_FAVORITE_LIST, function*(action: DeleteProductInFavoriteListAction) {
+    try {
+      const { userId, productId } = action.payload
+      if(userId) {
+        const favoriteList = yield call(API.deleteProductInFavoriteList, userId, productId)
+        yield put(getFavoriteListSuccess(favoriteList))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
 export default [
   addProductToCart, 
   getCart, 
@@ -141,5 +152,6 @@ export default [
   increaseQuantity, 
   decreaseQuantity,
   addToFavoriteList,
-  getFavoriteList
+  getFavoriteList,
+  deleteProductFavoriteList
 ].map(fork)

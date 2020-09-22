@@ -2,15 +2,15 @@ import { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllProducts, fetchOneProduct } from '../redux/actions'
-import { AppState } from 'type'
+import { RootState } from 'redux/reducer'
 
 export default function useProduct(productId: string) {
   const dispatch = useDispatch()
 
-  const { allProducts, filteredProducts, singleProduct } = 
-    useSelector((state: AppState) => ({
+  const { allProducts, searchedProducts, singleProduct } = 
+    useSelector((state: RootState) => ({
       allProducts: state.product.products,
-      filteredProducts: state.product.filteredProducts,
+      searchedProducts: state.product.searchedProducts,
       singleProduct: state.product.singleProduct
   })
   )
@@ -22,7 +22,7 @@ export default function useProduct(productId: string) {
 
   return {
     allProducts,
-    filteredProducts,
+    searchedProducts,
     singleProduct
   }
 }

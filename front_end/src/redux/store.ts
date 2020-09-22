@@ -7,7 +7,7 @@ import rootReducer, { RootState } from './reducer';
 const initState: RootState = {
   product: {
     products: [],
-    filteredProducts: [],
+    searchedProducts: [],
     singleProduct: undefined
   }, 
   auth: {

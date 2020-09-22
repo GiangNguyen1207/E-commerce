@@ -62,6 +62,7 @@ export default {
     productId: string,
     productName: string,
     productVariant: string,
+    image: string,
     price: number
     ) {
       return await axios
@@ -71,6 +72,7 @@ export default {
           productId: productId,
           productName: productName,
           productVariant: productVariant,
+          image: image,
           price: price
         })
         .then(res => res.data)
@@ -79,5 +81,17 @@ export default {
   async getFavoriteList(userId: string) {
     return await axios.get(`http://localhost:3000/api/v1/users/favorite/${userId}`)
       .then(res => res.data)
-  }
+  },
+
+  async deleteProductInFavoriteList(userId: string, productId: string) {
+    return await axios
+      .delete(`http://localhost:3000/api/v1/users/favorite/${userId}`, 
+        {
+          data: {
+            userId,
+            productId
+          }
+        })
+      .then(res => res.data)
+  },
 }

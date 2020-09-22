@@ -8,14 +8,23 @@ import SearchBar from 'components/SearchBar'
 import useProduct from './hooks/useProduct';
 import Sort from 'components/Sort';
 import Filter from 'components/Filter';
+import { Product } from 'pages/productList/redux/types';
 import { findProducts } from './redux/actions';
 import './styles.css'
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
-  const [select, setSelect] = useState('')
-  const { allProducts, filteredProducts} = useProduct('')
+  const { allProducts, searchedProducts } = useProduct('')
+  const [sortValue, setsortValue] = useState<string>('')
+  const [filterValues, setFilterValues] = useState<string[]>([])
+  const names = Array.from(new Set(allProducts.map(p => p.name.split(' -')[0])))
+  const categories = Array.from(new Set(allProducts.map(p => p.category)))
+  const variants = Array.from(new Set(allProducts.map(p => p.variant)))
   let sortedProducts;
+  let filterByName: string[] = []
+  let filterByCategory: string[] = []
+  let filterByVariant: string[] = []
+  let filteredProducts: Product[] = []; 
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -24,18 +33,66 @@ const SearchProducts = () => {
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'None') {
-      setSelect('')
-    } else setSelect(event.target.value as string)
+      setsortValue('')
+    } else setsortValue(event.target.value as string)
   }
 
-  if (select === 'Price (Low to High)') {
-    sortedProducts = _orderBy(allProducts, 'price', 'asc')
-  } else if (select === 'Price (High to Low)') {
-    sortedProducts = _orderBy(allProducts, 'price', 'desc')
-  } else if (select === 'Name (Asc)') {
-    sortedProducts = _orderBy(allProducts, 'name', 'asc')
-  } else sortedProducts = _orderBy(allProducts, 'name', 'desc')
-  
+  const handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setFilterValues(event.target.value as string[]);
+  };
+
+  filterValues.map(value => {
+    if(names.includes(value)) {
+      filterByName.push(value) 
+    } else if( categories.includes(value)) {
+      filterByCategory.push(value)
+    } else filterByVariant.push(value)
+    return { filterByName, filterByCategory, filterByVariant}
+  })
+
+  if(!_isEmpty(filterByName)) {
+    filterByName.map(value => {
+      const newArr = allProducts.filter(p => p.name.split(' -')[0] === value)
+      return filteredProducts = [...filteredProducts, ...newArr]
+    })
+    if(!_isEmpty(filterByCategory)) {
+      filterByCategory.map(value => {
+        return filteredProducts = filteredProducts.filter(p => p.category === value)
+      })
+    }
+    if(!_isEmpty(filterByVariant)) {
+      filterByVariant.map(value => {
+        return filteredProducts = filteredProducts.filter(p => p.variant === value)
+      })
+    } 
+  } else if(_isEmpty(filterByName)) {
+      if(!_isEmpty(filterByCategory)) {
+        filterByCategory.map(value => {
+          const newArr = allProducts.filter(p => p.category === value)
+          return filteredProducts = [...filteredProducts, ...newArr]
+        })
+        if(!_isEmpty(filterByVariant)) {
+          filterByCategory.map(value => {
+            return filteredProducts = filteredProducts.filter(p => p.variant === value)
+          })
+        }
+      }
+      if(!_isEmpty(filterByVariant)) {
+        filterByVariant.map(value => {
+          const newArr = allProducts.filter(p => p.variant === value)
+          return filteredProducts = [...filteredProducts, ...newArr]
+        })
+      }
+  }
+
+  if (sortValue === 'Price (Low to High)') {
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'asc')
+  } else if (sortValue === 'Price (High to Low)') {
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'price', 'desc')
+  } else if (sortValue === 'Name (Asc)') {
+    sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'name', 'asc')
+  } else sortedProducts = _orderBy(!_isEmpty(filteredProducts) ? filteredProducts : allProducts, 'name', 'desc')
+
   return(
     <>
       <div className='product-container'>
@@ -45,16 +102,25 @@ const SearchProducts = () => {
           />
         <div className='products-action'>
           <Sort 
-            select={select}
+            sortValue={sortValue}
             handleChange={handleChange}
           />
-          <Filter />
+          <Filter 
+            names={names}
+            categories={categories}
+            variants={variants}
+            filterValues={filterValues}
+            handleChange={handleFilterChange}
+            onButtonClick={()=>setFilterValues([])}
+          />
         </div>
         <ProductList 
-          products={
-            select ? sortedProducts 
-            : !_isEmpty(filteredProducts) ? filteredProducts 
-            : allProducts
+          products={ 
+              sortValue ? sortedProducts 
+              : !_isEmpty(filteredProducts) ? filteredProducts 
+              : (_isEmpty(filteredProducts) && !_isEmpty(filterValues)) ? []
+              : !_isEmpty(searchedProducts) ? searchedProducts
+              : allProducts
           }
           />
         </div>

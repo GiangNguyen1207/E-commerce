@@ -9,3 +9,10 @@
 .sort-text {
   padding-right: 10px;
 }
+
+@media screen and (max-width: 900px) {
+  .sort {
+    width: 50%;
+    margin: 20px 0 0
+  }
+}

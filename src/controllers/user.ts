@@ -222,9 +222,11 @@ export const addProductToCart = async (
     )
     res.json(user.cart)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
 }
 
 export const getCart = async (
@@ -237,9 +239,11 @@ export const getCart = async (
     const user = await UserService.getCart(userId)
     res.json(user.cart)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
 }
 
 export const removeProductInCart = async (
@@ -252,9 +256,14 @@ export const removeProductInCart = async (
     const user = await UserService.removeProductInCart(userId, productId)
     res.json(user.cart)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    if (error.message === 'Product not found') {
+      return next(new NotFoundError('Product not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
 }
 
 export const increaseQuantity = async (
@@ -267,9 +276,11 @@ export const increaseQuantity = async (
     const user = await UserService.increaseQuantity(userId, productId)
     res.json(user.cart)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
 }
 
 export const decreaseQuantity = async (
@@ -282,9 +293,11 @@ export const decreaseQuantity = async (
     const user = await UserService.decreaseQuantity(userId, productId)
     res.json(user.cart)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
 }
 
 export const addToFavoriteList = async (
@@ -293,13 +306,20 @@ export const addToFavoriteList = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body)
-    const { userId, productId, productName, productVariant, price } = req.body
+    const {
+      userId,
+      productId,
+      productName,
+      productVariant,
+      image,
+      price,
+    } = req.body
     const user = await UserService.addToFavoriteList(
       userId,
       productId,
       productName,
       productVariant,
+      image,
       price
     )
     res.json(user.favoriteList)
@@ -325,7 +345,32 @@ export const getFavoriteList = async (
     const user = await UserService.getFavoriteList(userId)
     res.json(user.favoriteList)
   } catch (error) {
-    return next(new NotFoundError('User not found', error))
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    return next(new InternalServerError())
   }
-  return next(new InternalServerError())
+}
+
+export const removeProductInFavoriteList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId, productId } = req.body
+    const user = await UserService.removeProductInFavoriteList(
+      userId,
+      productId
+    )
+    res.json(user.favoriteList)
+  } catch (error) {
+    if (error.message === 'User not found') {
+      return next(new NotFoundError('User not found', error))
+    }
+    if (error.message === 'Product not found') {
+      return next(new NotFoundError('Product not found', error))
+    }
+    return next(new InternalServerError())
+  }
 }

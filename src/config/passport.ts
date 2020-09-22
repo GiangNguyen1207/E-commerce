@@ -37,6 +37,7 @@ passport.use(
               productId: '',
               productName: '',
               productVariant: '',
+              image: '',
               price: 0,
             },
           ],

@@ -229,6 +229,7 @@ function addToFavoriteList(
   productId: string,
   productName: string,
   productVariant: string,
+  image: string,
   price: number
 ): Promise<UserDocument> {
   return User.findById(userId)
@@ -238,7 +239,7 @@ function addToFavoriteList(
         throw new Error('User not found')
       }
       const existingProduct = user.favoriteList.find(
-        (i) => i.productId === productId
+        (item) => item.productId === productId
       )
       if (existingProduct) {
         throw new Error('Product has been added already')
@@ -247,6 +248,7 @@ function addToFavoriteList(
           productId,
           productName,
           productVariant,
+          image,
           price,
         })
       }
@@ -265,6 +267,31 @@ function getFavoriteList(userId: string): Promise<UserDocument> {
     })
 }
 
+function removeProductInFavoriteList(
+  userId: string,
+  productId: string
+): Promise<UserDocument> {
+  return User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found')
+      }
+      const existing = user.favoriteList.find(
+        (item) => item.productId === productId
+      )
+
+      if (existing) {
+        const index = user.favoriteList.indexOf(existing)
+        user.favoriteList.splice(index, 1)
+      }
+      if (!existing) {
+        throw new Error('Product not found')
+      }
+      return user.save()
+    })
+}
+
 export default {
   createUser,
   signIn,
@@ -280,4 +307,5 @@ export default {
   decreaseQuantity,
   addToFavoriteList,
   getFavoriteList,
+  removeProductInFavoriteList,
 }

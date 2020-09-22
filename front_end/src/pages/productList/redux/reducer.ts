@@ -8,7 +8,7 @@ import {
 
 const initialState: ProductState = {
   products: [],
-  filteredProducts: [],
+  searchedProducts: [],
   singleProduct: undefined
 }
 
@@ -23,7 +23,7 @@ export function product(state: ProductState = initialState, action: ProductActio
     case FIND_PRODUCTS_SUCCESS:
       return {
         ...state,
-        filteredProducts: action.payload
+        searchedProducts: action.payload
       }
 
     case FETCH_ONE_PRODUCT_SUCCESS:

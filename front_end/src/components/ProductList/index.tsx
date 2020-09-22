@@ -1,8 +1,10 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router';
+import _isEmpty from 'lodash/isEmpty'
+import Typography from '@material-ui/core/Typography';
 
-import { Product } from '../../type';
+import { Product } from 'pages/productList/redux/types';
 import ProductCard from '../ProductCard'
 
 type ListProps = {
@@ -26,7 +28,7 @@ const ProductList = ({ products }: ListProps) => {
         alignItems="center"
         wrap='wrap'
       >
-        {products.map(p => {
+        {!_isEmpty(products) ? products.map(p => {
           return(
             <ProductCard 
               _id={p._id}
@@ -37,7 +39,8 @@ const ProductList = ({ products }: ListProps) => {
               price={p.price}
               takeProductId={takeProductId}
             />
-          )})}
+          )}) : <Typography variant="h5">No products found</Typography>
+        }
       </Grid>
     </div>
   )
