@@ -18,6 +18,7 @@
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
+    "dotenv": "^8.2.0",
     "i": "^0.3.6",
     "lodash": "^4.17.20",
     "passport-google-id-token": "^0.4.6",
