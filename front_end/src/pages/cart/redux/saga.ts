@@ -5,6 +5,7 @@ import {
   getCartSuccess, 
   getFavoriteListSuccess,
   } from './actions'
+import { showNotification } from 'components/redux/actions'
 import { RootState } from 'redux/reducer'
 import {
   ADD_PRODUCT_TO_CART,
@@ -24,6 +25,10 @@ import {
   DeleteProductInFavoriteListAction
 } from './types'
 
+function* showError(error: any) {
+  const message = error.response.data.message || error.message
+  yield put(showNotification('error', message))
+}
 
 function* addProductToCart() {
   yield takeEvery(ADD_PRODUCT_TO_CART, function*(action: AddProductToCartAction) {
@@ -38,10 +43,11 @@ function* addProductToCart() {
           productId,
           price
         )
+        yield put(showNotification('success', 'Product added successfully'))
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -55,7 +61,7 @@ function* getCart() {
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -66,10 +72,11 @@ function* deleteProduct() {
       const { userId, productId } = action.payload 
       if(userId) {
         const cart = yield call(API.deleteProduct, userId, productId)
+        yield put(showNotification('success', 'Product deleted successfully'))
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -83,7 +90,7 @@ function* increaseQuantity() {
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -97,7 +104,7 @@ function* decreaseQuantity() {
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -108,10 +115,11 @@ function* addToFavoriteList() {
       const { userId, productId, productName, productVariant, image, price } = action.payload
       if(userId) {
         const favoriteList = yield call(API.addProductToFavoriteList, userId, productId, productName, productVariant, image, price)
+        yield put(showNotification('success', 'Product added successfully'))
         yield put(getFavoriteListSuccess(favoriteList))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -126,7 +134,7 @@ function* getFavoriteList() {
         yield put(getFavoriteListSuccess(favoriteList))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -137,10 +145,11 @@ function* deleteProductFavoriteList() {
       const { userId, productId } = action.payload
       if(userId) {
         const favoriteList = yield call(API.deleteProductInFavoriteList, userId, productId)
+        yield put(showNotification('success', 'Product deleted successfully'))
         yield put(getFavoriteListSuccess(favoriteList))
       }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
