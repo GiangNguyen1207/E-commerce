@@ -6,6 +6,7 @@ import {
   getFavoriteListSuccess,
   } from './actions'
 import { showNotification } from 'components/redux/actions'
+import { signout } from 'pages/auth/redux/actions'
 import { RootState } from 'redux/reducer'
 import {
   ADD_PRODUCT_TO_CART,
@@ -27,7 +28,12 @@ import {
 
 function* showError(error: any) {
   const message = error.response.data.message || error.message
-  yield put(showNotification('error', message))
+  if(message === 'Forbidden') {
+    yield put(signout())
+    yield put(showNotification('warning', 'You should log in again'))
+  } else {
+    yield put(showNotification('error', message))
+  }
 }
 
 function* addProductToCart() {
@@ -43,7 +49,7 @@ function* addProductToCart() {
           productId,
           price
         )
-        yield put(showNotification('success', 'Product added successfully'))
+        yield put(showNotification('success', 'Product added to cart successfully'))
         yield put(getCartSuccess(cart))
       }
     } catch (error) {
