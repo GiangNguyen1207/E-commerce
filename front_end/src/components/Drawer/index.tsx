@@ -26,7 +26,7 @@ const LeftDrawer = () => {
     <>
       <Divider />
         <List>
-          <ListItem style={{cursor:'pointer'}}>
+          <ListItem onClick={() => history.push('/profile')} style={{cursor:'pointer'}}>
             <ListItemIcon>
               <AccountBoxIcon />
             </ListItemIcon>
