@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { User } from 'pages/auth/redux/types'
+
 export default {
   async signup(firstName: string, lastName: string, username: string, email: string, password: string) {
     return await axios.post('http://localhost:3000/api/v1/users/signUp', {
@@ -30,4 +32,14 @@ export default {
       .catch(error => error.response)
   },
 
+  async updateUserProfile(userId: string, updateUser: Partial<User>) {
+    return await axios
+      .put(`http://localhost:3000/api/v1/users/${userId}`, 
+      {
+        userId: userId,
+        updateUser: updateUser
+      })
+      .then(res => res.data)
+      .catch(error => error.response)
+  }
 }
