@@ -41,5 +41,16 @@ export default {
       })
       .then(res => res.data)
       .catch(error => error.response)
+  },
+
+  async resetPassword(userId: string, newPassword: string) {
+    return await axios
+      .put('http://localhost:3000/api/v1/users/resetPassword', 
+      {
+        userId: userId,
+        newPassword: newPassword
+      })
+      .then(res => res.data)
+      .catch(error => error.response)
   }
 }
