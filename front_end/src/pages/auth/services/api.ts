@@ -12,7 +12,6 @@ export default {
       password: password,
     })
       .then(res => res.data)
-      .catch(error => error.response)
   }, 
 
   async signin(userInfo: string, password: string) {
@@ -21,7 +20,6 @@ export default {
       password: password
     })
       .then(res => res.data)
-      .catch(error => error.response)
   },
 
   async googleSignin(id_token: string) {
@@ -29,7 +27,6 @@ export default {
       id_token: id_token
     })
       .then(res => res.data)
-      .catch(error => error.response)
   },
 
   async updateUserProfile(userId: string, updateUser: Partial<User>) {
@@ -40,7 +37,6 @@ export default {
         updateUser: updateUser
       })
       .then(res => res.data)
-      .catch(error => error.response)
   },
 
   async resetPassword(userId: string, newPassword: string) {
@@ -51,6 +47,5 @@ export default {
         newPassword: newPassword
       })
       .then(res => res.data)
-      .catch(error => error.response)
   }
 }

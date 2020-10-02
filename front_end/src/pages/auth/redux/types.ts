@@ -6,6 +6,8 @@ export const USER_SIGN_IN = 'USER_SIGN_IN'
 export const USER_SIGN_IN_SUCCESS = 'USER_SIGN_IN_SUCCESS'
 export const GOGGLE_SIGN_IN = 'GOOGLE_SIGN_IN'
 export const USER_SIGN_OUT = 'USER_SIGN_OUT'
+export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE'
+export const UPDATE_USER_PROFILE_SUCCESS = 'UPDATE_USER_PROFILE_SUCCESS'
 
 export type Cart = {
   productName: string;
@@ -73,9 +75,21 @@ export type GoogleSigninAction = {
   }
 }
 
-
 export type UserSignoutAction = {
   type: typeof USER_SIGN_OUT
+}
+
+export type UpdateUserProfileAction = {
+  type: typeof UPDATE_USER_PROFILE,
+  payload: {
+    userId: string | undefined,
+    update: Partial<User>
+  }
+}
+
+export type UpdateUserProfilSuccessAction = {
+  type: typeof UPDATE_USER_PROFILE_SUCCESS,
+  payload: User
 }
 
 export type AuthState = {
@@ -90,3 +104,5 @@ export type AuthActions =
   | UserSigninSuccessAction
   | GoogleSigninAction
   | UserSignoutAction
+  | UpdateUserProfileAction
+  | UpdateUserProfilSuccessAction

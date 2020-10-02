@@ -6,6 +6,8 @@ import {
   USER_SIGN_IN_SUCCESS,
   GOGGLE_SIGN_IN,
   USER_SIGN_OUT,
+  UPDATE_USER_PROFILE,
+  UPDATE_USER_PROFILE_SUCCESS,
   AuthActions,
   User,
 } from './types'
@@ -65,5 +67,22 @@ export function googleSignin(id_token: string, history: History) : AuthActions{
 export function signout() : AuthActions {
   return {
     type: USER_SIGN_OUT,
+  }
+}
+
+export function updateProfile(userId: string | undefined, update: Partial<User>) : AuthActions {
+  return {
+    type: UPDATE_USER_PROFILE,
+    payload: {
+      userId,
+      update
+    }
+  }
+}
+
+export function updateProfileSuccess(user: User) : AuthActions {
+  return {
+    type: UPDATE_USER_PROFILE_SUCCESS,
+    payload: user
   }
 }

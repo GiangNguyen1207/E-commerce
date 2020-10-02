@@ -1,6 +1,7 @@
 import {
   USER_SIGN_IN_SUCCESS,
   USER_SIGN_OUT,
+  UPDATE_USER_PROFILE_SUCCESS,
   AuthState,
   AuthActions,
 } from './types'
@@ -24,6 +25,13 @@ export function auth(state: AuthState = initialState, action: AuthActions) : Aut
       delete state.user
       return {
         ...state
+      }
+    
+    case UPDATE_USER_PROFILE_SUCCESS: 
+    console.log(action.payload)
+      return {
+        ...state,
+        user: action.payload
       }
 
     default: 

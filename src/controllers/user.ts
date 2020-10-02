@@ -34,9 +34,9 @@ export const createUser = async (
     res.json({ status: 200, message: 'Success', user })
   } catch (error) {
     if (error.name === 'ValidationError') {
-      next(new BadRequestError(error.message, error))
+      return next(new BadRequestError(error.message, error))
     }
-    next(new InternalServerError('Internal Server Error', error))
+    return next(new InternalServerError('Internal Server Error', error))
   }
 }
 
@@ -62,9 +62,9 @@ export const signIn = async (
     res.json({ token, user })
   } catch (error) {
     if ((error.message = 'Username or password incorrect')) {
-      next(new NotFoundError('Username or password incorrect', error))
+      return next(new NotFoundError('Username or password incorrect', error))
     }
-    next(new InternalServerError('Internal server error', error))
+    return next(new InternalServerError('Internal server error', error))
   }
 }
 
@@ -74,15 +74,14 @@ export const updateUserProfile = async (
   next: NextFunction
 ) => {
   try {
-    const updateUser = req.body
-    const userId = req.params.userId
+    const { userId, updateUser } = req.body
     const updateUserProfile = await UserService.updateUserProfile(
       userId,
       updateUser
     )
     res.json(updateUserProfile)
   } catch (error) {
-    next(new NotFoundError('User not found', error))
+    return next(new NotFoundError('User not found', error))
   }
 }
 
