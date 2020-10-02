@@ -39,13 +39,14 @@ export default {
       .then(res => res.data)
   },
 
-  async resetPassword(userId: string, newPassword: string) {
+  async resetPassword(userId: string, oldPassword: string, newPassword: string) {
     return await axios
-      .put('http://localhost:3000/api/v1/users/resetPassword', 
+      .put(`http://localhost:3000/api/v1/users/changePassword/${userId}`, 
       {
         userId: userId,
+        oldPassword: oldPassword, 
         newPassword: newPassword
       })
-      .then(res => res.data)
+      .then(res => res.data.message)
   }
 }

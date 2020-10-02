@@ -12,10 +12,12 @@ import {
   GOGGLE_SIGN_IN,
   USER_SIGN_OUT,
   UPDATE_USER_PROFILE,
+  RESET_PASSWORD,
   UserSignupAction,
   UserSigninAction,
   GoogleSigninAction,
-  UpdateUserProfileAction
+  UpdateUserProfileAction,
+  ResetPasswordAction
 } from './types'
 
 function* showError(error: any) {
@@ -88,4 +90,18 @@ function* updateProfile() {
   })
 }
 
-export default [singup, signin, googleSignin, singout, updateProfile].map(fork)
+function* resetPassword() {
+  yield takeEvery(RESET_PASSWORD, function*(action: ResetPasswordAction) {
+    const { userId, oldPassword, newPassword } = action.payload
+    try {
+      if(userId) {
+        const message = yield call(API.resetPassword, userId, oldPassword, newPassword)
+        yield put(showNotification('success', message))
+      }
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
+export default [singup, signin, googleSignin, singout, updateProfile, resetPassword].map(fork)

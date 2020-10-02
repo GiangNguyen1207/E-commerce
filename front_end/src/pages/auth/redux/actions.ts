@@ -8,6 +8,7 @@ import {
   USER_SIGN_OUT,
   UPDATE_USER_PROFILE,
   UPDATE_USER_PROFILE_SUCCESS,
+  RESET_PASSWORD,
   AuthActions,
   User,
 } from './types'
@@ -84,5 +85,16 @@ export function updateProfileSuccess(user: User) : AuthActions {
   return {
     type: UPDATE_USER_PROFILE_SUCCESS,
     payload: user
+  }
+}
+
+export function resetPassword(userId: string | undefined, oldPassword: string, newPassword: string) : AuthActions {
+  return {
+    type: RESET_PASSWORD,
+    payload: {
+      userId,
+      oldPassword,
+      newPassword
+    }
   }
 }

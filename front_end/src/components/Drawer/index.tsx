@@ -32,7 +32,7 @@ const LeftDrawer = () => {
             </ListItemIcon>
             <ListItemText primary={'User profile'} />
           </ListItem>
-          <ListItem style={{cursor:'pointer'}}>
+          <ListItem onClick={() => history.push('/resetPassword')}  style={{cursor:'pointer'}}>
             <ListItemIcon>
               <LockOpenIcon />
             </ListItemIcon>

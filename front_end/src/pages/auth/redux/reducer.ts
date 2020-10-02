@@ -28,7 +28,6 @@ export function auth(state: AuthState = initialState, action: AuthActions) : Aut
       }
     
     case UPDATE_USER_PROFILE_SUCCESS: 
-    console.log(action.payload)
       return {
         ...state,
         user: action.payload

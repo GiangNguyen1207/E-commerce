@@ -168,6 +168,7 @@ export const changePassword = async (
 ) => {
   try {
     const { oldPassword, newPassword } = req.body
+    console.log(oldPassword, newPassword)
     const newHashedPassword = await bcrypt.hash(newPassword, 10)
     const userId = req.params.userId
     await UserService.changePassword(userId, oldPassword, newHashedPassword)

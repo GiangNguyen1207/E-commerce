@@ -8,6 +8,7 @@ export const GOGGLE_SIGN_IN = 'GOOGLE_SIGN_IN'
 export const USER_SIGN_OUT = 'USER_SIGN_OUT'
 export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE'
 export const UPDATE_USER_PROFILE_SUCCESS = 'UPDATE_USER_PROFILE_SUCCESS'
+export const RESET_PASSWORD = 'RESET_PASSWORD'
 
 export type Cart = {
   productName: string;
@@ -92,6 +93,15 @@ export type UpdateUserProfilSuccessAction = {
   payload: User
 }
 
+export type ResetPasswordAction = {
+  type: typeof RESET_PASSWORD,
+  payload: {
+    userId: string | undefined
+    oldPassword: string,
+    newPassword: string
+  }
+}
+
 export type AuthState = {
   token: string,
   user?: User
@@ -106,3 +116,4 @@ export type AuthActions =
   | UserSignoutAction
   | UpdateUserProfileAction
   | UpdateUserProfilSuccessAction
+  | ResetPasswordAction
