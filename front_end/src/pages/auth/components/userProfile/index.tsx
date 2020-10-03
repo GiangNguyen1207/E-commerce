@@ -58,32 +58,34 @@ const Profile = () => {
   const dispatch = useDispatch()
   const { user } = useAuth()
   const [isEdit, setEdit] = useState(false)
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+  const [values, setValues] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    username: ''
+  })
 
   const onChangeFName= (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstName(event.target.value)
+    setValues({ ...values, firstName: event.target.value})
   }
 
   const onChangeLName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(event.target.value)
+    setValues({ ...values, lastName: event.target.value})
   }
 
   const onChangeUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value)
+    setValues({ ...values, username: event.target.value})
   }
 
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
+    setValues({ ...values, email: event.target.value})
   }
 
   const update = {
-    firstName: firstName,
-    lastName: lastName,
-    username: username,
-    email: email
+    firstName: values.firstName,
+    lastName: values.lastName,
+    username: values.username,
+    email: values.email
   }
 
   const onUpdateClick = (event: React.FormEvent<HTMLFormElement>) => {

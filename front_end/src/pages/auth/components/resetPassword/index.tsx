@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
     passwords: {
       marginTop: '40px'
     },
+    label: {
+      textTransform: 'capitalize'
+    },
     button: {
       marginTop: '40px',
       margin: '0 auto',
@@ -57,7 +60,7 @@ const ResetPassword = () => {
     showNewPassword: false
   })
 
-  const passwords = ['Current password', 'New password']
+  const passwords = ['current password', 'new password']
 
   const handleClickShowCurrentPassword = () => {
     setValues({ ...values, showCurrentPassword: !values.showCurrentPassword });
@@ -94,16 +97,16 @@ const ResetPassword = () => {
           {passwords.map(p => {
             return(
               <div className={classes.passwords}>
-                <InputLabel htmlFor="passwords">{p}</InputLabel>
+                <InputLabel htmlFor="passwords" className={classes.label}>{p}</InputLabel>
                 <OutlinedInput
                   id="-passwords"
-                  value={p === 'Current password' ? values.currentPassword : values.newPassword}
+                  value={p === 'current password' ? values.currentPassword : values.newPassword}
                   style={{marginTop: '10px', width: '100%'}}
-                  type={p === 'Current password' ? 
+                  type={p === 'current password' ? 
                     values.showCurrentPassword ? 'text' : 'password' 
                     : values.showNewPassword ? 'text' : 'password'
                   }
-                  onChange={p === 'Current password' ? 
+                  onChange={p === 'current password' ? 
                     onChangeCurrentPassword :
                     onChangeNewPassword
                   }
@@ -111,11 +114,11 @@ const ResetPassword = () => {
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
-                        onClick={p === 'Current password' ? 
+                        onClick={p === 'current password' ? 
                           handleClickShowCurrentPassword 
                           : handleClickShowNewPassword
                         }>
-                        {p === 'Current password' ? 
+                        {p === 'current password' ? 
                           values.showCurrentPassword ? <Visibility /> : <VisibilityOff />
                           : values.showNewPassword ? <Visibility /> : <VisibilityOff />
                         }
