@@ -95,7 +95,7 @@ function* resetPassword() {
     const { userId, oldPassword, newPassword } = action.payload
     try {
       if(userId) {
-        const message = yield call(API.resetPassword, userId, oldPassword, newPassword)
+        const { message } = yield call(API.resetPassword, userId, oldPassword, newPassword)
         yield put(showNotification('success', message))
       }
     } catch (error) {

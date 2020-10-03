@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { useDispatch } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -51,32 +50,35 @@ const ResetPassword = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
   const { user } = useAuth()
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
+  const [values, setValues] = useState({
+    currentPassword: '',
+    newPassword: '',
+    showCurrentPassword: false,
+    showNewPassword: false
+  })
 
   const passwords = ['Current password', 'New password']
 
   const handleClickShowCurrentPassword = () => {
-    setShowCurrentPassword(!showCurrentPassword);
+    setValues({ ...values, showCurrentPassword: !values.showCurrentPassword });
   };
 
   const handleClickShowNewPassword = () => {
-    setShowNewPassword(!showNewPassword);
+    setValues({ ...values, showNewPassword: !values.showNewPassword });
   };
 
-  const onChangeOldPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOldPassword(event.target.value)
+  const onChangeCurrentPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, currentPassword: event.target.value})
   }
 
   const onChangeNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPassword(event.target.value)
+    setValues({ ...values, newPassword: event.target.value })
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    dispatch(resetPassword(user?._id, oldPassword, newPassword))
+    dispatch(resetPassword(user?._id, values.currentPassword, values.newPassword))
+    setValues({ ...values, currentPassword: '', newPassword: ''})
   }
 
   return(
@@ -95,13 +97,14 @@ const ResetPassword = () => {
                 <InputLabel htmlFor="passwords">{p}</InputLabel>
                 <OutlinedInput
                   id="-passwords"
+                  value={p === 'Current password' ? values.currentPassword : values.newPassword}
                   style={{marginTop: '10px', width: '100%'}}
                   type={p === 'Current password' ? 
-                    showCurrentPassword ? 'text' : 'password' 
-                    : showNewPassword ? 'text' : 'password'
+                    values.showCurrentPassword ? 'text' : 'password' 
+                    : values.showNewPassword ? 'text' : 'password'
                   }
                   onChange={p === 'Current password' ? 
-                    onChangeOldPassword :
+                    onChangeCurrentPassword :
                     onChangeNewPassword
                   }
                   endAdornment={
@@ -113,8 +116,8 @@ const ResetPassword = () => {
                           : handleClickShowNewPassword
                         }>
                         {p === 'Current password' ? 
-                          showCurrentPassword ? <Visibility /> : <VisibilityOff />
-                          : showNewPassword ? <Visibility /> : <VisibilityOff />
+                          values.showCurrentPassword ? <Visibility /> : <VisibilityOff />
+                          : values.showNewPassword ? <Visibility /> : <VisibilityOff />
                         }
                       </IconButton>
                     </InputAdornment>

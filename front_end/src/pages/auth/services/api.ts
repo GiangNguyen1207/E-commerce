@@ -47,6 +47,6 @@ export default {
         oldPassword: oldPassword, 
         newPassword: newPassword
       })
-      .then(res => res.data.message)
+      .then(res => res.data)
   }
 }
