@@ -8,6 +8,8 @@ import SignIn from 'pages/auth/components/login'
 import SignUp from 'pages/auth/components/signup'
 import ShoppingCart from 'pages/cart'
 import FavoriteList from 'pages/favoriteList'
+import Profile from 'pages/auth/components/userProfile'
+import ResetPassword from 'pages/auth/components/resetPassword'
 
 const Routes = () => (
   <Switch>
@@ -51,6 +53,18 @@ const Routes = () => (
       exact
       path='/favorite'
       component={ FavoriteList }
+    />
+
+    <Route
+      exact
+      path='/profile'
+      component={ Profile }
+    />
+
+    <Route
+      exact
+      path='/resetPassword'
+      component={ ResetPassword }
     />
     
   </Switch>

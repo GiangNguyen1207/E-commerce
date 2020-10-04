@@ -126,7 +126,7 @@ const AppBarComponent = () => {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar 
-        position="static" 
+        position="fixed" 
         color='transparent'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: openDrawer,

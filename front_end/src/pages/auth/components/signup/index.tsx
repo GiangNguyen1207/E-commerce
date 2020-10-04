@@ -6,8 +6,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -56,36 +54,44 @@ export default function SignUp() {
   const classes = useStyles();
   const dispatch = useDispatch()
   const history = useHistory()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
-
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    username: ''
+  })
 
   const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(signup(firstName, lastName, username, email, password, history))
+    dispatch(signup(
+      values.firstName, 
+      values.lastName,
+      values.username,
+      values.email,
+      values.password,
+      history
+    ))
   }
 
-  const getFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstName(e.target.value)
+  const onChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, firstName: e.target.value})
   }
 
-  const getLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.target.value)
+  const onChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, lastName: e.target.value})
   }
 
-  const getUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
+  const onChangetUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, username: e.target.value})
   }
 
-  const getEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, email: e.target.value})
   }
 
-  const getPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, password: e.target.value})
   }
 
   return (
@@ -103,7 +109,7 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  onChange={getFirstName}
+                  onChange={onChangeFirstName}
                   autoComplete="fname"
                   name="firstName"
                   variant="outlined"
@@ -116,7 +122,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  onChange={getLastName}
+                  onChange={onChangeLastName}
                   variant="outlined"
                   required
                   fullWidth
@@ -128,7 +134,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={getEmail}
+                  onChange={onChangeEmail}
                   variant="outlined"
                   required
                   fullWidth
@@ -140,7 +146,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={getUsername}
+                  onChange={onChangetUsername}
                   variant="outlined"
                   required
                   fullWidth
@@ -151,7 +157,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={getPassword}
+                  onChange={onChangePassword}
                   variant="outlined"
                   required
                   fullWidth
@@ -160,12 +166,6 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>

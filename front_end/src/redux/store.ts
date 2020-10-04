@@ -5,6 +5,7 @@ import rootSaga from './saga'
 import rootReducer, { RootState } from './reducer';
 
 const initState: RootState = {
+  notification: null,
   product: {
     products: [],
     searchedProducts: [],

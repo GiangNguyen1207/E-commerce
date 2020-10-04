@@ -26,13 +26,13 @@ const LeftDrawer = () => {
     <>
       <Divider />
         <List>
-          <ListItem style={{cursor:'pointer'}}>
+          <ListItem onClick={() => history.push('/profile')} style={{cursor:'pointer'}}>
             <ListItemIcon>
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary={'User profile'} />
           </ListItem>
-          <ListItem style={{cursor:'pointer'}}>
+          <ListItem onClick={() => history.push('/resetPassword')}  style={{cursor:'pointer'}}>
             <ListItemIcon>
               <LockOpenIcon />
             </ListItemIcon>

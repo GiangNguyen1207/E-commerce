@@ -6,15 +6,16 @@ import { useDispatch } from 'react-redux';
 import { googleSignin } from 'pages/auth/redux/actions'
 
 const GoogleSignin= () => {
+  const clientID: any = process.env.REACT_APP_CLIENT_ID
   const history = useHistory()
   const dispatch = useDispatch()
   async function ResponseGoogle (response: any) { 
     dispatch(googleSignin(response.tokenObj.id_token, history))
   }
-
+  
   return (
     <GoogleLogin
-      clientId="827944169415-416idnak4qdkql3piho5q3a5a9ngb611.apps.googleusercontent.com"
+      clientId={clientID}
       buttonText="Login with Google"
       onSuccess={ResponseGoogle}
       onFailure={ResponseGoogle}

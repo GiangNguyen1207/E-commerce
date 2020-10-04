@@ -2,7 +2,8 @@ import { takeEvery, put, call, fork, select } from 'redux-saga/effects'
 import axios from 'axios'
 
 import API from '../services/api'
-import { signinSuccess } from './actions'
+import { signinSuccess, updateProfileSuccess } from './actions'
+import { showNotification } from 'components/redux/actions'
 import { RootState } from 'redux/reducer'
 
 import {
@@ -10,10 +11,19 @@ import {
   USER_SIGN_IN,
   GOGGLE_SIGN_IN,
   USER_SIGN_OUT,
+  UPDATE_USER_PROFILE,
+  RESET_PASSWORD,
   UserSignupAction,
   UserSigninAction,
   GoogleSigninAction,
+  UpdateUserProfileAction,
+  ResetPasswordAction
 } from './types'
+
+function* showError(error: any) {
+  const message = error.response.data.message || error.message
+  yield put(showNotification('error', message))
+}
 
 function* singup() {
   yield takeEvery(USER_SIGN_UP, function*(action: UserSignupAction) {
@@ -23,7 +33,7 @@ function* singup() {
       history.push('/user/signIn')
     }
     catch (error) {
-      console.log(error)
+    yield showError(error)
     }
   })
 }
@@ -33,14 +43,12 @@ function* signin() {
     const { userInfo, password, history } = action.payload
     try {
       const { token, user } = yield call(API.signin, userInfo, password)
-      console.log('token', token)
-      yield put(signinSuccess(token, user))
-      // axios.defaults.headers.common[
-      //   'Authorization'
-      // ] = `Bearer ${token}`
-      history.push('/')
+      if(user) {
+        yield put(signinSuccess(token, user))
+        history.push('/')
+      }
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -51,12 +59,9 @@ function* googleSignin() {
     try {
       const { token, user } = yield call(API.googleSignin, id_token)
       yield put(signinSuccess(token, user))
-      // axios.defaults.headers.common[
-      //   'Authorization'
-      // ] = `Bearer ${token}`
       history.push('/')
     } catch (error) {
-      console.log(error)
+      yield showError(error)
     }
   })
 }
@@ -70,4 +75,33 @@ function* singout() {
   })
 }
 
-export default [singup, signin, googleSignin, singout].map(fork)
+function* updateProfile() {
+  yield takeEvery(UPDATE_USER_PROFILE, function*(action: UpdateUserProfileAction) {
+    const { userId, update } = action.payload
+    try {
+      if(userId) {
+        const user = yield call(API.updateUserProfile, userId, update)
+        yield put(updateProfileSuccess(user))
+        yield put(showNotification('success', 'User has been updated successfully'))
+      }
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
+function* resetPassword() {
+  yield takeEvery(RESET_PASSWORD, function*(action: ResetPasswordAction) {
+    const { userId, oldPassword, newPassword } = action.payload
+    try {
+      if(userId) {
+        const { message } = yield call(API.resetPassword, userId, oldPassword, newPassword)
+        yield put(showNotification('success', message))
+      }
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
+export default [singup, signin, googleSignin, singout, updateProfile, resetPassword].map(fork)
