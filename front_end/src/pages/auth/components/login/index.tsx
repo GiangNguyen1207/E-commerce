@@ -1,20 +1,20 @@
-import React, { useState} from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import Container from '@material-ui/core/Container'
 
 import GoogleSignIn from 'components/GoogleLogin'
-import { signin } from 'pages/auth/redux/actions' 
+import { signin } from 'pages/auth/redux/actions'
 
 function Copyright() {
   return (
@@ -26,7 +26,7 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  );
+  )
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,14 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      marginTop: '20px'
+      marginTop: '20px',
     },
     avatar: {
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: '50%', 
+      width: '50%',
       textAlign: 'center',
       marginTop: theme.spacing(1),
     },
@@ -57,32 +57,32 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '300px',
       position: 'absolute',
       left: '55%',
-      top: '30%'
+      top: '30%',
     },
     button: {
       width: '50%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
     text: {
-      marginBottom: '10px'
-    }
+      marginBottom: '10px',
+    },
   })
 )
 
 export default function SignIn() {
-  const classes = useStyles();
+  const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
   const [userInfo, setUserInfo] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSignin = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     dispatch(signin(userInfo, password, history))
   }
@@ -102,13 +102,13 @@ export default function SignIn() {
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
-            </Avatar>
+          </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
           <div className={classes.panel}>
             <form className={classes.form} onSubmit={handleSignin}>
-              <Typography variant='h6'>Log in with username/email</Typography>
+              <Typography variant="h6">Log in with username/email</Typography>
               <TextField
                 onChange={getUserInfo}
                 variant="outlined"
@@ -141,9 +141,9 @@ export default function SignIn() {
               >
                 Sign In
               </Button>
-              <Grid container>
+              <Grid>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgotPassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
@@ -155,8 +155,10 @@ export default function SignIn() {
               </Grid>
             </form>
             <div className={classes.vertical}></div>
-            <div className={classes.button}> 
-              <Typography variant="h6" className={classes.text}>Log in with Google</Typography>
+            <div className={classes.button}>
+              <Typography variant="h6" className={classes.text}>
+                Log in with Google
+              </Typography>
               <GoogleSignIn />
             </div>
           </div>
@@ -166,5 +168,5 @@ export default function SignIn() {
         </Box>
       </Container>
     </>
-  );
+  )
 }

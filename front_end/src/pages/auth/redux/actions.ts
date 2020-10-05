@@ -9,18 +9,19 @@ import {
   UPDATE_USER_PROFILE,
   UPDATE_USER_PROFILE_SUCCESS,
   RESET_PASSWORD,
+  FORGOT_PASSWORD,
   AuthActions,
   User,
 } from './types'
 
 export function signup(
-  firstName: string, 
-  lastName: string, 
+  firstName: string,
+  lastName: string,
   username: string,
   email: string,
   password: string,
   history: History
-  ) : AuthActions {
+): AuthActions {
   return {
     type: USER_SIGN_UP,
     payload: {
@@ -29,72 +30,90 @@ export function signup(
       username,
       email,
       password,
-      history
-    }
+      history,
+    },
   }
 }
 
-export function signin(userInfo: string, password: string, history: History) : AuthActions{
+export function signin(
+  userInfo: string,
+  password: string,
+  history: History
+): AuthActions {
   return {
     type: USER_SIGN_IN,
     payload: {
       userInfo,
       password,
-      history
-    }
+      history,
+    },
   }
 }
 
-export function signinSuccess(token: string, user: User) : AuthActions{
+export function signinSuccess(token: string, user: User): AuthActions {
   return {
     type: USER_SIGN_IN_SUCCESS,
     payload: {
       token,
-      user
-    }
+      user,
+    },
   }
 }
 
-export function googleSignin(id_token: string, history: History) : AuthActions{
+export function googleSignin(id_token: string, history: History): AuthActions {
   return {
     type: GOGGLE_SIGN_IN,
     payload: {
       id_token,
-      history
-    }
+      history,
+    },
   }
 }
 
-export function signout() : AuthActions {
+export function signout(): AuthActions {
   return {
     type: USER_SIGN_OUT,
   }
 }
 
-export function updateProfile(userId: string | undefined, update: Partial<User>) : AuthActions {
+export function updateProfile(
+  userId: string | undefined,
+  update: Partial<User>
+): AuthActions {
   return {
     type: UPDATE_USER_PROFILE,
     payload: {
       userId,
-      update
-    }
+      update,
+    },
   }
 }
 
-export function updateProfileSuccess(user: User) : AuthActions {
+export function updateProfileSuccess(user: User): AuthActions {
   return {
     type: UPDATE_USER_PROFILE_SUCCESS,
-    payload: user
+    payload: user,
   }
 }
 
-export function resetPassword(userId: string | undefined, oldPassword: string, newPassword: string) : AuthActions {
+export function resetPassword(
+  userId: string | undefined,
+  oldPassword: string,
+  newPassword: string
+): AuthActions {
   return {
     type: RESET_PASSWORD,
     payload: {
       userId,
       oldPassword,
-      newPassword
-    }
+      newPassword,
+    },
+  }
+}
+
+export function forgotPassword(email: string): AuthActions {
+  return {
+    type: FORGOT_PASSWORD,
+    payload: email,
   }
 }

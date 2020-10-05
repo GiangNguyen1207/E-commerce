@@ -95,7 +95,7 @@ export const forgotPassword = async (
     await UserService.forgotPassword(req.body.email, token)
     const data = {
       to: req.body.email,
-      from: 'giang.nguyen@integrify.io',
+      from: process.env.SENDER_EMAIL,
       template: 'reset-password-template',
       subject: 'Reset your password',
       text: `Please click on the following link
@@ -109,12 +109,16 @@ export const forgotPassword = async (
       service: 'Gmail',
       auth: {
         type: 'OAuth2',
-        user: 'nguyengiang.nchg@gmail.com',
+        user: process.env.SENDER_EMAIL,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
       },
     })
 
-    smtpTransport.sendMail(data, function (error) {
+    smtpTransport.sendMail(data, function (error: any) {
       if (error) {
+        res.json({ status: 400, message: 'Failed to send email' })
         console.log(error)
       } else {
         res.json({ status: 200, message: 'Email sent successfully' })
