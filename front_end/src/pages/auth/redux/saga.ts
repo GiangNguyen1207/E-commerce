@@ -7,17 +7,19 @@ import { showNotification } from 'components/redux/actions'
 import { RootState } from 'redux/reducer'
 
 import {
-  USER_SIGN_UP, 
+  USER_SIGN_UP,
   USER_SIGN_IN,
   GOGGLE_SIGN_IN,
   USER_SIGN_OUT,
   UPDATE_USER_PROFILE,
   RESET_PASSWORD,
+  FORGOT_PASSWORD,
   UserSignupAction,
   UserSigninAction,
   GoogleSigninAction,
   UpdateUserProfileAction,
-  ResetPasswordAction
+  ResetPasswordAction,
+  ForGotPasswordAction,
 } from './types'
 
 function* showError(error: any) {
@@ -26,24 +28,30 @@ function* showError(error: any) {
 }
 
 function* singup() {
-  yield takeEvery(USER_SIGN_UP, function*(action: UserSignupAction) {
-    const { firstName, lastName, username, email, password, history } = action.payload
+  yield takeEvery(USER_SIGN_UP, function* (action: UserSignupAction) {
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      history,
+    } = action.payload
     try {
       yield call(API.signup, firstName, lastName, username, email, password)
       history.push('/user/signIn')
-    }
-    catch (error) {
-    yield showError(error)
+    } catch (error) {
+      yield showError(error)
     }
   })
 }
 
 function* signin() {
-  yield takeEvery(USER_SIGN_IN, function*(action: UserSigninAction) {
+  yield takeEvery(USER_SIGN_IN, function* (action: UserSigninAction) {
     const { userInfo, password, history } = action.payload
     try {
       const { token, user } = yield call(API.signin, userInfo, password)
-      if(user) {
+      if (user) {
         yield put(signinSuccess(token, user))
         history.push('/')
       }
@@ -54,7 +62,7 @@ function* signin() {
 }
 
 function* googleSignin() {
-  yield takeEvery(GOGGLE_SIGN_IN, function*(action: GoogleSigninAction) {
+  yield takeEvery(GOGGLE_SIGN_IN, function* (action: GoogleSigninAction) {
     const { id_token, history } = action.payload
     try {
       const { token, user } = yield call(API.googleSignin, id_token)
@@ -67,22 +75,26 @@ function* googleSignin() {
 }
 
 function* singout() {
-  yield takeEvery(USER_SIGN_OUT, function*() {
+  yield takeEvery(USER_SIGN_OUT, function* () {
     yield localStorage.clear()
-      const state: RootState = yield select()
-      delete state.cart
+    const state: RootState = yield select()
+    delete state.cart
     delete axios.defaults.headers.common['Authorization']
   })
 }
 
 function* updateProfile() {
-  yield takeEvery(UPDATE_USER_PROFILE, function*(action: UpdateUserProfileAction) {
+  yield takeEvery(UPDATE_USER_PROFILE, function* (
+    action: UpdateUserProfileAction
+  ) {
     const { userId, update } = action.payload
     try {
-      if(userId) {
+      if (userId) {
         const user = yield call(API.updateUserProfile, userId, update)
         yield put(updateProfileSuccess(user))
-        yield put(showNotification('success', 'User has been updated successfully'))
+        yield put(
+          showNotification('success', 'User has been updated successfully')
+        )
       }
     } catch (error) {
       yield showError(error)
@@ -91,11 +103,16 @@ function* updateProfile() {
 }
 
 function* resetPassword() {
-  yield takeEvery(RESET_PASSWORD, function*(action: ResetPasswordAction) {
+  yield takeEvery(RESET_PASSWORD, function* (action: ResetPasswordAction) {
     const { userId, oldPassword, newPassword } = action.payload
     try {
-      if(userId) {
-        const { message } = yield call(API.resetPassword, userId, oldPassword, newPassword)
+      if (userId) {
+        const { message } = yield call(
+          API.resetPassword,
+          userId,
+          oldPassword,
+          newPassword
+        )
         yield put(showNotification('success', message))
       }
     } catch (error) {
@@ -104,4 +121,24 @@ function* resetPassword() {
   })
 }
 
-export default [singup, signin, googleSignin, singout, updateProfile, resetPassword].map(fork)
+function* forgotPassword() {
+  yield takeEvery(FORGOT_PASSWORD, function* (action: ForGotPasswordAction) {
+    const email = action.payload
+    try {
+      const { message } = yield call(API.forgotPassword, email)
+      yield put(showNotification('success', message))
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
+export default [
+  singup,
+  signin,
+  googleSignin,
+  singout,
+  updateProfile,
+  resetPassword,
+  forgotPassword,
+].map(fork)

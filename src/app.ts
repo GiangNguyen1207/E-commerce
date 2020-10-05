@@ -57,6 +57,7 @@ app.use(
       '/v1/products/',
       '/v1/users/signUp',
       '/v1/users/signIn',
+      '/v1/users/forgotPassword',
     ],
     authenticate
   )
