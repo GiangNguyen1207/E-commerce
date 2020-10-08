@@ -10,6 +10,7 @@ export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE'
 export const UPDATE_USER_PROFILE_SUCCESS = 'UPDATE_USER_PROFILE_SUCCESS'
 export const RESET_PASSWORD = 'RESET_PASSWORD'
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD'
+export const VALIDATE_TOKEN = 'VALIDATE_TOKEN'
 
 export type Cart = {
   productName: string
@@ -108,6 +109,14 @@ export type ForGotPasswordAction = {
   payload: string
 }
 
+export type ValidateTokenAction = {
+  type: typeof VALIDATE_TOKEN
+  payload: {
+    token: string
+    history: History
+  }
+}
+
 export type AuthState = {
   token: string
   user?: User
@@ -124,3 +133,4 @@ export type AuthActions =
   | UpdateUserProfilSuccessAction
   | ResetPasswordAction
   | ForGotPasswordAction
+  | ValidateTokenAction

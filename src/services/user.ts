@@ -45,7 +45,7 @@ function updateUserProfile(
 }
 
 function forgotPassword(email: string, token: string): Promise<UserDocument> {
-  return User.findOne({ email: email })
+  return User.findOne({ email: { $regex: email, $options: 'i' } })
     .exec()
     .then((user) => {
       if (!user) {
@@ -55,7 +55,7 @@ function forgotPassword(email: string, token: string): Promise<UserDocument> {
         user.forgotPassword = {
           token: token,
           timeOfCreated: Date.now(),
-          timeStamp: 300000,
+          timeStamp: 1800000,
         }
       }
       return user.save()

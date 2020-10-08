@@ -92,6 +92,7 @@ export const forgotPassword = async (
 ) => {
   try {
     const token = await crypto.randomBytes(32).toString('hex')
+
     await UserService.forgotPassword(req.body.email, token)
     const data = {
       to: req.body.email,
@@ -99,7 +100,7 @@ export const forgotPassword = async (
       template: 'reset-password-template',
       subject: 'Reset your password',
       text: `Please click on the following link
-      ${`http://localhost:3000/users/resetPassword?token=${token}`} 
+      ${`http://localhost:3003/resetPassword/${token}`} 
       to reset your password. \n\n 
       If you did not request this, 
       please ignore this email and your password will remain unchanged.\n`,
@@ -138,8 +139,8 @@ export const validateToken = async (
   next: NextFunction
 ) => {
   try {
-    await UserService.validateToken(req.query.token)
-    res.status(200).send('Token is validated')
+    await UserService.validateToken(req.body.token)
+    res.json({ status: 200, message: 'Token is validated' })
   } catch (error) {
     if (error.message === 'Invalid token' || 'Wrong token') {
       next(new BadRequestError('Invalid token', error))

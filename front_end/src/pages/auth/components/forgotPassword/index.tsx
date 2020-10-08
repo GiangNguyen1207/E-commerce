@@ -40,6 +40,7 @@ const ForgotPassword = () => {
   const onButtonClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     dispatch(forgotPassword(email))
+    setEmail('')
   }
 
   return (
@@ -55,6 +56,7 @@ const ForgotPassword = () => {
         onSubmit={onButtonClick}
       >
         <TextField
+          value={email}
           onChange={onEmailChange}
           id="Email-input"
           label="Your email"

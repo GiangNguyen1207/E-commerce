@@ -10,6 +10,7 @@ import {
   UPDATE_USER_PROFILE_SUCCESS,
   RESET_PASSWORD,
   FORGOT_PASSWORD,
+  VALIDATE_TOKEN,
   AuthActions,
   User,
 } from './types'
@@ -115,5 +116,15 @@ export function forgotPassword(email: string): AuthActions {
   return {
     type: FORGOT_PASSWORD,
     payload: email,
+  }
+}
+
+export function validateToken(token: string, history: History): AuthActions {
+  return {
+    type: VALIDATE_TOKEN,
+    payload: {
+      token,
+      history,
+    },
   }
 }

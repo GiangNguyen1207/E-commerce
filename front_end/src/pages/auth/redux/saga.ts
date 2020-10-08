@@ -14,12 +14,14 @@ import {
   UPDATE_USER_PROFILE,
   RESET_PASSWORD,
   FORGOT_PASSWORD,
+  VALIDATE_TOKEN,
   UserSignupAction,
   UserSigninAction,
   GoogleSigninAction,
   UpdateUserProfileAction,
   ResetPasswordAction,
   ForGotPasswordAction,
+  ValidateTokenAction,
 } from './types'
 
 function* showError(error: any) {
@@ -133,6 +135,20 @@ function* forgotPassword() {
   })
 }
 
+function* validateToken() {
+  yield takeEvery(VALIDATE_TOKEN, function* (action: ValidateTokenAction) {
+    const { token, history } = action.payload
+    try {
+      const { message } = yield call(API.validateToken, token)
+      if (message) {
+        history.push('/resetPassword')
+      }
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
 export default [
   singup,
   signin,
@@ -141,4 +157,5 @@ export default [
   updateProfile,
   resetPassword,
   forgotPassword,
+  validateToken,
 ].map(fork)

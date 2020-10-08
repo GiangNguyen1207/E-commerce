@@ -68,4 +68,12 @@ export default {
       })
       .then((res) => res.data)
   },
+
+  async validateToken(token: string) {
+    return await axios
+      .post(`http://localhost:3000/api/v1/users/resetPassword`, {
+        token: token,
+      })
+      .then((res) => res.data)
+  },
 }

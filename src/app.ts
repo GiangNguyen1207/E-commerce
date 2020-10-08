@@ -58,6 +58,7 @@ app.use(
       '/v1/users/signUp',
       '/v1/users/signIn',
       '/v1/users/forgotPassword',
+      '/v1/users/resetPassword',
     ],
     authenticate
   )
