@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
-import Button from '@material-ui/core/Button'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
-import LockIcon from '@material-ui/icons/Lock'
+import FormControl from '@material-ui/core/FormControl'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -14,155 +13,93 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 
-import useAuth from 'pages/auth/hooks/useAuth'
-import { resetPassword } from 'pages/auth/redux/actions'
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       marginTop: theme.spacing(8),
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
     },
     avatar: {
-      margin: '10px auto',
-      backgroundColor: '#d671ad',
-    },
-    title: {
-      textAlign: 'center',
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      display: 'flex',
-      flexDirection: 'column',
+      marginTop: '20px',
     },
-    passwords: {
-      marginTop: '40px',
-    },
-    label: {
-      textTransform: 'capitalize',
-    },
-    button: {
-      marginTop: '40px',
-      margin: '0 auto',
-      width: '30%',
+    formControl: {
+      width: '100%',
+      margin: '10px auto 20px',
     },
   })
 )
 
-const ChangePassword = () => {
+const ResetPassword = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { user } = useAuth()
   const [values, setValues] = useState({
-    currentPassword: '',
+    userInfo: '',
     newPassword: '',
-    showCurrentPassword: false,
-    showNewPassword: false,
+    showPassword: false,
   })
 
-  const passwords = ['current password', 'new password']
-
-  const handleClickShowCurrentPassword = () => {
-    setValues({ ...values, showCurrentPassword: !values.showCurrentPassword })
-  }
-
-  const handleClickShowNewPassword = () => {
-    setValues({ ...values, showNewPassword: !values.showNewPassword })
-  }
-
-  const onChangeCurrentPassword = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setValues({ ...values, currentPassword: event.target.value })
+  const onChangeUserInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, userInfo: event.target.value })
   }
 
   const onChangeNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, newPassword: event.target.value })
   }
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    dispatch(
-      resetPassword(user?._id, values.currentPassword, values.newPassword)
-    )
-    setValues({ ...values, currentPassword: '', newPassword: '' })
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword })
   }
 
   return (
     <Container component="main" maxWidth="md">
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5" className={classes.title}>
+        <Typography component="h1" variant="h5">
           Reset your password
         </Typography>
-        <form className={classes.form} onSubmit={onSubmit}>
-          {passwords.map((p) => {
-            return (
-              <div className={classes.passwords}>
-                <InputLabel htmlFor="passwords" className={classes.label}>
-                  {p}
-                </InputLabel>
-                <OutlinedInput
-                  id="-passwords"
-                  value={
-                    p === 'current password'
-                      ? values.currentPassword
-                      : values.newPassword
-                  }
-                  style={{ marginTop: '10px', width: '100%' }}
-                  type={
-                    p === 'current password'
-                      ? values.showCurrentPassword
-                        ? 'text'
-                        : 'password'
-                      : values.showNewPassword
-                      ? 'text'
-                      : 'password'
-                  }
-                  onChange={
-                    p === 'current password'
-                      ? onChangeCurrentPassword
-                      : onChangeNewPassword
-                  }
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={
-                          p === 'current password'
-                            ? handleClickShowCurrentPassword
-                            : handleClickShowNewPassword
-                        }
-                      >
-                        {p === 'current password' ? (
-                          values.showCurrentPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )
-                        ) : values.showNewPassword ? (
-                          <Visibility />
-                        ) : (
-                          <VisibilityOff />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </div>
-            )
-          })}
-          <Button
-            type="submit"
-            size="large"
-            variant="contained"
-            color="primary"
-            startIcon={<LockOpenIcon />}
-            className={classes.button}
-          >
-            Reset Password
+        <form className={classes.form}>
+          <TextField
+            onChange={onChangeUserInfo}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username or Email"
+            name="username"
+            autoComplete="username"
+            autoFocus
+          />
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="outlined-adornment-password">
+              New password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.newPassword}
+              onChange={onChangeNewPassword}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={110}
+            />
+          </FormControl>
+          <Button type="submit" fullWidth variant="contained" color="primary">
+            Reset
           </Button>
         </form>
       </div>
@@ -170,4 +107,4 @@ const ChangePassword = () => {
   )
 }
 
-export default ChangePassword
+export default ResetPassword

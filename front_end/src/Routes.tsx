@@ -9,9 +9,10 @@ import SignUp from 'pages/auth/components/signup'
 import ShoppingCart from 'pages/cart'
 import FavoriteList from 'pages/favoriteList'
 import Profile from 'pages/auth/components/userProfile'
-import ChangePassword from 'pages/auth/components/resetPassword'
+import ChangePassword from 'pages/auth/components/changePassword'
 import ForgotPassword from 'pages/auth/components/forgotPassword'
 import Landing from 'pages/auth/components/landing'
+import ResetPassword from 'pages/auth/components/resetPassword'
 
 const Routes = () => (
   <Switch>
@@ -36,6 +37,8 @@ const Routes = () => (
     <Route exact path="/forgotPassword" component={ForgotPassword} />
 
     <Route exact path="/resetPassword/:token" component={Landing} />
+
+    <Route exact path="/resetPassword" component={ResetPassword} />
   </Switch>
 )
 
