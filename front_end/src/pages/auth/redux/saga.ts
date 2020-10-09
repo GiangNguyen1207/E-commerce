@@ -12,16 +12,18 @@ import {
   GOGGLE_SIGN_IN,
   USER_SIGN_OUT,
   UPDATE_USER_PROFILE,
-  RESET_PASSWORD,
+  CHANGE_PASSWORD,
   FORGOT_PASSWORD,
   VALIDATE_TOKEN,
+  RESET_PASSWORD,
   UserSignupAction,
   UserSigninAction,
   GoogleSigninAction,
   UpdateUserProfileAction,
-  ResetPasswordAction,
+  ChangePasswordAction,
   ForGotPasswordAction,
   ValidateTokenAction,
+  ResetPasswordAction,
 } from './types'
 
 function* showError(error: any) {
@@ -104,13 +106,13 @@ function* updateProfile() {
   })
 }
 
-function* resetPassword() {
-  yield takeEvery(RESET_PASSWORD, function* (action: ResetPasswordAction) {
+function* changePassword() {
+  yield takeEvery(CHANGE_PASSWORD, function* (action: ChangePasswordAction) {
     const { userId, oldPassword, newPassword } = action.payload
     try {
       if (userId) {
         const { message } = yield call(
-          API.resetPassword,
+          API.changePassword,
           userId,
           oldPassword,
           newPassword
@@ -149,13 +151,28 @@ function* validateToken() {
   })
 }
 
+function* resetPassword() {
+  yield takeEvery(RESET_PASSWORD, function* (action: ResetPasswordAction) {
+    const { userInfo, newPassword } = action.payload
+    try {
+      const { message } = yield call(API.resetPassword, userInfo, newPassword)
+      if (message) {
+        yield put(showNotification('success', message))
+      }
+    } catch (error) {
+      yield showError(error)
+    }
+  })
+}
+
 export default [
   singup,
   signin,
   googleSignin,
   singout,
   updateProfile,
-  resetPassword,
+  changePassword,
   forgotPassword,
   validateToken,
+  resetPassword,
 ].map(fork)

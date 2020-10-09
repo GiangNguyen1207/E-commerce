@@ -15,7 +15,7 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 
 import useAuth from 'pages/auth/hooks/useAuth'
-import { resetPassword } from 'pages/auth/redux/actions'
+import { changePassword } from 'pages/auth/redux/actions'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,7 +83,7 @@ const ChangePassword = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     dispatch(
-      resetPassword(user?._id, values.currentPassword, values.newPassword)
+      changePassword(user?._id, values.currentPassword, values.newPassword)
     )
     setValues({ ...values, currentPassword: '', newPassword: '' })
   }

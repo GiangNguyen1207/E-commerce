@@ -8,9 +8,10 @@ import {
   USER_SIGN_OUT,
   UPDATE_USER_PROFILE,
   UPDATE_USER_PROFILE_SUCCESS,
-  RESET_PASSWORD,
+  CHANGE_PASSWORD,
   FORGOT_PASSWORD,
   VALIDATE_TOKEN,
+  RESET_PASSWORD,
   AuthActions,
   User,
 } from './types'
@@ -97,13 +98,13 @@ export function updateProfileSuccess(user: User): AuthActions {
   }
 }
 
-export function resetPassword(
+export function changePassword(
   userId: string | undefined,
   oldPassword: string,
   newPassword: string
 ): AuthActions {
   return {
-    type: RESET_PASSWORD,
+    type: CHANGE_PASSWORD,
     payload: {
       userId,
       oldPassword,
@@ -125,6 +126,19 @@ export function validateToken(token: string, history: History): AuthActions {
     payload: {
       token,
       history,
+    },
+  }
+}
+
+export function resetPassword(
+  userInfo: string,
+  newPassword: string
+): AuthActions {
+  return {
+    type: RESET_PASSWORD,
+    payload: {
+      userInfo,
+      newPassword,
     },
   }
 }

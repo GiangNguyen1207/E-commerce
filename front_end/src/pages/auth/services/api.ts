@@ -47,7 +47,7 @@ export default {
       .then((res) => res.data)
   },
 
-  async resetPassword(
+  async changePassword(
     userId: string,
     oldPassword: string,
     newPassword: string
@@ -71,8 +71,17 @@ export default {
 
   async validateToken(token: string) {
     return await axios
-      .post(`http://localhost:3000/api/v1/users/resetPassword`, {
+      .post('http://localhost:3000/api/v1/users/resetPassword', {
         token: token,
+      })
+      .then((res) => res.data)
+  },
+
+  async resetPassword(userInfo: string, newPassword: string) {
+    return await axios
+      .put('http://localhost:3000/api/v1/users/resetPassword', {
+        userInfo: userInfo,
+        newPassword: newPassword,
       })
       .then((res) => res.data)
   },

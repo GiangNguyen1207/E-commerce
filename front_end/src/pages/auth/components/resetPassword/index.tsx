@@ -13,6 +13,8 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 
+import { resetPassword } from 'pages/auth/redux/actions'
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -56,13 +58,19 @@ const ResetPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
 
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    dispatch(resetPassword(values.userInfo, values.newPassword))
+    setValues({ ...values, userInfo: '', newPassword: '' })
+  }
+
   return (
     <Container component="main" maxWidth="md">
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Reset your password
         </Typography>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             onChange={onChangeUserInfo}
             variant="outlined"
