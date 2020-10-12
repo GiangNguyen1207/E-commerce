@@ -6,23 +6,27 @@ export const FETCH_ONE_PRODUCT = 'FIND_ONE_PRODUCT'
 export const FETCH_ONE_PRODUCT_SUCCESS = 'FIND_ONE_PRODUCT_SUCCESS'
 
 export type Product = {
-  _id: string,
-  name: string,
-  category: string,
-  variant: string,
-  image: string,
-  shortDescription: string,
+  _id: string
+  name: string
+  category: string
+  variant: string
+  image: string
+  shortDescription: string
   longDescription: string
-  price: number,
+  price: number
 }
 
 export type FetchAllProductsAction = {
   type: typeof FETCH_ALL_PRODUCTS
+  payload: number
 }
 
 export type FetchAllProductsSuccessAction = {
   type: typeof FETCH_ALL_PRODUCTS_SUCCESS
-  payload: Product[]
+  payload: {
+    totalPages: number
+    allProducts: Product[]
+  }
 }
 
 export type FindProductsAction = {
@@ -46,12 +50,15 @@ export type FetchOneProductSuccessAction = {
 }
 
 export type ProductState = {
-  products: Product[]
-  searchedProducts: Product[],
+  products: {
+    totalPages: number
+    products: Product[]
+  }
+  searchedProducts: Product[]
   singleProduct?: Product
 }
 
-export type ProductActions = 
+export type ProductActions =
   | FetchAllProductsAction
   | FetchAllProductsSuccessAction
   | FindProductsAction

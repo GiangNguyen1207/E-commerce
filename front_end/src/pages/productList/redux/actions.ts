@@ -9,43 +9,50 @@ import {
   ProductActions,
 } from './types'
 
-export function fetchAllProducts() : ProductActions {
+export function fetchAllProducts(page: number): ProductActions {
   return {
-    type: FETCH_ALL_PRODUCTS, 
+    type: FETCH_ALL_PRODUCTS,
+    payload: page,
   }
 }
 
-export function fetchAllProductsSuccess(products: Product[]) : ProductActions {
+export function fetchAllProductsSuccess(
+  pages: number,
+  products: Product[]
+): ProductActions {
   return {
     type: FETCH_ALL_PRODUCTS_SUCCESS,
-    payload: products
+    payload: {
+      totalPages: pages,
+      allProducts: products,
+    },
   }
 }
 
-export function findProducts(query: string) : ProductActions {
+export function findProducts(query: string): ProductActions {
   return {
     type: FIND_PRODUCTS,
-    payload: query
+    payload: query,
   }
 }
 
-export function findProductsSuccess(products: Product[]) : ProductActions {
+export function findProductsSuccess(products: Product[]): ProductActions {
   return {
     type: FIND_PRODUCTS_SUCCESS,
-    payload: products
+    payload: products,
   }
 }
 
-export function fetchOneProduct(productId: string) : ProductActions {
+export function fetchOneProduct(productId: string): ProductActions {
   return {
     type: FETCH_ONE_PRODUCT,
-    payload: productId
+    payload: productId,
   }
 }
 
-export function fetchOneProductSucess(product: Product) : ProductActions {
+export function fetchOneProductSucess(product: Product): ProductActions {
   return {
     type: FETCH_ONE_PRODUCT_SUCCESS,
-    payload: product
+    payload: product,
   }
 }

@@ -1,22 +1,29 @@
 import { takeEvery, put, call, fork } from 'redux-saga/effects'
 
 import API from '../services/api'
-import { fetchAllProductsSuccess, findProductsSuccess, fetchOneProductSucess } from './actions'
+import {
+  fetchAllProductsSuccess,
+  findProductsSuccess,
+  fetchOneProductSucess,
+} from './actions'
 
 import {
   FETCH_ALL_PRODUCTS,
   FIND_PRODUCTS,
   FETCH_ONE_PRODUCT,
+  FetchAllProductsAction,
   FindProductsAction,
-  FetchOneProductAction
+  FetchOneProductAction,
 } from './types'
 
-
 function* fetchAllProducts() {
-  yield takeEvery(FETCH_ALL_PRODUCTS, function*() {
+  yield takeEvery(FETCH_ALL_PRODUCTS, function* (
+    action: FetchAllProductsAction
+  ) {
     try {
-      const allProducts = yield call(API.fetchAllProducts)
-      yield put(fetchAllProductsSuccess(allProducts))
+      const page = action.payload
+      const { totalPages, allProducts } = yield call(API.fetchAllProducts, page)
+      yield put(fetchAllProductsSuccess(totalPages, allProducts))
     } catch (error) {
       console.log(error)
     }
@@ -24,7 +31,7 @@ function* fetchAllProducts() {
 }
 
 function* findProducts() {
-  yield takeEvery(FIND_PRODUCTS, function*(action: FindProductsAction) {
+  yield takeEvery(FIND_PRODUCTS, function* (action: FindProductsAction) {
     try {
       const query = action.payload
       const filteredProducts = yield call(API.findProducts, query)
@@ -36,7 +43,7 @@ function* findProducts() {
 }
 
 function* fetchOneProduct() {
-  yield takeEvery(FETCH_ONE_PRODUCT, function*(action: FetchOneProductAction) {
+  yield takeEvery(FETCH_ONE_PRODUCT, function* (action: FetchOneProductAction) {
     try {
       const productId = action.payload
       const singleProduct = yield call(API.fetchOneProduct, productId)

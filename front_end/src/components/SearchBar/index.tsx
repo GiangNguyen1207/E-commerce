@@ -1,8 +1,8 @@
-import React from 'react'; 
-import Button from '@material-ui/core/Button';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React from 'react'
+import Button from '@material-ui/core/Button'
+import InputBase from '@material-ui/core/InputBase'
+import SearchIcon from '@material-ui/icons/Search'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 type Props = {
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputRoot: {
       color: 'inherit',
-      borderRadius: '5px'
+      borderRadius: '5px',
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
@@ -51,32 +51,35 @@ const useStyles = makeStyles((theme: Theme) =>
           width: 200,
         },
       },
-    }
-  }),
-);
+    },
+  })
+)
 
 const SearchBar = ({ handleSearch }: Props) => {
   const classes = useStyles()
 
-  return(
+  return (
     <div className={classes.search}>
       <div className={classes.searchIcon}>
-        <Button >
+        <Button>
           <SearchIcon />
-        </Button> 
+        </Button>
       </div>
-      <InputBase 
-        style={{border:'1px solid #000000', width: '50%'}}
+      <InputBase
+        style={{
+          border: '1px solid #000000',
+          width: '50%',
+        }}
         placeholder="Search…"
         classes={{
           root: classes.inputRoot,
           input: classes.inputInput,
         }}
         inputProps={{ 'aria-label': 'search' }}
-        onChange={handleSearch} 
+        onChange={handleSearch}
       />
     </div>
   )
 }
 
-export default SearchBar 
+export default SearchBar

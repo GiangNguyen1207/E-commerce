@@ -1,41 +1,44 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware from 'redux-saga';
+import { createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
 
 import rootSaga from './saga'
-import rootReducer, { RootState } from './reducer';
+import rootReducer, { RootState } from './reducer'
 
 const initState: RootState = {
   notification: null,
   product: {
-    products: [],
+    products: {
+      totalPages: 0,
+      products: [],
+    },
     searchedProducts: [],
-    singleProduct: undefined
-  }, 
+    singleProduct: undefined,
+  },
   auth: {
     token: '',
-    user: undefined
+    user: undefined,
   },
   cart: {
     cart: undefined,
-    favoriteList: undefined
-  }
-};
+    favoriteList: undefined,
+  },
+}
 
 export default function makeStore() {
-  let initialState;
+  let initialState
   const loadedState = localStorage.getItem('state')
 
-  if(loadedState !== null) {
+  if (loadedState !== null) {
     initialState = JSON.parse(loadedState)
   } else initialState = initState
 
-  const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
-  let composeEnhancers = compose;
+  const sagaMiddleware = createSagaMiddleware()
+  const middlewares = [sagaMiddleware]
+  let composeEnhancers = compose
 
   if (process.env.NODE_ENV === 'development') {
     if ((window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-      composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+      composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     }
   }
 
@@ -43,9 +46,9 @@ export default function makeStore() {
     rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
-  );
+  )
 
-  sagaMiddleware.run(rootSaga);
+  sagaMiddleware.run(rootSaga)
 
-  return store;
+  return store
 }

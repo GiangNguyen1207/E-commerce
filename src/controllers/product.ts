@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import Product from '../models/Product'
+import Product, { ProductDocument } from '../models/Product'
 import ProductService from '../services/product'
 import {
   NotFoundError,
@@ -14,7 +14,18 @@ export const findAll = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await ProductService.findAll(req.query.search))
+    let totalPages: number
+    const page = Number(req.query.page)
+    const startIndex = (page - 1) * 9
+    const endIndex = page * 9
+    const allProducts = await ProductService.findAll(req.query.search)
+    if (allProducts.length % 9 === 0) {
+      totalPages = allProducts.length / 9
+    } else totalPages = Math.floor(allProducts.length / 9) + 1
+    res.json({
+      totalPages: totalPages,
+      allProducts: allProducts.slice(startIndex, endIndex),
+    })
   } catch (error) {
     next(new NotFoundError('Product not found', error))
   }

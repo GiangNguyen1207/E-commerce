@@ -28,18 +28,6 @@ function findAll(searchTerm?: any): Promise<ProductDocument[]> {
         return product
       })
   )
-  /*let filteredProducts: any
-      filteredProducts = Product.find({
-        $or: [
-          {name: searchTerm},
-          {category: searchTerm},
-          {variant: {$in: searchTerm}}
-        ]
-      })
-      return (_isEmpty(filteredProducts)? 
-        product 
-        : filteredProducts)
-    })*/
 }
 
 function findById(productId: string): Promise<ProductDocument> {
