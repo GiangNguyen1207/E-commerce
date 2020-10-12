@@ -96,77 +96,75 @@ export default function SignIn() {
   }
 
   return (
-    <>
-      <Container component="main" maxWidth="md">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <div className={classes.panel}>
-            <form className={classes.form} onSubmit={handleSignin}>
-              <Typography variant="h6">Log in with username/email</Typography>
-              <TextField
-                onChange={getUserInfo}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username or Email"
-                name="username"
-                autoComplete="username"
-                autoFocus
-              />
-              <TextField
-                onChange={getPassword}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-              <Grid>
-                <Grid item xs>
-                  <Link href="/forgotPassword" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="/user/signUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+    <Container component="main" maxWidth="md">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <div className={classes.panel}>
+          <form className={classes.form} onSubmit={handleSignin}>
+            <Typography variant="h6">Log in with username/email</Typography>
+            <TextField
+              onChange={getUserInfo}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username or Email"
+              name="username"
+              autoComplete="username"
+              autoFocus
+            />
+            <TextField
+              onChange={getPassword}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid>
+              <Grid item xs>
+                <Link href="/forgotPassword" variant="body2">
+                  Forgot password?
+                </Link>
               </Grid>
-            </form>
-            <div className={classes.vertical}></div>
-            <div className={classes.button}>
-              <Typography variant="h6" className={classes.text}>
-                Log in with Google
-              </Typography>
-              <GoogleSignIn />
-            </div>
+              <Grid item>
+                <Link href="/user/signUp" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+          <div className={classes.vertical}></div>
+          <div className={classes.button}>
+            <Typography variant="h6" className={classes.text}>
+              Log in with Google
+            </Typography>
+            <GoogleSignIn />
           </div>
         </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-      </Container>
-    </>
+      </div>
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </Container>
   )
 }

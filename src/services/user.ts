@@ -85,9 +85,9 @@ function resetPassword(
 ): Promise<UserDocument> {
   return User.findOne({ $or: [{ username: userInfo }, { email: userInfo }] })
     .exec()
-    .then((user) => {
+    .then(async (user) => {
       if (!user) throw new Error('User not found')
-      user.password = newPassword
+      user.password = await bcrypt.hash(newPassword, 10)
       return user.save()
     })
 }

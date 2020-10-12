@@ -73,6 +73,7 @@ const ResetPassword = () => {
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             onChange={onChangeUserInfo}
+            value={values.userInfo}
             variant="outlined"
             margin="normal"
             required
