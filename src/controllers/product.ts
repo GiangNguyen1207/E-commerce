@@ -24,7 +24,8 @@ export const findAll = async (
     } else totalPages = Math.floor(allProducts.length / 9) + 1
     res.json({
       totalPages: totalPages,
-      allProducts: allProducts.slice(startIndex, endIndex),
+      allProducts: allProducts,
+      products: allProducts.slice(startIndex, endIndex),
     })
   } catch (error) {
     next(new NotFoundError('Product not found', error))

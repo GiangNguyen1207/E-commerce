@@ -34,8 +34,8 @@ function* findProducts() {
   yield takeEvery(FIND_PRODUCTS, function* (action: FindProductsAction) {
     try {
       const query = action.payload
-      const filteredProducts = yield call(API.findProducts, query)
-      yield put(findProductsSuccess(filteredProducts))
+      const { allProducts } = yield call(API.findProducts, query)
+      yield put(findProductsSuccess(allProducts))
     } catch (error) {
       console.log(error)
     }
