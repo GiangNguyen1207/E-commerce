@@ -11,19 +11,15 @@ import {
   FETCH_ALL_PRODUCTS,
   FIND_PRODUCTS,
   FETCH_ONE_PRODUCT,
-  FetchAllProductsAction,
   FindProductsAction,
   FetchOneProductAction,
 } from './types'
 
 function* fetchAllProducts() {
-  yield takeEvery(FETCH_ALL_PRODUCTS, function* (
-    action: FetchAllProductsAction
-  ) {
+  yield takeEvery(FETCH_ALL_PRODUCTS, function* () {
     try {
-      const page = action.payload
-      const { totalPages, allProducts } = yield call(API.fetchAllProducts, page)
-      yield put(fetchAllProductsSuccess(totalPages, allProducts))
+      const allProducts = yield call(API.fetchAllProducts)
+      yield put(fetchAllProductsSuccess(allProducts))
     } catch (error) {
       console.log(error)
     }
@@ -34,7 +30,7 @@ function* findProducts() {
   yield takeEvery(FIND_PRODUCTS, function* (action: FindProductsAction) {
     try {
       const query = action.payload
-      const { allProducts } = yield call(API.findProducts, query)
+      const allProducts = yield call(API.findProducts, query)
       yield put(findProductsSuccess(allProducts))
     } catch (error) {
       console.log(error)

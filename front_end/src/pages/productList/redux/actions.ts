@@ -9,23 +9,16 @@ import {
   ProductActions,
 } from './types'
 
-export function fetchAllProducts(page: number): ProductActions {
+export function fetchAllProducts(): ProductActions {
   return {
     type: FETCH_ALL_PRODUCTS,
-    payload: page,
   }
 }
 
-export function fetchAllProductsSuccess(
-  pages: number,
-  products: Product[]
-): ProductActions {
+export function fetchAllProductsSuccess(products: Product[]): ProductActions {
   return {
     type: FETCH_ALL_PRODUCTS_SUCCESS,
-    payload: {
-      totalPages: pages,
-      allProducts: products,
-    },
+    payload: products,
   }
 }
 

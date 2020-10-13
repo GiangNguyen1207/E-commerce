@@ -4,9 +4,11 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Pagination from '@material-ui/lab/Pagination'
 
 import { fetchAllProducts } from 'pages/productList/redux/actions'
+import { Product } from 'pages/productList/redux/types'
+import { useHistory } from 'react-router'
 
 type Props = {
-  totalPages: number
+  products: Product[]
 }
 
 const useStyles = makeStyles((theme) =>
@@ -19,12 +21,19 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const Pages = ({ totalPages }: Props) => {
+const Pages = ({ products }: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const history = useHistory()
+
+  let totalPages: number
+  if (products.length % 9 === 0) {
+    totalPages = products.length / 9
+  } else totalPages = Math.floor(products.length / 9) + 1
 
   const handleChange = (event: React.ChangeEvent<any>, page: number) => {
-    dispatch(fetchAllProducts(page))
+    history.push(`/products/?page=${page}`)
+    dispatch(fetchAllProducts())
   }
 
   return (

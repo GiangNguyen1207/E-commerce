@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 export default {
-  async fetchAllProducts(page: Number) {
+  async fetchAllProducts() {
     return await axios
-      .get(`http://localhost:3000/api/v1/products/?page=${page}`)
+      .get(`http://localhost:3000/api/v1/products/`)
       .then((res) => res.data)
   },
 

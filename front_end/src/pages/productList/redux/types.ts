@@ -18,15 +18,11 @@ export type Product = {
 
 export type FetchAllProductsAction = {
   type: typeof FETCH_ALL_PRODUCTS
-  payload: number
 }
 
 export type FetchAllProductsSuccessAction = {
   type: typeof FETCH_ALL_PRODUCTS_SUCCESS
-  payload: {
-    totalPages: number
-    allProducts: Product[]
-  }
+  payload: Product[]
 }
 
 export type FindProductsAction = {
@@ -50,10 +46,7 @@ export type FetchOneProductSuccessAction = {
 }
 
 export type ProductState = {
-  products: {
-    totalPages: number
-    products: Product[]
-  }
+  allProducts: Product[]
   searchedProducts: Product[]
   singleProduct?: Product
 }

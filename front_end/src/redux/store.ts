@@ -7,10 +7,7 @@ import rootReducer, { RootState } from './reducer'
 const initState: RootState = {
   notification: null,
   product: {
-    products: {
-      totalPages: 0,
-      products: [],
-    },
+    allProducts: [],
     searchedProducts: [],
     singleProduct: undefined,
   },

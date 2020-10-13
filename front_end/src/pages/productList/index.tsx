@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router'
 import _isEmpty from 'lodash/isEmpty'
 import _orderBy from 'lodash/orderBy'
 
@@ -15,15 +16,22 @@ import './styles.css'
 
 const SearchProducts = () => {
   const dispatch = useDispatch()
-  const { totalPages, allProducts, searchedProducts } = useProduct('')
+  const location = useLocation()
+  const { allProducts, searchedProducts } = useProduct('')
   const [sortValue, setsortValue] = useState<string>('')
   const [filterValues, setFilterValues] = useState<string[]>([])
+
+  const query = new URLSearchParams(location.search)
+  const page: number = Number(query.get('page'))
+  const startIndex = (page - 1) * 9
+  const endIndex = page * 9
+
   const names = Array.from(
     new Set(allProducts.map((p) => p.name.split(' -')[0]))
   )
   const categories = Array.from(new Set(allProducts.map((p) => p.category)))
   const variants = Array.from(new Set(allProducts.map((p) => p.variant)))
-  let sortedProducts
+  let sortedProducts: Product[] = []
   let filterByName: string[] = []
   let filterByCategory: string[] = []
   let filterByVariant: string[] = []
@@ -138,17 +146,25 @@ const SearchProducts = () => {
           <ProductList
             products={
               sortValue
+                ? sortedProducts.slice(startIndex, endIndex)
+                : !_isEmpty(filteredProducts)
+                ? filteredProducts.slice(startIndex, endIndex)
+                : !_isEmpty(searchedProducts)
+                ? searchedProducts.slice(startIndex, endIndex)
+                : allProducts.slice(startIndex, endIndex)
+            }
+          />
+          <Pagination
+            products={
+              sortValue
                 ? sortedProducts
                 : !_isEmpty(filteredProducts)
                 ? filteredProducts
-                : _isEmpty(filteredProducts) && !_isEmpty(filterValues)
-                ? []
                 : !_isEmpty(searchedProducts)
                 ? searchedProducts
                 : allProducts
             }
           />
-          <Pagination totalPages={totalPages} />
         </div>
       </div>
     </>

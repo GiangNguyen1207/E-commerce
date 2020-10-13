@@ -7,25 +7,20 @@ import { RootState } from 'redux/reducer'
 export default function useProduct(productId: string) {
   const dispatch = useDispatch()
 
-  const {
-    totalPages,
-    allProducts,
-    searchedProducts,
-    singleProduct,
-  } = useSelector((state: RootState) => ({
-    totalPages: state.product.products.totalPages,
-    allProducts: state.product.products.products,
-    searchedProducts: state.product.searchedProducts,
-    singleProduct: state.product.singleProduct,
-  }))
+  const { allProducts, searchedProducts, singleProduct } = useSelector(
+    (state: RootState) => ({
+      allProducts: state.product.allProducts,
+      searchedProducts: state.product.searchedProducts,
+      singleProduct: state.product.singleProduct,
+    })
+  )
 
   useEffect(() => {
-    dispatch(fetchAllProducts(1))
+    dispatch(fetchAllProducts())
     dispatch(fetchOneProduct(productId))
   }, [dispatch, productId])
 
   return {
-    totalPages,
     allProducts,
     searchedProducts,
     singleProduct,

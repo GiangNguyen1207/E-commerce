@@ -7,10 +7,7 @@ import {
 } from './types'
 
 const initialState: ProductState = {
-  products: {
-    totalPages: 0,
-    products: [],
-  },
+  allProducts: [],
   searchedProducts: [],
   singleProduct: undefined,
 }
@@ -23,10 +20,7 @@ export function product(
     case FETCH_ALL_PRODUCTS_SUCCESS:
       return {
         ...state,
-        products: {
-          totalPages: action.payload.totalPages,
-          products: action.payload.allProducts,
-        },
+        allProducts: action.payload,
       }
 
     case FIND_PRODUCTS_SUCCESS:
